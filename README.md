@@ -3,7 +3,7 @@
 ## Команды
 
 Первый запуск:
-py -m venv venv - создание локального окружения
+python -m venv venv - создание локального окружения
 .\venv\Scripts\activate - запуск локального окружения
 pip install -r .\requirements.txt - установка всех зависимостей
 
