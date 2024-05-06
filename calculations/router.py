@@ -1,11 +1,11 @@
-from enum import Enum
 from fastapi import APIRouter
-from pydantic import BaseModel, ValidationError
 import rsp
+
+from calculations.schemas import AvailableSubstance
 
 router = APIRouter(
     prefix="/calculations",
-    tags=["Calculating"]
+    tags=["Calculating"],
 )
 
 
@@ -18,9 +18,9 @@ router = APIRouter(
 
 
 @router.get("/")
-def init():
+def get_calc_model_substanse():
     try:
-        h2o = rsp.createSubstance("H2O_IF96")
+        h2o = rsp.createSubstance("H2O_IF97")
         h2o_info = rsp.info.SubstanceInfo()
         rsp.info.getSubstanceInfo(h2o, h2o_info)
         modes = rsp.VectorString()
@@ -34,3 +34,13 @@ def init():
     #     result = []
     #     result.append(mode)
     #     return result
+
+# Получение всех доступных веществ из бибилотеки rsp
+
+
+@router.get("/get_available_substances", response_model=AvailableSubstance, description="Получение всех доступных веществ")
+def get_available_substances():
+    substances = rsp.VectorString()
+    rsp.info.getAvailableSubstances(substances)
+    count = len(list(substances))
+    return {"data": list(substances), "count": count}

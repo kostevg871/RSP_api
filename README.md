@@ -9,3 +9,5 @@ pip freeze > requirements.txt - соххранение локальных зав
 uvicorn main:app --reload - запуск сервера
 http://127.0.0.1:8000/docs#/ - Swagger или localhost:8000
 py pip install git+https://github.com/fiztexlabs/librsp.git - установка библиотеки
+
+pip install -r .\requirements.txt - установка всех зависимостей
