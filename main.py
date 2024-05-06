@@ -10,7 +10,7 @@ app = FastAPI(
 )
 
 
-@app.get("/")
+@app.get("/getSubstancesList")
 def start():
     return {"info": "Сервер работает!"}
 
