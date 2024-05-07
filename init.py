@@ -28,7 +28,7 @@ class InitRSP:
         rsp.info.getAvailableSubstances(self.substances_names)
 
         # двумерный список объектов для getCalcModesInfo (первая размерность конкретное вещество, вторая размерность - конкретный режим вычислений)
-        self.data_get_calc_modes_info = [[]]
+        self.data_get_calc_modes_info = []
 
         #GET /getCalcModesInfo?id={}, где id - id вещества
 #
@@ -61,6 +61,3 @@ class InitRSP:
                 self.data_get_calc_modes_info[i].append(data(j, modes[j]))
 
             i = i + 1
-
-
-substaneces_objects_globals = InitRSP()
