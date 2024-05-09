@@ -30,13 +30,11 @@ class InitRSP:
         # двумерный список объектов для getCalcModesInfo (первая размерность конкретное вещество, вторая размерность - конкретный режим вычислений)
         self.data_get_calc_modes_info = []
 
-        #GET /getCalcModesInfo?id={}, где id - id вещества
-#
-        #Response - array of object
-        #{
-        #   value: string; //id режима
-        #   label: string; //наименование режима
-        #}
+        # список доступных свойств для каждого режима вычисления по веществам
+        self.available_properties = []
+
+        # список пояснений для доступных свойств для каждого режима вычисления по веществам
+        self.properties_descriptions = []
 
         i = 0
         for subst in self.substances_names:
@@ -59,5 +57,28 @@ class InitRSP:
             self.data_get_calc_modes_info.append([])
             for j in range(len(modes)):
                 self.data_get_calc_modes_info[i].append(data(j, modes[j]))
+
+            
+            # объявляем информационную таблицу для литералов свойств (ассоциативный массив, 
+            # в котором ключ - литерал режима вычисления, а значение - соответствуюющий массив
+            # доступных для вычисления свойств)
+            properties = rsp.info.InfoTable()
+
+            # объявляем информационную таблицу для поялениний литералов свойств (ассоциативный массив, 
+            # в котором ключ - литерал режима вычисления, а значение - соответствуюющий массив
+            # доступных для вычисления свойств). Например, литералу 'D' соотвтетсвует пояснение 'Density'
+            descriptions = rsp.info.InfoTable()
+
+            self.substances_info[i].getInfoTables(properties, descriptions)
+
+            # self.available_properties.append([])
+            # self.properties_descriptions.append([])
+
+            # for mode in self.substances_calc_modes[i]:
+            #     self.available_properties[i].append(properties[mode])
+            #     self.available_properties[i].append(descriptions[mode])
+                
+            self.available_properties.append(properties)
+            self.properties_descriptions.append(descriptions)
 
             i = i + 1

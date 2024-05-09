@@ -24,3 +24,7 @@ class Model(Substance):
 
 class ParameterMode(AvailableSubstance):
     data: list[Substance]
+
+
+class Property(BaseModel):
+    data: list[str]
