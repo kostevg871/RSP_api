@@ -23,7 +23,7 @@ class Model(Substance):
 
 # запрос 3
 class ParameterMode(AvailableSubstance):
-    data: list[Substance]
+    data: list[str]
 
 
 class Property(BaseModel):
@@ -37,7 +37,6 @@ class Params(BaseModel):
     dimensionId: str
 
 class PropertyTableRequest(BaseModel):
-
     substanceId: str # id выбранного вещества
     modeId: str # id выбранного режима
     params: Params
