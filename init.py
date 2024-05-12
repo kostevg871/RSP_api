@@ -1,4 +1,4 @@
-from libs import rsp
+import rsp
 
 
 class data:

@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from init import InitRSP
 from schemas import *
 
-import libs.rsp as rsp
+import rsp
 
 
 app = FastAPI(
