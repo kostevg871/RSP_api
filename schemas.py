@@ -50,8 +50,12 @@ class PropertyTableRequest(BaseModel):
 class PropertyRowDataResponse(BaseModel):
     dimensionId: str
     property: str
-    value: str
+    value: float
 
 
 class PropertyRowTableResponse(BaseModel):
     data: PropertyRowDataResponse
+
+    
+class PropertyTableResponse(BaseModel):
+    data: dict[str, float]
