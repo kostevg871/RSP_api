@@ -56,21 +56,6 @@ class InitRSP:
             rsp.info.getSubstanceInfo(
                 self.substances_objects[i], self.substances_info[i])
 
-            # # получаем информацию о доступных режимах вычиления для данного вещества
-            # modes = rsp.VectorString()
-            # self.substances_info[i].getCalcModesInfo(modes)
-            # self.substances_calc_modes_id.append(modes)
-
-            # mode_descriptions = rsp.info.InfoTable()
-            # self.substances_info[i].getModeDecomposition(mode_descriptions)
-
-            # self.substances_calc_modes_descriptions.append(mode_descriptions)
-
-            # # заполняем список объектов для getCalcModesInfo
-            # self.data_get_calc_modes_info.append([])
-            # for j in range(len(modes)):
-            #     self.data_get_calc_modes_info[i].append(data(modes[j], mode_descriptions[modes[j]]))
-
             # объявляем информационную таблицу для литералов свойств (ассоциативный массив,
             # в котором ключ - литерал режима вычисления, а значение - соответствуюющий массив
             # доступных для вычисления свойств)
@@ -102,11 +87,13 @@ class InitRSP:
                     list(self.available_properties[i][str(mode)]),
                     list(self.properties_descriptions[i][str(mode)])
                 ))
-
-            # # массив для getPropertiesLists
-            # self.data_get_properties_lists.append([])
-            # for property, description in zip(self.available_properties[i], self.properties_descriptions[i]):
-            #      self.data_get_properties_lists[i].append(data(str(property),str(description)))
+                # убираем из списка доступных свойств производные, потому что для них свой запрос
+                if 'DZDXY' in self.properties[i][str(mode)].keys():
+                    del self.properties[i][str(mode)]['DZDXY']
+                if 'DZDXYSS' in self.properties[i][str(mode)].keys():
+                    del self.properties[i][str(mode)]['DZDXYSS']
+                if 'DZDXYSW' in self.properties[i][str(mode)].keys():
+                    del self.properties[i][str(mode)]['DZDXYSW']
 
             # режимы вычисления
             self.substances_calc_modes_id.append([])

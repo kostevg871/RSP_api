@@ -44,6 +44,23 @@ def get_properties_table(request: PropertyTableRequest) -> PropertyRowTableRespo
         {
             "dimensionId": "SI",
             "property": str(app.substaneces_objects_globals.properties[int(request.substanceId)][str(request.modeId)][request.params.propertyId]),
-            "value": str(val)
+            "value": val
         }
     }
+
+@app.post("/getPropertiesTable", response_model=PropertyTableResponse, description="Запрос для получения таблицы значений по каждому параметру")
+def get_properties_table(substanceId: str, modeId: str, parameters: list[float]) -> PropertyTableResponse:
+    results = dict(zip(
+        app.substaneces_objects_globals.properties[int(substanceId)][str(modeId)], 
+        [None] * len(app.substaneces_objects_globals.properties[int(substanceId)][str(modeId)])))
+    for prop in app.substaneces_objects_globals.properties[int(substanceId)][str(modeId)]:
+        results[str(prop)] = rsp.callProperty(
+            app.substaneces_objects_globals.substances_objects[int(substanceId)],
+            prop,
+            modeId,
+            parameters
+        )
+
+    print(results)
+
+    return {"data": results}
