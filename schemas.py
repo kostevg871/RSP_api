@@ -1,3 +1,4 @@
+from typing import Tuple
 from pydantic import BaseModel
 
 # Схемы ответов
@@ -17,34 +18,40 @@ class AvailableSubstance(BaseModel):
 # Схема расчета
 
 
-class Model(Substance):
+class ModelCalcInfo(BaseModel):
     value: str
-    label: str
+    label: list[str]
+
 
 # запрос 3
+
+
 class ParameterMode(AvailableSubstance):
-    data: list[str]
+    data: list[ModelCalcInfo]
 
 
 class Property(BaseModel):
-    data: list[str]
+    data: dict[str, str]
 
 
-# ~~~ жесть для запроса 4
+# Для запроса 4
 class Params(BaseModel):
     propertyId: str
     value: list[float]
     dimensionId: str
 
+
 class PropertyTableRequest(BaseModel):
-    substanceId: str # id выбранного вещества
-    modeId: str # id выбранного режима
+    substanceId: str  # id выбранного вещества
+    modeId: str  # id выбранного режима
     params: Params
 
-class PropertyTableResponse(BaseModel):
-    propertyId: str
-    value: str
-    dimensionId: str
 
-# class PropertyTable(BaseModel):
-#         data: PropertyTableResponse
+class PropertyRowDataResponse(BaseModel):
+    dimensionId: str
+    property: str
+    value: str
+
+
+class PropertyRowTableResponse(BaseModel):
+    data: PropertyRowDataResponse
