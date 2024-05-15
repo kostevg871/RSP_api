@@ -4,6 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Evgeniy <kostyrkoevgeniy@yandex.ru>"]
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.10.12"
@@ -17,5 +18,6 @@ setuptools = "^69.5.1"
 
 
 [build-system]
-requires = ["poetry-core"]
+
+requires = ["poetry-core", "setuptools", "wheels", "setuptools-cpp"]
 build-backend = "poetry.core.masonry.api"
