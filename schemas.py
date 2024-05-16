@@ -56,6 +56,6 @@ class PropertyRowDataResponse(BaseModel):
 class PropertyRowTableResponse(BaseModel):
     data: PropertyRowDataResponse
 
-    
+
 class PropertyTableResponse(BaseModel):
     data: dict[str, float]
