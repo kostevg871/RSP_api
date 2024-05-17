@@ -1,101 +1,14 @@
-import re
-from typing import Union
 
-from fastapi import APIRouter, FastAPI, HTTPException
+from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import EmailStr, field_validator
-from sqlalchemy import Boolean, Column, String
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker, declarative_base
-from sqlalchemy.dialects.postgresql import UUID
 import uvicorn
-import settings
+from api.handlers.users.main import user_router
 
-import uuid
 
 from init import InitRSP
 from schemas import *
 
 import rsp
-
-
-# db
-
-engine = create_async_engine(settings.REAL_DATA_BASE, future=True, echo=True)
-
-async_session = sessionmaker(
-    engine, expire_on_commit=False, class_=AsyncSession)
-
-
-# db models
-
-Base = declarative_base()
-
-
-class User(Base):
-    __tablename__ = "users"
-
-    user_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    name = Column(String, nullable=False)
-    surname = Column(String, nullable=False)
-    email = Column(String, nullable=False, unique=True)
-    is_active = Column(Boolean(), default=True)
-
-# interaction with database in bussines context
-
-
-class UserDAL:
-    "Data Access Layer for operating user info"
-
-    def __init__(self, db_session: AsyncSession):
-        self.db_session = db_session
-
-    async def create_user(self, name: str, surname: str, email: str) -> User:
-        new_user = User(name=name, surname=surname, email=email,)
-        self.db_session.add(new_user)
-        await self.db_session.flush()
-        return new_user
-
-
-# api models
-
-LETTER_MATCH_PATTERN = re.compile(r"^[а-яА-Яa-zA-Z\-]+$")
-
-
-class TunedModel(BaseModel):
-    class Config:
-        """pydantic to convert even non dict obj to json"""
-
-        from_attributes = True
-
-
-class ShowUser(TunedModel):
-    user_id: uuid.UUID
-    name: str
-    surname: str
-    email: EmailStr
-    is_active: bool
-
-
-class UserCreate(BaseModel):
-    name: str
-    surname: str
-    email: EmailStr
-
-    @field_validator("name")
-    def validate_name(cls, value):
-        if not LETTER_MATCH_PATTERN.match(value):
-            raise HTTPException(
-                status_code=422, detail="Name should contains only letters"
-            )
-        return value
-
-    def validate_surname(cls, value):
-        if not LETTER_MATCH_PATTERN.match(value):
-            raise HTTPException(
-                status_code=422, detail="Surname should contains only letters"
-            )
-        return value
 
 
 # api
@@ -173,32 +86,6 @@ def get_properties_table(substanceId: str, modeId: str, parameters: list[float])
     print(results)
 
     return {"data": results}
-
-
-user_router = APIRouter()
-
-
-async def _create_new_user(body: UserCreate) -> ShowUser:
-    async with async_session() as session:
-        async with session.begin():
-            user_dal = UserDAL(session)
-            user = await user_dal.create_user(
-                name=body.name,
-                surname=body.surname,
-                email=body.email,
-            )
-            return ShowUser(
-                user_id=user.user_id,
-                name=user.name,
-                surname=user.surname,
-                email=user.email,
-                is_active=user.is_active,
-            )
-
-
-@user_router.post("/user", response_model=ShowUser)
-async def create_user(body: UserCreate) -> ShowUser:
-    return await _create_new_user(body)
 
 
 main_api_router = APIRouter()
