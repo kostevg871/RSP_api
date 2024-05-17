@@ -187,7 +187,6 @@ async def _create_new_user(body: UserCreate) -> ShowUser:
                 surname=body.surname,
                 email=body.email,
             )
-            print(user)
             return ShowUser(
                 user_id=user.user_id,
                 name=user.name,
