@@ -1,6 +1,9 @@
-from typing import Tuple
+from fastapi import Query
+from typing_extensions import Annotated
 from pydantic import BaseModel
 
+
+from init import InitRSP
 # Схемы ответов
 # схема вещества
 
@@ -36,13 +39,16 @@ class Property(BaseModel):
 
 # Для запроса 4
 class Params(BaseModel):
-    propertyId: str
+    property: str
     value: list[float]
     dimensionId: str
 
 
+init = InitRSP()
+
+
 class PropertyTableRequest(BaseModel):
-    substanceId: str  # id выбранного вещества
+    substanceId: int  # id выбранного вещества
     modeId: str  # id выбранного режима
     params: Params
 
@@ -56,6 +62,6 @@ class PropertyRowDataResponse(BaseModel):
 class PropertyRowTableResponse(BaseModel):
     data: PropertyRowDataResponse
 
-    
+
 class PropertyTableResponse(BaseModel):
     data: dict[str, float]
