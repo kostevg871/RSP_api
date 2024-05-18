@@ -721,13 +721,14 @@ files = []
 develop = false
 
 [package.extras]
+build = ["cmake (>=3.14)"]
 test = ["pytest (>=6.0)"]
 
 [package.source]
 type = "git"
 url = "git+ssh://git@github-librsp/fiztexlabs/librsp.git"
 reference = "HEAD"
-resolved_reference = "f9af204eebb2f40954959acc76b158b86f7e26ef"
+resolved_reference = "be4b6e0d2f697a75651fb4a8bb036f409aa8d090"
 
 [[package]]
 name = "setuptools"
