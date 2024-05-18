@@ -60,29 +60,20 @@ def get_properties_table_row(request: PropertyTableRequest) -> PropertyRowTableR
     property = request.params.property.upper()
     if request.substanceId < 0 or request.substanceId > count_substance-1:
         raise HTTPException(status_code=422, detail=str(request.substanceId) + " be in the range from 0 to " +
-                            str(count_substance))
+                            str(count_substance-1))
 
     if mode not in app.substaneces_objects_globals.properties[request.substanceId]:
         raise HTTPException(status_code=422, detail="mode=" +
                             mode + " not in substance")
-    if not (len(request.params.value) == 2):
-        raise HTTPException(
-            status_code=422, detail="parameters must contain 2 parameters pressure or temperature")
     if not property in app.substaneces_objects_globals.properties[request.substanceId][mode]:
         raise HTTPException(status_code=422, detail="property=" +
                             property + " not in substance")
-     # ! добавить условия при которых давление или температура неверны
-        # ! библиотеки ошибка обьект я так понял нет таких функций в библиотеке{
-#  "substanceId":3,
-#  "modeId": "pt",
-#  "params": {
-#    "property": "d",
-#    "value": [
-#      130000, 400
-#    ],
-#    "dimensionId": "1"
-#  }
-# }
+    params = app.substaneces_objects_globals.mode_descriptions[
+        request.substanceId][mode]
+
+    if not (len(request.params.value) == len(params)):
+        raise HTTPException(
+            status_code=422, detail="parameters must contain " + str(len(params)) + " parameters " + str(list(params))[1: -1])
     try:
         val = rsp.callProperty(
             app.substaneces_objects_globals.substances_objects[
@@ -104,18 +95,19 @@ def get_properties_table_row(request: PropertyTableRequest) -> PropertyRowTableR
     }
 
 
-@app.post("/getPropertiesTable", response_model=PropertyTableResponse, description="Запрос для получения таблицы значений по каждому параметру")
+@ app.post("/getPropertiesTable", response_model=PropertyTableResponse, description="Запрос для получения таблицы значений по каждому параметру")
 def get_properties_table(substanceId: Annotated[int, Query(ge=0, lt=len(app.substaneces_objects_globals.data_get_substances_list))],
                          modeId: str, parameters: list[float]) -> PropertyTableResponse:
     mode = modeId.upper()
     if mode not in app.substaneces_objects_globals.properties[substanceId]:
         raise HTTPException(status_code=422, detail="mode=" +
                             mode + " not in substance")
-    if not (len(parameters) == 2):
-        raise HTTPException(
-            status_code=422, detail="parameters must contain 2 parameters pressure or temperature")
 
-       # ! добавить условия при которых давление или температура неверны
+    params = app.substaneces_objects_globals.mode_descriptions[
+        substanceId][mode]
+    if not (len(parameters) == len(params)):
+        raise HTTPException(
+            status_code=422, detail="parameters must contain " + str(len(params)) + " parameters " + str(list(params))[1: -1])
     try:
         results = dict(zip(
             app.substaneces_objects_globals.properties[int(
