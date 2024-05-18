@@ -41,6 +41,9 @@ class InitRSP:
 
         self.properties = []
 
+        # список словарей режимов вычисления по каждому веществу (ключ - режим, значение - массив с названиями параметров)
+        self.mode_descriptions = []
+
         # список пояснений для доступных свойств для каждого режима вычисления по веществам
         self.properties_descriptions = []
 
@@ -69,10 +72,10 @@ class InitRSP:
             # объявляем информационную таблицу для пояснений литералов режимов вычисления (ассоциативный массив,
             # в котором ключ - литерал режима вычисления, а значение - пояснение соответствующих параметров: для
             # "PT": ["Pressure", "Temperature"]).
-            mode_descriptions = rsp.info.InfoTable()
+            self.mode_descriptions.append(rsp.info.InfoTable())
 
             self.substances_info[i].getInfoTables(
-                properties, prop_descriptions, mode_descriptions)
+                properties, prop_descriptions, self.mode_descriptions[i])
 
             # доступные свойства
             self.available_properties.append(properties)
@@ -81,7 +84,7 @@ class InitRSP:
             self.properties_descriptions.append(prop_descriptions)
 
             self.properties.append({})
-            for mode in mode_descriptions.keys():
+            for mode in self.mode_descriptions[i].keys():
                 # self.properties[i] = {}
                 self.properties[i][str(mode)] = dict(zip(
                     list(self.available_properties[i][str(mode)]),
@@ -97,12 +100,12 @@ class InitRSP:
 
             # режимы вычисления
             self.substances_calc_modes_id.append([])
-            for mode_id in mode_descriptions.keys():
+            for mode_id in self.mode_descriptions[i].keys():
                 self.substances_calc_modes_id[i].append(str(mode_id))
 
             # пояснения к режимам вычисления
             self.substances_calc_modes_descriptions.append([])
-            for descriptions in mode_descriptions.values():
+            for descriptions in self.mode_descriptions[i].values():
                 self.substances_calc_modes_descriptions[i].append([])
                 for description in descriptions:
                     self.substances_calc_modes_descriptions[i][-1].append(
