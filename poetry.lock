@@ -713,7 +713,7 @@ jupyter = ["ipywidgets (>=7.5.1,<9)"]
 
 [[package]]
 name = "rsp"
-version = "2.0.3"
+version = "2.0.4"
 description = "Real Substance Properties"
 optional = false
 python-versions = ">=3.7"
@@ -727,7 +727,7 @@ test = ["pytest (>=6.0)"]
 type = "git"
 url = "git+ssh://git@github-librsp/fiztexlabs/librsp.git"
 reference = "HEAD"
-resolved_reference = "19b668fccd354b9b16e10a37f8ff9d872e07acdb"
+resolved_reference = "f9af204eebb2f40954959acc76b158b86f7e26ef"
 
 [[package]]
 name = "setuptools"
