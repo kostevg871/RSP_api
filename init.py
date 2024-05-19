@@ -1,5 +1,31 @@
+from fastapi import HTTPException
 import rsp
 
+def rsp_callProperty(
+        substance: rsp.Substance,
+        property: str,
+        mode: str,
+        values: list[float],
+        der_literals: list[str] = [""]
+):
+    val = 0.
+
+    try:
+        val = float(rsp.callProperty(
+            substance,
+            property,
+            mode,
+            values,
+            rsp.VectorString(der_literals)
+        ))
+    except RuntimeError as e:
+        raise HTTPException(
+            status_code=500, detail='RSP core error: {}'.format(e))
+    # except Exception as e:
+        # raise HTTPException(
+            # status_code=500, detail='Unknown RSP core error: {}'.format(e))
+    
+    return val
 
 class data():
     def __init__(self, value: str, label: str):

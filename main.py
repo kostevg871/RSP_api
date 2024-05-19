@@ -5,10 +5,12 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
 
-from init import InitRSP
+from init import InitRSP, rsp_callProperty
 from schemas import *
 
 import rsp
+
+import uvicorn
 
 
 app = FastAPI(
@@ -74,16 +76,13 @@ def get_properties_table_row(request: PropertyTableRequest) -> PropertyRowTableR
     if not (len(request.params.value) == len(params)):
         raise HTTPException(
             status_code=422, detail="parameters must contain " + str(len(params)) + " parameters " + str(list(params))[1: -1])
-    try:
-        val = rsp.callProperty(
-            app.substaneces_objects_globals.substances_objects[
-                request.substanceId],
-            property,
-            mode,
-            request.params.value)
-    except RuntimeError as e:
-        raise HTTPException(
-            status_code=500, detail='InitRSP error: {}'.format(e))
+
+    val = rsp_callProperty(
+        app.substaneces_objects_globals.substances_objects[
+            request.substanceId],
+        property,
+        mode,
+        request.params.value)
 
     return {
         "data":
@@ -108,21 +107,28 @@ def get_properties_table(substanceId: Annotated[int, Query(ge=0, lt=len(app.subs
     if not (len(parameters) == len(params)):
         raise HTTPException(
             status_code=422, detail="parameters must contain " + str(len(params)) + " parameters " + str(list(params))[1: -1])
-    try:
-        results = dict(zip(
-            app.substaneces_objects_globals.properties[int(
-                substanceId)][mode],
-            [None] * len(app.substaneces_objects_globals.properties[int(substanceId)][mode])))
-        for prop in app.substaneces_objects_globals.properties[int(substanceId)][mode]:
-            results[str(prop)] = rsp.callProperty(
-                app.substaneces_objects_globals.substances_objects[int(
-                    substanceId)],
-                prop,
-                mode,
-                parameters
-            )
-    except RuntimeError as e:
-        raise HTTPException(
-            status_code=500, detail='InitRSP error: {}'.format(e))
 
-    return {"data": results}
+    results = dict(zip(
+        app.substaneces_objects_globals.properties[int(
+            substanceId)][mode],
+        [None] * len(app.substaneces_objects_globals.properties[int(substanceId)][mode])))
+    for prop in app.substaneces_objects_globals.properties[int(substanceId)][mode]:
+        results[str(prop)] = rsp_callProperty(
+            app.substaneces_objects_globals.substances_objects[int(
+                substanceId)],
+            prop,
+            mode,
+            parameters
+        )
+
+    try:
+        response: PropertyTableResponse = {"data": results}
+    except ValueError as e:
+        raise HTTPException(
+            status_code=500, detail='Unknown error: {}'.format(e))
+    
+    return response
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8000)

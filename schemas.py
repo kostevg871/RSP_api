@@ -23,7 +23,7 @@ class AvailableSubstance(BaseModel):
 
 class ModelCalcInfo(BaseModel):
     value: str
-    label: list[str]
+    filter_params: list[str]
 
 
 # запрос 3
@@ -65,3 +65,4 @@ class PropertyRowTableResponse(BaseModel):
 
 class PropertyTableResponse(BaseModel):
     data: dict[str, float]
+        
