@@ -1,6 +1,7 @@
 from fastapi import HTTPException
 import rsp
 
+
 def rsp_callProperty(
         substance: rsp.Substance,
         property: str,
@@ -23,14 +24,15 @@ def rsp_callProperty(
             status_code=500, detail='RSP core error: {}'.format(e))
     # except Exception as e:
         # raise HTTPException(
-            # status_code=500, detail='Unknown RSP core error: {}'.format(e))
-    
+        # status_code=500, detail='Unknown RSP core error: {}'.format(e))
+
     return val
 
+
 class data():
-    def __init__(self, value: str, label: str):
+    def __init__(self, value: str, filter_params: str):
         self.value = value
-        self.label = label
+        self.filter_params = filter_params
 
 
 class InitRSP:
