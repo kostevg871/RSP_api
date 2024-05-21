@@ -29,10 +29,16 @@ def rsp_callProperty(
     return val
 
 
-class data():
+class data_get_calc_modes_info():
     def __init__(self, value: str, filter_params: str):
         self.value = value
         self.filter_params = filter_params
+
+
+class data_get_available_substances():
+    def __init__(self, value: str, label: str):
+        self.value = value
+        self.label = label
 
 
 class InitRSP:
@@ -80,7 +86,8 @@ class InitRSP:
             self.substances_objects.append(rsp.createSubstance(subst))
 
             # заполняем список объектов для getAvailableSubstances
-            self.data_get_substances_list.append(data(str(i), subst))
+            self.data_get_substances_list.append(
+                data_get_available_substances(str(i), subst))
 
             # получаем информацию о текущем веществе (список доступных режимов вычисления и свойств)
             self.substances_info.append(rsp.info.SubstanceInfo())
@@ -142,5 +149,5 @@ class InitRSP:
             # массив для getCalcModesInfo
             self.data_get_calc_modes_info.append([])
             for j in range(len(self.substances_calc_modes_id[i])):
-                self.data_get_calc_modes_info[i].append(data(str(self.substances_calc_modes_id[i][j]),
-                                                             self.substances_calc_modes_descriptions[i][j]))
+                self.data_get_calc_modes_info[i].append(data_get_calc_modes_info(str(self.substances_calc_modes_id[i][j]),
+                                                                                 self.substances_calc_modes_descriptions[i][j]))
