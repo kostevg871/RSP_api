@@ -108,21 +108,36 @@ def get_properties_table(substanceId: Annotated[int, Query(ge=0, lt=len(app.subs
         raise HTTPException(
             status_code=422, detail="parameters must contain " + str(len(params)) + " parameters " + str(list(params))[1: -1])
 
-    results = dict(zip(
-        app.substaneces_objects_globals.properties[int(
-            substanceId)][mode],
-        [None] * len(app.substaneces_objects_globals.properties[int(substanceId)][mode])))
+    # results = dict(zip(
+    #     app.substaneces_objects_globals.properties[int(
+    #         substanceId)][mode],
+    #     [None] * len(app.substaneces_objects_globals.properties[int(substanceId)][mode])))
+    
+    results = []
     for prop in app.substaneces_objects_globals.properties[int(substanceId)][mode]:
-        results[str(prop)] = rsp_callProperty(
-            app.substaneces_objects_globals.substances_objects[int(
-                substanceId)],
-            prop,
-            mode,
-            parameters
+        results.append(
+            PropertyRowDataResponse(
+                dimensionId = "SI",
+                propertyId = str(prop),
+                value = rsp_callProperty(
+                    app.substaneces_objects_globals.substances_objects[int(
+                        substanceId)],
+                    prop,
+                    mode,
+                    parameters
+                )
+            )
         )
+        # results[str(prop)] = rsp_callProperty(
+        #     app.substaneces_objects_globals.substances_objects[int(
+        #         substanceId)],
+        #     prop,
+        #     mode,
+        #     parameters
+        # )
 
     try:
-        response: PropertyTableResponse = {"data": results}
+        response = PropertyTableResponse(data = results)
     except ValueError as e:
         raise HTTPException(
             status_code=500, detail='Unknown error: {}'.format(e))
