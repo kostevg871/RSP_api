@@ -13,6 +13,7 @@ rsp = { git = "git+ssh://git@github-librsp/fiztexlabs/librsp.git" }
 unicorn = { extras = ["standard"], version = "^2.0.1.post1" }
 cmake = "^3.29.3"
 setuptools = "^69.5.1"
+unit-converter = "^1.1.0"
 
 [tool.poetry.group.dev.dependencies]
 

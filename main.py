@@ -5,12 +5,12 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
 
-from init import InitRSP, rsp_callProperty
+from init import InitRSP, rsp_callProperty, property_dim_si
 from schemas import *
 
-import rsp
-
 import uvicorn
+
+from unit_converter.converter import convert, converts
 
 
 app = FastAPI(
@@ -84,12 +84,13 @@ def get_properties_table_row(request: PropertyTableRequest) -> PropertyRowTableR
         mode,
         request.params.value)
 
+    val_dim = converts(str(val) + ' ' + property_dim_si[property], request.params.dimension)
     return {
         "data":
         {
-            "dimensionId": "SI",
-            "property": str(app.substaneces_objects_globals.properties[request.substanceId][mode][property]),
-            "value": val
+            "dimension": request.params.dimension,
+            "propertyId": str(app.substaneces_objects_globals.properties[request.substanceId][mode][property]),
+            "value": float(val_dim)
         }
     }
 
@@ -117,7 +118,7 @@ def get_properties_table(substanceId: Annotated[int, Query(ge=0, lt=len(app.subs
     for prop in app.substaneces_objects_globals.properties[int(substanceId)][mode]:
         results.append(
             PropertyRowDataResponse(
-                dimensionId = "SI",
+                dimension = property_dim_si[prop],
                 propertyId = str(prop),
                 value = rsp_callProperty(
                     app.substaneces_objects_globals.substances_objects[int(

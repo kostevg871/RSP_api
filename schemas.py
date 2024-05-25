@@ -41,7 +41,7 @@ class Property(BaseModel):
 class Params(BaseModel):
     property: str
     value: list[float]
-    dimensionId: str
+    dimension: str
 
 
 init = InitRSP()
@@ -54,7 +54,7 @@ class PropertyTableRequest(BaseModel):
 
 
 class PropertyRowDataResponse(BaseModel):
-    dimensionId: str
+    dimension: str
     propertyId: str
     value: float
 

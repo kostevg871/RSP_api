@@ -920,6 +920,16 @@ files = [
 ]
 
 [[package]]
+name = "unit-converter"
+version = "1.1.0"
+description = "Package for converting quantities in different unit."
+optional = false
+python-versions = "*"
+files = [
+    {file = "unit_converter-1.1.0-py3-none-any.whl", hash = "sha256:c31ca2ae7b64839b2a4b687c1892c80c7253aaee9332fed8c5de7c8a52cb2686"},
+]
+
+[[package]]
 name = "uvicorn"
 version = "0.29.0"
 description = "The lightning-fast ASGI server."
@@ -1160,4 +1170,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10.12"
-content-hash = "1a021b1a71efe2d3583e9622be7ad053ae00909008db44866ccda35ae28d1b36"
+content-hash = "75e6c788135c0e51900594ce73359faec2d0f1a0457748d888b2cbfd28dc1a78"
