@@ -16,7 +16,7 @@ property_dim_si = {
     "W": "m*s^-1",
     "K": "",
     "KINVIS": "m^2*s^-1",
-    "DYNVIS": "Pa*",
+    "DYNVIS": "Pa*s",
     "THERMCOND": "Wt*m^-1",
     "PRANDTLE": "",
     "JOULETHOMPSON": "",
@@ -37,7 +37,7 @@ property_dim_si = {
     "WSS": "m*s^-1",
     "KSS": "",
     "KINVISSS": "m^2*s^-1",
-    "DYNVISSS": "Pa*",
+    "DYNVISSS": "Pa*s",
     "THERMCONDSS": "Wt*m^-1",
     "PRANDTLESS": "",
     "JOULETHOMPSONSS": "",
@@ -54,10 +54,27 @@ property_dim_si = {
     "WSW": "m*s^-1",
     "KSW": "",
     "KINVISSW": "m^2*s^-1",
-    "DYNVISSW": "Pa*",
+    "DYNVISSW": "Pa*s",
     "THERMCONDSW": "Wt*m^-1",
     "PRANDTLESW": "",
     "JOULETHOMPSONSW": "",
+
+    "DS": "kg*m^-3",
+    "VS": "m^3*kg^-1",
+    "US": "J*kg^-1",
+    "SS": "J*kg^-1*K^-1",
+    "HS": "J*kg^-1",
+    "GS": "J*kg^-1",
+    "FS": "J*kg^-1",
+    "CVS": "J*kg^-1*K^-1",
+    "CPS": "J*kg^-1*K^-1",
+    "WS": "m*s^-1",
+    "KS": "",
+    "KINVISS": "m^2*s^-1",
+    "DYNVISS": "Pa*s",
+    "THERMCONDS": "Wt*m^-1",
+    "PRANDTLES": "",
+    "JOULETHOMPSONS": "",
 }
 
 
@@ -191,6 +208,8 @@ class InitRSP:
                     del self.properties[i][str(mode)]['DZDXYSS']
                 if 'DZDXYSW' in self.properties[i][str(mode)].keys():
                     del self.properties[i][str(mode)]['DZDXYSW']
+                if 'DZDXYS' in self.properties[i][str(mode)].keys():
+                    del self.properties[i][str(mode)]['DZDXYS']
 
             # режимы вычисления
             self.substances_calc_modes_id.append([])

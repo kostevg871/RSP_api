@@ -729,7 +729,7 @@ test = ["pytest (>=6.0)"]
 type = "git"
 url = "git+ssh://git@github-librsp/fiztexlabs/librsp.git"
 reference = "HEAD"
-resolved_reference = "89e8c24f407a986c6a671dfe1d231b285898e8c8"
+resolved_reference = "b6293a0a6f07f5df43acae38f01a9bbb35b129c3"
 
 [[package]]
 name = "setuptools"
