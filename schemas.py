@@ -4,6 +4,8 @@ from pydantic import BaseModel
 
 
 from init import InitRSP
+
+init = InitRSP()
 # Схемы ответов
 # схема вещества
 
@@ -24,6 +26,8 @@ class AvailableSubstance(BaseModel):
 class ModelCalcInfo(BaseModel):
     value: str
     filter_params: list[str]
+    param_literals: list[str]
+    param_dimensions: list[str]
 
 
 # запрос 3
@@ -38,19 +42,16 @@ class Property(BaseModel):
 
 
 # Для запроса 4
-class Params(BaseModel):
+class RowParams(BaseModel):
     property: str
-    value: list[float]
-    dimension: str
+    property_dimension: str
+    param_values: list[float]
+    param_dimensions: list[str]
 
-
-init = InitRSP()
-
-
-class PropertyTableRequest(BaseModel):
+class PropertyRowTableRequest(BaseModel):
     substanceId: int  # id выбранного вещества
     modeId: str  # id выбранного режима
-    params: Params
+    params: RowParams
 
 
 class PropertyRowDataResponse(BaseModel):
@@ -62,6 +63,15 @@ class PropertyRowDataResponse(BaseModel):
 class PropertyRowTableResponse(BaseModel):
     data: PropertyRowDataResponse
 
+# Для запроса 5
+class TableParams(BaseModel):
+    param_values: list[float]
+    param_dimensions: list[str]
+
+class PropertyTableRequest(BaseModel):
+    substanceId: int  # id выбранного вещества
+    modeId: str  # id выбранного режима
+    params: TableParams
 
 class PropertyTableResponse(BaseModel):
     data: list[PropertyRowDataResponse]

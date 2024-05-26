@@ -55,7 +55,7 @@ def get_calc_model_substanse(substanceId: Annotated[int, Query(ge=0, lt=len(app.
 
 
 @app.post("/getPropertiesTableRow", response_model=PropertyRowTableResponse, description="Запрос для получения строки таблицы по параметру")
-def get_properties_table_row(request: PropertyTableRequest) -> PropertyRowTableResponse:
+def get_properties_table_row(request: PropertyRowTableRequest) -> PropertyRowTableResponse:
     count_substance = len(
         app.substaneces_objects_globals.data_get_substances_list)
     mode = request.modeId.upper()
@@ -73,22 +73,27 @@ def get_properties_table_row(request: PropertyTableRequest) -> PropertyRowTableR
     params = app.substaneces_objects_globals.mode_descriptions[
         request.substanceId][mode]
 
-    if not (len(request.params.value) == len(params)):
+    if not (len(request.params.param_values) == len(params)):
         raise HTTPException(
             status_code=422, detail="parameters must contain " + str(len(params)) + " parameters " + str(list(params))[1: -1])
 
+    params_in_SI = [
+        float(convert(str(v) + ' ' + d, property_dim_si[l])) for v,d,l in zip(
+            request.params.param_values, 
+            request.params.param_dimensions, 
+            app.substaneces_objects_globals.substances_calc_modes_literals[request.substanceId][mode])]
     val = rsp_callProperty(
         app.substaneces_objects_globals.substances_objects[
             request.substanceId],
         property,
         mode,
-        request.params.value)
+        params_in_SI)
 
-    val_dim = converts(str(val) + ' ' + property_dim_si[property], request.params.dimension)
+    val_dim = float(converts(str(val) + ' ' + property_dim_si[property], request.params.property_dimension))
     return {
         "data":
         {
-            "dimension": request.params.dimension,
+            "dimension": request.params.property_dimension,
             "propertyId": str(app.substaneces_objects_globals.properties[request.substanceId][mode][property]),
             "value": float(val_dim)
         }
@@ -96,36 +101,42 @@ def get_properties_table_row(request: PropertyTableRequest) -> PropertyRowTableR
 
 
 @ app.post("/getPropertiesTable", response_model=PropertyTableResponse, description="Запрос для получения таблицы значений по каждому параметру")
-def get_properties_table(substanceId: Annotated[int, Query(ge=0, lt=len(app.substaneces_objects_globals.data_get_substances_list))],
-                         modeId: str, parameters: list[float]) -> PropertyTableResponse:
-    mode = modeId.upper()
-    if mode not in app.substaneces_objects_globals.properties[substanceId]:
+def get_properties_table(request: PropertyTableRequest) -> PropertyTableResponse:
+    count_substance = len(
+        app.substaneces_objects_globals.data_get_substances_list)
+    if request.substanceId < 0 or request.substanceId > count_substance-1:
+        raise HTTPException(status_code=422, detail=str(request.substanceId) + " be in the range from 0 to " +
+                            str(count_substance-1))
+    
+    mode = request.modeId.upper()
+
+    if mode not in app.substaneces_objects_globals.properties[request.substanceId]:
         raise HTTPException(status_code=422, detail="mode=" +
                             mode + " not in substance")
-
     params = app.substaneces_objects_globals.mode_descriptions[
-        substanceId][mode]
-    if not (len(parameters) == len(params)):
+        request.substanceId][mode]
+
+    if not (len(request.params.param_values) == len(params)):
         raise HTTPException(
             status_code=422, detail="parameters must contain " + str(len(params)) + " parameters " + str(list(params))[1: -1])
-
-    # results = dict(zip(
-    #     app.substaneces_objects_globals.properties[int(
-    #         substanceId)][mode],
-    #     [None] * len(app.substaneces_objects_globals.properties[int(substanceId)][mode])))
     
     results = []
-    for prop in app.substaneces_objects_globals.properties[int(substanceId)][mode]:
+    params_in_SI = [
+        float(convert(str(v) + ' ' + d, property_dim_si[l])) for v,d,l in zip(
+            request.params.param_values, 
+            request.params.param_dimensions, 
+            app.substaneces_objects_globals.substances_calc_modes_literals[request.substanceId][mode])]
+    for prop in app.substaneces_objects_globals.properties[int(request.substanceId)][mode].keys():
         results.append(
             PropertyRowDataResponse(
                 dimension = property_dim_si[prop],
                 propertyId = str(prop),
                 value = rsp_callProperty(
                     app.substaneces_objects_globals.substances_objects[int(
-                        substanceId)],
+                        request.substanceId)],
                     prop,
                     mode,
-                    parameters
+                    params_in_SI
                 )
             )
         )

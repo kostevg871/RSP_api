@@ -106,9 +106,11 @@ def rsp_callProperty(
 
 
 class data_get_calc_modes_info():
-    def __init__(self, value: str, filter_params: str):
+    def __init__(self, value: str, filter_params: list[str], param_literals: list[str], param_dimensions: list[str]):
         self.value = value
         self.filter_params = filter_params
+        self.param_literals = param_literals
+        self.param_dimensions = param_dimensions
 
 
 class data_get_available_substances():
@@ -127,6 +129,12 @@ class InitRSP:
 
         # список доступных режимов вычисления для каждого вещества
         self.substances_calc_modes_id = []
+
+        # список декомпозиция аргументов ('PH' -> ['P', 'H'])
+        self.substances_calc_modes_literals = []
+
+        # список размерностей для аргументов (в CИ)
+        self.substances_calc_modes_dimensions = []
 
         # список пояснений к режимам вычисления
         self.substances_calc_modes_descriptions = []
@@ -153,6 +161,9 @@ class InitRSP:
 
         # список словарей режимов вычисления по каждому веществу (ключ - режим, значение - массив с названиями параметров)
         self.mode_descriptions = []
+
+        # список словарей, содержащих декомпозицию литералов для каждого режима вычисления
+        self.mode_decompositions = []
 
         # список пояснений для доступных свойств для каждого режима вычисления по веществам
         self.properties_descriptions = []
@@ -187,6 +198,10 @@ class InitRSP:
 
             self.substances_info[i].getInfoTables(
                 properties, prop_descriptions, self.mode_descriptions[i])
+            
+            # получаем декомпозицию режимов на литералы для данного вещества
+            self.mode_decompositions.append(rsp.info.InfoTable())
+            self.substances_info[i].getModeDecomposition(self.mode_decompositions[i])
 
             # доступные свойства
             self.available_properties.append(properties)
@@ -211,10 +226,16 @@ class InitRSP:
                 if 'DZDXYS' in self.properties[i][str(mode)].keys():
                     del self.properties[i][str(mode)]['DZDXYS']
 
-            # режимы вычисления
             self.substances_calc_modes_id.append([])
+            self.substances_calc_modes_literals.append({})
+            self.substances_calc_modes_dimensions.append({})
             for mode_id in self.mode_descriptions[i].keys():
+                # режимы вычисления
                 self.substances_calc_modes_id[i].append(str(mode_id))
+                # декомпозиция режимов вычисления на литералы
+                self.substances_calc_modes_literals[i][str(mode_id)] = [lit for lit in self.mode_decompositions[i][str(mode_id)]]
+                # размерности для аргументов
+                self.substances_calc_modes_dimensions[i][str(mode_id)] = [property_dim_si[lit] for lit in self.mode_decompositions[i][str(mode_id)]]
 
             # пояснения к режимам вычисления
             self.substances_calc_modes_descriptions.append([])
@@ -224,8 +245,11 @@ class InitRSP:
                     self.substances_calc_modes_descriptions[i][-1].append(
                         str(description))
 
+
             # массив для getCalcModesInfo
             self.data_get_calc_modes_info.append([])
             for j in range(len(self.substances_calc_modes_id[i])):
                 self.data_get_calc_modes_info[i].append(data_get_calc_modes_info(str(self.substances_calc_modes_id[i][j]),
-                                                                                 self.substances_calc_modes_descriptions[i][j]))
+                                                                                 self.substances_calc_modes_descriptions[i][j],
+                                                                                 self.substances_calc_modes_literals[i][str(self.substances_calc_modes_id[i][j])],
+                                                                                 self.substances_calc_modes_dimensions[i][str(self.substances_calc_modes_id[i][j])]))
