@@ -1,6 +1,82 @@
 from fastapi import HTTPException
 import rsp
 
+property_dim_si = {
+    "T": "K",
+    "P": "Pa",
+    "D": "kg*m^-3",
+    "V": "m^3*kg^-1",
+    "U": "J*kg^-1",
+    "S": "J*kg^-1*K^-1",
+    "H": "J*kg^-1",
+    "G": "J*kg^-1",
+    "F": "J*kg^-1",
+    "CV": "J*kg^-1*K^-1",
+    "CP": "J*kg^-1*K^-1",
+    "W": "m*s^-1",
+    "K": "",
+    "KINVIS": "m^2*s^-1",
+    "DYNVIS": "Pa*s",
+    "THERMCOND": "Wt*m^-1",
+    "PRANDTLE": "",
+    "JOULETHOMPSON": "",
+    "X": "",
+    
+    "TS": "K",
+    "PS": "Pa",
+
+    "DSS": "kg*m^-3",
+    "VSS": "m^3*kg^-1",
+    "USS": "J*kg^-1",
+    "SSS": "J*kg^-1*K^-1",
+    "HSS": "J*kg^-1",
+    "GSS": "J*kg^-1",
+    "FSS": "J*kg^-1",
+    "CVSS": "J*kg^-1*K^-1",
+    "CPSS": "J*kg^-1*K^-1",
+    "WSS": "m*s^-1",
+    "KSS": "",
+    "KINVISSS": "m^2*s^-1",
+    "DYNVISSS": "Pa*s",
+    "THERMCONDSS": "Wt*m^-1",
+    "PRANDTLESS": "",
+    "JOULETHOMPSONSS": "",
+
+    "DSW": "kg*m^-3",
+    "VSW": "m^3*kg^-1",
+    "USW": "J*kg^-1",
+    "SSW": "J*kg^-1*K^-1",
+    "HSW": "J*kg^-1",
+    "GSW": "J*kg^-1",
+    "FSW": "J*kg^-1",
+    "CVSW": "J*kg^-1*K^-1",
+    "CPSW": "J*kg^-1*K^-1",
+    "WSW": "m*s^-1",
+    "KSW": "",
+    "KINVISSW": "m^2*s^-1",
+    "DYNVISSW": "Pa*s",
+    "THERMCONDSW": "Wt*m^-1",
+    "PRANDTLESW": "",
+    "JOULETHOMPSONSW": "",
+
+    "DS": "kg*m^-3",
+    "VS": "m^3*kg^-1",
+    "US": "J*kg^-1",
+    "SS": "J*kg^-1*K^-1",
+    "HS": "J*kg^-1",
+    "GS": "J*kg^-1",
+    "FS": "J*kg^-1",
+    "CVS": "J*kg^-1*K^-1",
+    "CPS": "J*kg^-1*K^-1",
+    "WS": "m*s^-1",
+    "KS": "",
+    "KINVISS": "m^2*s^-1",
+    "DYNVISS": "Pa*s",
+    "THERMCONDS": "Wt*m^-1",
+    "PRANDTLES": "",
+    "JOULETHOMPSONS": "",
+}
+
 
 def rsp_callProperty(
         substance: rsp.Substance,
@@ -132,6 +208,8 @@ class InitRSP:
                     del self.properties[i][str(mode)]['DZDXYSS']
                 if 'DZDXYSW' in self.properties[i][str(mode)].keys():
                     del self.properties[i][str(mode)]['DZDXYSW']
+                if 'DZDXYS' in self.properties[i][str(mode)].keys():
+                    del self.properties[i][str(mode)]['DZDXYS']
 
             # режимы вычисления
             self.substances_calc_modes_id.append([])

@@ -729,7 +729,7 @@ test = ["pytest (>=6.0)"]
 type = "git"
 url = "git+ssh://git@github-librsp/fiztexlabs/librsp.git"
 reference = "HEAD"
-resolved_reference = "89e8c24f407a986c6a671dfe1d231b285898e8c8"
+resolved_reference = "b6293a0a6f07f5df43acae38f01a9bbb35b129c3"
 
 [[package]]
 name = "setuptools"
@@ -917,6 +917,16 @@ files = [
     {file = "unicorn-2.0.1.post1-py2.py3-none-win32.whl", hash = "sha256:9f0e3bbe207a6d2ddd3dff528bf3b2251c8e11d0fb4bab2338dff01475f6f41b"},
     {file = "unicorn-2.0.1.post1-py2.py3-none-win_amd64.whl", hash = "sha256:7145fe448d17b2377b18e08e0521749cf0f94b9d3fe8b67c032bb4c932a21c29"},
     {file = "unicorn-2.0.1.post1.tar.gz", hash = "sha256:7fc69523eb83b4c8abc7cb4410ca21875e066c34b7afe998f59481e830d28e56"},
+]
+
+[[package]]
+name = "unit-converter"
+version = "1.1.0"
+description = "Package for converting quantities in different unit."
+optional = false
+python-versions = "*"
+files = [
+    {file = "unit_converter-1.1.0-py3-none-any.whl", hash = "sha256:c31ca2ae7b64839b2a4b687c1892c80c7253aaee9332fed8c5de7c8a52cb2686"},
 ]
 
 [[package]]
@@ -1160,4 +1170,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10.12"
-content-hash = "1a021b1a71efe2d3583e9622be7ad053ae00909008db44866ccda35ae28d1b36"
+content-hash = "75e6c788135c0e51900594ce73359faec2d0f1a0457748d888b2cbfd28dc1a78"
