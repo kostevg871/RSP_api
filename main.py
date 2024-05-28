@@ -11,6 +11,7 @@ from schemas import *
 import uvicorn
 
 from unit_converter.converter import convert, converts
+from unit_converter.exceptions import *
 
 
 app = FastAPI(
@@ -77,11 +78,18 @@ def get_properties_table_row(request: PropertyRowTableRequest) -> PropertyRowTab
         raise HTTPException(
             status_code=422, detail="parameters must contain " + str(len(params)) + " parameters " + str(list(params))[1: -1])
 
-    params_in_SI = [
-        float(convert(str(v) + ' ' + d, property_dim_si[l])) for v,d,l in zip(
-            request.params.param_values, 
-            request.params.param_dimensions, 
-            app.substaneces_objects_globals.substances_calc_modes_literals[request.substanceId][mode])]
+    try:
+        params_in_SI = [
+            float(convert(str(v) + ' ' + d, property_dim_si[l])) for v,d,l in zip(
+                request.params.param_values, 
+                request.params.param_dimensions, 
+                app.substaneces_objects_globals.substances_calc_modes_literals[request.substanceId][mode])]
+    except UnConsistentUnitsError as e:
+        raise HTTPException(
+            status_code=422, detail='Dimensions error: {}'.format(e))
+    except UnitDoesntExistError as e:
+        raise HTTPException(
+            status_code=422, detail='Dimensions error: {}'.format(e))
     val = rsp_callProperty(
         app.substaneces_objects_globals.substances_objects[
             request.substanceId],
@@ -121,11 +129,20 @@ def get_properties_table(request: PropertyTableRequest) -> PropertyTableResponse
             status_code=422, detail="parameters must contain " + str(len(params)) + " parameters " + str(list(params))[1: -1])
     
     results = []
-    params_in_SI = [
-        float(convert(str(v) + ' ' + d, property_dim_si[l])) for v,d,l in zip(
-            request.params.param_values, 
-            request.params.param_dimensions, 
-            app.substaneces_objects_globals.substances_calc_modes_literals[request.substanceId][mode])]
+
+    try:
+        params_in_SI = [
+            float(convert(str(v) + ' ' + d, property_dim_si[l])) for v,d,l in zip(
+                request.params.param_values, 
+                request.params.param_dimensions, 
+                app.substaneces_objects_globals.substances_calc_modes_literals[request.substanceId][mode])]
+    except UnConsistentUnitsError as e:
+        raise HTTPException(
+            status_code=422, detail='Dimensions error: {}'.format(e))
+    except UnitDoesntExistError as e:
+        raise HTTPException(
+            status_code=422, detail='Dimensions error: {}'.format(e))
+
     for prop in app.substaneces_objects_globals.properties[int(request.substanceId)][mode].keys():
         results.append(
             PropertyRowDataResponse(
