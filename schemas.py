@@ -57,7 +57,7 @@ class PropertyRowTableRequest(BaseModel):
 class PropertyRowDataResponse(BaseModel):
     dimension: str
     propertyId: str
-    value: float
+    value: str | float
 
 
 class PropertyRowTableResponse(BaseModel):

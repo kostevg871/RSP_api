@@ -7,8 +7,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from init import InitRSP, rsp_callProperty, property_dim_si
 from schemas import *
+from math import *
 
 import uvicorn
+
+import rsp
 
 from unit_converter.converter import convert, converts
 from unit_converter.exceptions import *
@@ -80,7 +83,7 @@ def get_properties_table_row(request: PropertyRowTableRequest) -> PropertyRowTab
 
     try:
         params_in_SI = [
-            float(convert(str(v) + ' ' + d, property_dim_si[l])) for v,d,l in zip(
+            copysign(float(convert(str(abs(v)) + ' ' + d, property_dim_si[l])), v) for v,d,l in zip(
                 request.params.param_values, 
                 request.params.param_dimensions, 
                 app.substaneces_objects_globals.substances_calc_modes_literals[request.substanceId][mode])]
@@ -97,7 +100,7 @@ def get_properties_table_row(request: PropertyRowTableRequest) -> PropertyRowTab
         mode,
         params_in_SI)
 
-    val_dim = float(converts(str(val) + ' ' + property_dim_si[property], request.params.property_dimension))
+    val_dim = copysign(float(converts(str(abs(val)) + ' ' + property_dim_si[property], request.params.property_dimension)),val)
     return {
         "data":
         {
@@ -132,7 +135,7 @@ def get_properties_table(request: PropertyTableRequest) -> PropertyTableResponse
 
     try:
         params_in_SI = [
-            float(convert(str(v) + ' ' + d, property_dim_si[l])) for v,d,l in zip(
+            copysign(float(convert(str(abs(v)) + ' ' + d, property_dim_si[l])), v) for v,d,l in zip(
                 request.params.param_values, 
                 request.params.param_dimensions, 
                 app.substaneces_objects_globals.substances_calc_modes_literals[request.substanceId][mode])]
@@ -143,20 +146,32 @@ def get_properties_table(request: PropertyTableRequest) -> PropertyTableResponse
         raise HTTPException(
             status_code=422, detail='Dimensions error: {}'.format(e))
 
-    for prop in app.substaneces_objects_globals.properties[int(request.substanceId)][mode].keys():
-        results.append(
-            PropertyRowDataResponse(
-                dimension = property_dim_si[prop],
-                propertyId = str(prop),
-                value = rsp_callProperty(
-                    app.substaneces_objects_globals.substances_objects[int(
-                        request.substanceId)],
-                    prop,
-                    mode,
-                    params_in_SI
+    try:
+        for prop in app.substaneces_objects_globals.properties[int(request.substanceId)][mode].keys():
+            try:
+                results.append(
+                    PropertyRowDataResponse(
+                        dimension = property_dim_si[prop],
+                        propertyId = str(prop),
+                        value = rsp.callProperty(
+                            app.substaneces_objects_globals.substances_objects[int(
+                                request.substanceId)],
+                            prop,
+                            mode,
+                            params_in_SI
+                        )
+                    )
                 )
-            )
-        )
+            except rsp.exceptions.ExceptionUnphysicalFunc as e:
+                results.append(
+                    PropertyRowDataResponse(
+                        dimension = property_dim_si[prop],
+                        propertyId = str(prop),
+                        value = str('NaN: {}'.format(e))
+                    ))
+    except RuntimeError as e:
+        raise HTTPException(
+            status_code=500, detail='RSP core error: {}'.format(e))
         # results[str(prop)] = rsp_callProperty(
         #     app.substaneces_objects_globals.substances_objects[int(
         #         substanceId)],
