@@ -28,6 +28,7 @@ class ModelCalcInfo(BaseModel):
     filter_params: list[str]
     param_literals: list[str]
     param_dimensions: list[str]
+    available_param_dimension: list[list[str]]
 
 
 # запрос 3
@@ -48,6 +49,7 @@ class RowParams(BaseModel):
     param_values: list[float]
     param_dimensions: list[str]
 
+
 class PropertyRowTableRequest(BaseModel):
     substanceId: int  # id выбранного вещества
     modeId: str  # id выбранного режима
@@ -58,21 +60,34 @@ class PropertyRowDataResponse(BaseModel):
     dimension: str
     propertyId: str
     value: str | float
+    available_property_dimensions: list[str] | None
 
 
 class PropertyRowTableResponse(BaseModel):
+    available_param_dimensions: list[list[str]]
     data: PropertyRowDataResponse
 
 # Для запроса 5
+
+
 class TableParams(BaseModel):
     param_values: list[float]
     param_dimensions: list[str]
+
 
 class PropertyTableRequest(BaseModel):
     substanceId: int  # id выбранного вещества
     modeId: str  # id выбранного режима
     params: TableParams
 
+
+class PropertyRowDataResponseTable(BaseModel):
+    dimension: str
+    propertyId: str
+    value: str | float
+    available_dimensions: list[str] | None
+
+
 class PropertyTableResponse(BaseModel):
-    data: list[PropertyRowDataResponse]
-        
+    available_param_dimensions: list[list[str]]
+    data: list[PropertyRowDataResponseTable]

@@ -21,7 +21,7 @@ property_dim_si = {
     "PRANDTLE": "",
     "JOULETHOMPSON": "",
     "X": "",
-    
+
     "TS": "K",
     "PS": "Pa",
 
@@ -98,7 +98,7 @@ property_availabe_dim = {
     "PRANDTLE": [""],
     "JOULETHOMPSON": [""],
     "X": [""],
-    
+
     "TS": ["K", "°C", "°F"],
     "PS": ["Pa", "kPa", "MPa", "bar"],
 
@@ -175,19 +175,19 @@ def rsp_callProperty(
     except RuntimeError as e:
         raise HTTPException(
             status_code=500, detail='RSP core error: {}'.format(e))
-    # except Exception as e:
-        # raise HTTPException(
-        # status_code=500, detail='Unknown RSP core error: {}'.format(e))
 
     return val
 
 
 class data_get_calc_modes_info():
-    def __init__(self, value: str, filter_params: list[str], param_literals: list[str], param_dimensions: list[str]):
+    def __init__(self, value: str, filter_params: list[str],
+                 param_literals: list[str], param_dimensions: list[str],
+                 available_param_dimension: list[list[str]]):
         self.value = value
         self.filter_params = filter_params
         self.param_literals = param_literals
         self.param_dimensions = param_dimensions
+        self.available_param_dimension = available_param_dimension
 
 
 class data_get_available_substances():
@@ -212,6 +212,9 @@ class InitRSP:
 
         # список размерностей для аргументов (в CИ)
         self.substances_calc_modes_dimensions = []
+
+        # список предпочтительных размерностей для аргументов
+        self.substances_calc_modes_available_descriptions = []
 
         # список пояснений к режимам вычисления
         self.substances_calc_modes_descriptions = []
@@ -275,10 +278,11 @@ class InitRSP:
 
             self.substances_info[i].getInfoTables(
                 properties, prop_descriptions, self.mode_descriptions[i])
-            
+
             # получаем декомпозицию режимов на литералы для данного вещества
             self.mode_decompositions.append(rsp.info.InfoTable())
-            self.substances_info[i].getModeDecomposition(self.mode_decompositions[i])
+            self.substances_info[i].getModeDecomposition(
+                self.mode_decompositions[i])
 
             # доступные свойства
             self.available_properties.append(properties)
@@ -306,14 +310,20 @@ class InitRSP:
             self.substances_calc_modes_id.append([])
             self.substances_calc_modes_literals.append({})
             self.substances_calc_modes_dimensions.append({})
+            self.substances_calc_modes_available_descriptions.append({})
             for mode_id in self.mode_descriptions[i].keys():
                 # режимы вычисления
                 self.substances_calc_modes_id[i].append(str(mode_id))
                 # декомпозиция режимов вычисления на литералы
-                self.substances_calc_modes_literals[i][str(mode_id)] = [lit for lit in self.mode_decompositions[i][str(mode_id)]]
+                self.substances_calc_modes_literals[i][str(mode_id)] = [
+                    lit for lit in self.mode_decompositions[i][str(mode_id)]]
                 # размерности для аргументов
-                self.substances_calc_modes_dimensions[i][str(mode_id)] = [property_dim_si[lit] for lit in self.mode_decompositions[i][str(mode_id)]]
-
+                self.substances_calc_modes_dimensions[i][str(mode_id)] = [
+                    property_dim_si[lit] for lit in self.mode_decompositions[i][str(mode_id)]]
+                # возможные размерности для аргументов
+                self.substances_calc_modes_available_descriptions[i][str(mode_id)] = [
+                    property_availabe_dim[lit] for lit in self.mode_decompositions[i][str(mode_id)]
+                ]
             # пояснения к режимам вычисления
             self.substances_calc_modes_descriptions.append([])
             for descriptions in self.mode_descriptions[i].values():
@@ -322,11 +332,14 @@ class InitRSP:
                     self.substances_calc_modes_descriptions[i][-1].append(
                         str(description))
 
-
             # массив для getCalcModesInfo
             self.data_get_calc_modes_info.append([])
             for j in range(len(self.substances_calc_modes_id[i])):
                 self.data_get_calc_modes_info[i].append(data_get_calc_modes_info(str(self.substances_calc_modes_id[i][j]),
-                                                                                 self.substances_calc_modes_descriptions[i][j],
-                                                                                 self.substances_calc_modes_literals[i][str(self.substances_calc_modes_id[i][j])],
-                                                                                 self.substances_calc_modes_dimensions[i][str(self.substances_calc_modes_id[i][j])]))
+                                                                                 self.substances_calc_modes_descriptions[
+                                                                                     i][j],
+                                                                                 self.substances_calc_modes_literals[i][str(
+                                                                                     self.substances_calc_modes_id[i][j])],
+                                                                                 self.substances_calc_modes_dimensions[i][str(
+                                                                                     self.substances_calc_modes_id[i][j])],
+                                                                                 self.substances_calc_modes_available_descriptions[i][str(self.substances_calc_modes_id[i][j])]))
