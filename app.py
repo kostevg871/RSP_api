@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-from core.init import InitRSP
 from api.substances import router_substances
 
 app = FastAPI(
@@ -23,11 +22,7 @@ app.add_middleware(CORSMiddleware, allow_origins=origins,
                    allow_headers=["Content-Type", "Set-Cookie", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin",
                                   "Authorization"],)
 
-# Connect RSP
-app.substaneces_objects_globals = InitRSP()
-
 # Endpoints (routers)
-
 app.include_router(router=router_substances)
 
 
