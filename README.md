@@ -26,7 +26,7 @@ poetry add "пакет" - добавление "пакета"
 ### Для запуска:
 
 ```
-uvicorn main:app --reload - запуск сервера
+uvicorn app:app --reload - запуск сервера
 http://127.0.0.1:8000/docs#/ - Swagger или localhost:8000
-uvicorn main:app --host 0.0.0.0 --port 80 - запуск на сервере
+uvicorn app:app --host 0.0.0.0 --port 80 - запуск на сервере
 ```
