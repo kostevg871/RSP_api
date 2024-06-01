@@ -21,7 +21,7 @@ property_dim_si = {
     "PRANDTLE": "",
     "JOULETHOMPSON": "",
     "X": "",
-    
+
     "TS": "K",
     "PS": "Pa",
 
@@ -78,6 +78,83 @@ property_dim_si = {
 }
 
 
+property_availabe_dim = {
+    "T": ["K", "°C", "°F"],
+    "P": ["Pa", "kPa", "MPa", "bar"],
+    "D": ["kg*m^-3"],
+    "V": ["m^3*kg^-1"],
+    "U": ["J*kg^-1", "kJ*kg^-1", "MJ*kg^-1"],
+    "S": ["J*kg^-1*K^-1", "kJ*kg^-1*K^-1", "MJ*kg^-1*K^-1"],
+    "H": ["J*kg^-1", "kJ*kg^-1", "MJ*kg^-1"],
+    "G": ["J*kg^-1", "kJ*kg^-1", "MJ*kg^-1"],
+    "F": ["J*kg^-1", "kJ*kg^-1", "MJ*kg^-1"],
+    "CV": ["J*kg^-1*K^-1"],
+    "CP": ["J*kg^-1*K^-1"],
+    "W": ["m*s^-1"],
+    "K": [""],
+    "KINVIS": ["m^2*s^-1"],
+    "DYNVIS": ["Pa*s"],
+    "THERMCOND": ["Wt*m^-1", "kWt*m^-1", "MWt*m^-1"],
+    "PRANDTLE": [""],
+    "JOULETHOMPSON": [""],
+    "X": [""],
+
+    "TS": ["K", "°C", "°F"],
+    "PS": ["Pa", "kPa", "MPa", "bar"],
+
+    "DSS": ["kg*m^-3"],
+    "VSS": ["m^3*kg^-1"],
+    "USS": ["J*kg^-1", "kJ*kg^-1", "MJ*kg^-1"],
+    "SSS": ["J*kg^-1*K^-1", "kJ*kg^-1*K^-1", "MJ*kg^-1*K^-1"],
+    "HSS": ["J*kg^-1", "kJ*kg^-1", "MJ*kg^-1"],
+    "GSS": ["J*kg^-1", "kJ*kg^-1", "MJ*kg^-1"],
+    "FSS": ["J*kg^-1", "kJ*kg^-1", "MJ*kg^-1"],
+    "CVSS": ["J*kg^-1*K^-1"],
+    "CPSS": ["J*kg^-1*K^-1"],
+    "WSS": ["m*s^-1"],
+    "KSS": [""],
+    "KINVISSS": ["m^2*s^-1"],
+    "DYNVISSS": ["Pa*s"],
+    "THERMCONDSS": ["Wt*m^-1", "kWt*m^-1", "MWt*m^-1"],
+    "PRANDTLESS": [""],
+    "JOULETHOMPSONSS": [""],
+
+    "DSW": ["kg*m^-3"],
+    "VSW": ["m^3*kg^-1"],
+    "USW": ["J*kg^-1", "kJ*kg^-1", "MJ*kg^-1"],
+    "SWS": ["J*kg^-1*K^-1", "kJ*kg^-1*K^-1", "MJ*kg^-1*K^-1"],
+    "HSW": ["J*kg^-1", "kJ*kg^-1", "MJ*kg^-1"],
+    "GSW": ["J*kg^-1", "kJ*kg^-1", "MJ*kg^-1"],
+    "FSW": ["J*kg^-1", "kJ*kg^-1", "MJ*kg^-1"],
+    "CVSW": ["J*kg^-1*K^-1"],
+    "CPSW": ["J*kg^-1*K^-1"],
+    "WSW": ["m*s^-1"],
+    "KSW": [""],
+    "KINVISWS": ["m^2*s^-1"],
+    "DYNVISWS": ["Pa*s"],
+    "THERMCONDSW": ["Wt*m^-1", "kWt*m^-1", "MWt*m^-1"],
+    "PRANDTLESW": [""],
+    "JOULETHOMPSONSW": [""],
+
+    "DS": ["kg*m^-3"],
+    "VS": ["m^3*kg^-1"],
+    "US": ["J*kg^-1", "kJ*kg^-1", "MJ*kg^-1"],
+    "SS": ["J*kg^-1*K^-1", "kJ*kg^-1*K^-1", "MJ*kg^-1*K^-1"],
+    "HS": ["J*kg^-1", "kJ*kg^-1", "MJ*kg^-1"],
+    "GS": ["J*kg^-1", "kJ*kg^-1", "MJ*kg^-1"],
+    "FS": ["J*kg^-1", "kJ*kg^-1", "MJ*kg^-1"],
+    "CVS": ["J*kg^-1*K^-1"],
+    "CPS": ["J*kg^-1*K^-1"],
+    "WS": ["m*s^-1"],
+    "KS": [""],
+    "KINVISS": ["m^2*s^-1"],
+    "DYNVISS": ["Pa*s"],
+    "THERMCONDS": ["Wt*m^-1", "kWt*m^-1", "MWt*m^-1"],
+    "PRANDTLES": [""],
+    "JOULETHOMPSONS": [""],
+}
+
+
 def rsp_callProperty(
         substance: rsp.Substance,
         property: str,
@@ -98,17 +175,19 @@ def rsp_callProperty(
     except RuntimeError as e:
         raise HTTPException(
             status_code=500, detail='RSP core error: {}'.format(e))
-    # except Exception as e:
-        # raise HTTPException(
-        # status_code=500, detail='Unknown RSP core error: {}'.format(e))
 
     return val
 
 
 class data_get_calc_modes_info():
-    def __init__(self, value: str, filter_params: str):
+    def __init__(self, value: str, filter_params: list[str],
+                 param_literals: list[str], param_dimensions: list[str],
+                 available_param_dimension: list[list[str]]):
         self.value = value
         self.filter_params = filter_params
+        self.param_literals = param_literals
+        self.param_dimensions = param_dimensions
+        self.available_param_dimension = available_param_dimension
 
 
 class data_get_available_substances():
@@ -127,6 +206,15 @@ class InitRSP:
 
         # список доступных режимов вычисления для каждого вещества
         self.substances_calc_modes_id = []
+
+        # список декомпозиция аргументов ('PH' -> ['P', 'H'])
+        self.substances_calc_modes_literals = []
+
+        # список размерностей для аргументов (в CИ)
+        self.substances_calc_modes_dimensions = []
+
+        # список предпочтительных размерностей для аргументов
+        self.substances_calc_modes_available_descriptions = []
 
         # список пояснений к режимам вычисления
         self.substances_calc_modes_descriptions = []
@@ -153,6 +241,9 @@ class InitRSP:
 
         # список словарей режимов вычисления по каждому веществу (ключ - режим, значение - массив с названиями параметров)
         self.mode_descriptions = []
+
+        # список словарей, содержащих декомпозицию литералов для каждого режима вычисления
+        self.mode_decompositions = []
 
         # список пояснений для доступных свойств для каждого режима вычисления по веществам
         self.properties_descriptions = []
@@ -188,6 +279,11 @@ class InitRSP:
             self.substances_info[i].getInfoTables(
                 properties, prop_descriptions, self.mode_descriptions[i])
 
+            # получаем декомпозицию режимов на литералы для данного вещества
+            self.mode_decompositions.append(rsp.info.InfoTable())
+            self.substances_info[i].getModeDecomposition(
+                self.mode_decompositions[i])
+
             # доступные свойства
             self.available_properties.append(properties)
 
@@ -211,11 +307,23 @@ class InitRSP:
                 if 'DZDXYS' in self.properties[i][str(mode)].keys():
                     del self.properties[i][str(mode)]['DZDXYS']
 
-            # режимы вычисления
             self.substances_calc_modes_id.append([])
+            self.substances_calc_modes_literals.append({})
+            self.substances_calc_modes_dimensions.append({})
+            self.substances_calc_modes_available_descriptions.append({})
             for mode_id in self.mode_descriptions[i].keys():
+                # режимы вычисления
                 self.substances_calc_modes_id[i].append(str(mode_id))
-
+                # декомпозиция режимов вычисления на литералы
+                self.substances_calc_modes_literals[i][str(mode_id)] = [
+                    lit for lit in self.mode_decompositions[i][str(mode_id)]]
+                # размерности для аргументов
+                self.substances_calc_modes_dimensions[i][str(mode_id)] = [
+                    property_dim_si[lit] for lit in self.mode_decompositions[i][str(mode_id)]]
+                # возможные размерности для аргументов
+                self.substances_calc_modes_available_descriptions[i][str(mode_id)] = [
+                    property_availabe_dim[lit] for lit in self.mode_decompositions[i][str(mode_id)]
+                ]
             # пояснения к режимам вычисления
             self.substances_calc_modes_descriptions.append([])
             for descriptions in self.mode_descriptions[i].values():
@@ -228,4 +336,10 @@ class InitRSP:
             self.data_get_calc_modes_info.append([])
             for j in range(len(self.substances_calc_modes_id[i])):
                 self.data_get_calc_modes_info[i].append(data_get_calc_modes_info(str(self.substances_calc_modes_id[i][j]),
-                                                                                 self.substances_calc_modes_descriptions[i][j]))
+                                                                                 self.substances_calc_modes_descriptions[
+                                                                                     i][j],
+                                                                                 self.substances_calc_modes_literals[i][str(
+                                                                                     self.substances_calc_modes_id[i][j])],
+                                                                                 self.substances_calc_modes_dimensions[i][str(
+                                                                                     self.substances_calc_modes_id[i][j])],
+                                                                                 self.substances_calc_modes_available_descriptions[i][str(self.substances_calc_modes_id[i][j])]))
