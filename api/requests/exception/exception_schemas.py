@@ -29,3 +29,12 @@ class Schema_exception_442_info(BaseModel):
 
 class Schemas_exception_442(BaseModel):
     detail: Schema_exception_442_info
+
+
+class Schema_exception_443_info(BaseModel):
+    message: str
+    available_property_dimensions: list[list[str]]
+
+
+class Schemas_exception_443(BaseModel):
+    detail: Schema_exception_443_info

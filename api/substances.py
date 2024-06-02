@@ -3,7 +3,7 @@ from typing_extensions import Annotated
 
 from api.requests.available_substances import available_substances
 from api.requests.calc_model_substanse import calc_model_substanse
-from api.requests.exception.exception_schemas import HTTPError, Schemas_exception_441, Schemas_exception_442
+from api.requests.exception.exception_schemas import HTTPError, Schemas_exception_441, Schemas_exception_442, Schemas_exception_443
 from api.requests.properties_list import properties_list
 from api.requests.property_table import property_table
 from api.requests.property_table_row import property_table_row
@@ -57,6 +57,9 @@ def get_properties_list(substanceId: Annotated[int, Query(ge=0, lt=len(substanec
                             },
                             442: {
                                 "model": Schemas_exception_442,
+                            },
+                            443: {
+                                "model": Schemas_exception_443,
                             }
 
 

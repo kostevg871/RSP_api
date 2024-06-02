@@ -1,6 +1,6 @@
 from math import copysign
 from fastapi import HTTPException
-from api.requests.exception.exception import in_mode_on_substance
+from api.requests.exception.exception import check_count_substance_id, check_property, in_mode_on_substance
 from core.init import InitRSP, rsp_callProperty
 from helpers.constants import PROPERTY_AVAILABE_DIM, PROPERTY_DIMENSION_SI
 from schemas import PropertyRowTableResponse
@@ -17,16 +17,14 @@ def property_table_row(substaneces_objects_globals: InitRSP,
     mode = modeId.upper()
     property = property.upper()
 
-    if substanceId < 0 or substanceId > count_substance-1:
-        raise HTTPException(status_code=400, detail=str(substanceId) + " be in the range from 0 to " +
-                            str(count_substance-1))
+    check_count_substance_id(substanceId=substanceId,
+                             count_substance=count_substance)
 
     in_mode_on_substance(
         substaneces_objects_globals=substaneces_objects_globals,  substanceId=substanceId, mode=mode)
 
-    if not property in substaneces_objects_globals.properties[substanceId][mode]:
-        raise HTTPException(status_code=400, detail="property= " +
-                            property + " not in substance")
+    check_property(substaneces_objects_globals=substaneces_objects_globals,
+                   substanceId=substanceId, mode=mode, property=params.property)
 
     params_global: list[str] = substaneces_objects_globals.mode_descriptions[
         substanceId][mode]
