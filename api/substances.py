@@ -20,15 +20,13 @@ substaneces_objects_globals = InitRSP()
 @router_substances.get("/getAvailableSubstances", response_model=AvailableSubstance,
                        description="Получение всех доступных веществ")
 def get_available_substances() -> AvailableSubstance:
-    response = available_substances(substaneces_objects_globals)
-    return response
+    return available_substances(substaneces_objects_globals)
 
 
 @router_substances.get("/getCalcModesInfo", response_model=ParameterMode,
                        description="Запрос для получения Режима параметров")
 def get_calc_model_substanse(id: Annotated[int, Query(ge=0, lt=len(substaneces_objects_globals.data_get_substances_list))]) -> ParameterMode:
-    response = calc_model_substanse(substaneces_objects_globals, id)
-    return response
+    return calc_model_substanse(substaneces_objects_globals, id)
 
 
 @router_substances.get("/getPropertiesLists", responses={
@@ -40,10 +38,8 @@ def get_calc_model_substanse(id: Annotated[int, Query(ge=0, lt=len(substaneces_o
     description="Запрос для получения возможных Параметров для выбранного вещества и режима")
 def get_properties_list(substanceId: Annotated[int, Query(ge=0, lt=len(substaneces_objects_globals.data_get_substances_list))],
                         modeId: str) -> Property:
-
-    response = properties_list(
+    return properties_list(
         substaneces_objects_globals, substanceId, modeId)
-    return response
 
 
 @router_substances.post("/getPropertiesTableRow",
@@ -66,9 +62,8 @@ def get_properties_list(substanceId: Annotated[int, Query(ge=0, lt=len(substanec
                         },
                         description="Запрос для получения строки таблицы по параметру")
 def get_properties_table_row(request: PropertyRowTableRequest) -> PropertyRowTableResponse:
-    response = property_table_row(substaneces_objects_globals, request.substanceId, request.modeId,
-                                  request.params.property, request.params)
-    return response
+    return property_table_row(substaneces_objects_globals, request.substanceId, request.modeId,
+                              request.params.property, request.params)
 
 
 @router_substances.post("/getPropertiesTable",
@@ -84,8 +79,7 @@ def get_properties_table_row(request: PropertyRowTableRequest) -> PropertyRowTab
                         },
                         description="Запрос для получения таблицы значений по каждому параметру")
 def get_properties_table(request: PropertyTableRequest) -> PropertyTableResponse:
-    response = property_table(substaneces_objects_globals=substaneces_objects_globals,
-                              substanceId=request.substanceId,
-                              modeId=request.modeId,
-                              params=request.params)
-    return response
+    return property_table(substaneces_objects_globals=substaneces_objects_globals,
+                          substanceId=request.substanceId,
+                          modeId=request.modeId,
+                          params=request.params)
