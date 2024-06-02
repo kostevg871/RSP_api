@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from typing_extensions import Annotated
 
 from api.requests.available_substances import available_substances
 from api.requests.calc_model_substanse import calc_model_substanse
+from api.requests.exception.exception_schemas import HTTPError, Schemas_exception_441, Schemas_exception_442
 from api.requests.properties_list import properties_list
 from api.requests.property_table import property_table
 from api.requests.property_table_row import property_table_row
@@ -32,8 +33,8 @@ def get_calc_model_substanse(id: Annotated[int, Query(ge=0, lt=len(substaneces_o
 
 @router_substances.get("/getPropertiesLists", responses={
     200: {"model": Property},
-    400: {
-        "model": HTTPError,
+    441: {
+        "model": Schemas_exception_441,
     }
 },
     description="Запрос для получения возможных Параметров для выбранного вещества и режима")
@@ -51,9 +52,13 @@ def get_properties_list(substanceId: Annotated[int, Query(ge=0, lt=len(substanec
                             400: {
                                 "model": HTTPError,
                             },
-                            419: {
-                                "model": HTTPError_419,
+                            441: {
+                                "model": Schemas_exception_441,
+                            },
+                            442: {
+                                "model": Schemas_exception_442,
                             }
+
 
                         },
                         description="Запрос для получения строки таблицы по параметру")
@@ -69,8 +74,8 @@ def get_properties_table_row(request: PropertyRowTableRequest) -> PropertyRowTab
                             400: {
                                 "model": HTTPError,
                             },
-                            419: {
-                                "model": HTTPError_419,
+                            442: {
+                                "model": Schemas_exception_442,
                             }
 
                         },

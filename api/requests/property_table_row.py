@@ -1,5 +1,6 @@
 from math import copysign
 from fastapi import HTTPException
+from api.requests.exception.exception import in_mode_on_substance
 from core.init import InitRSP, rsp_callProperty
 from helpers.constants import PROPERTY_AVAILABE_DIM, PROPERTY_DIMENSION_SI
 from schemas import PropertyRowTableResponse
@@ -20,9 +21,8 @@ def property_table_row(substaneces_objects_globals: InitRSP,
         raise HTTPException(status_code=400, detail=str(substanceId) + " be in the range from 0 to " +
                             str(count_substance-1))
 
-    if mode not in substaneces_objects_globals.properties[substanceId]:
-        raise HTTPException(status_code=400, detail="mode= " +
-                            mode + " not in substance")
+    in_mode_on_substance(
+        substaneces_objects_globals=substaneces_objects_globals,  substanceId=substanceId, mode=mode)
 
     if not property in substaneces_objects_globals.properties[substanceId][mode]:
         raise HTTPException(status_code=400, detail="property= " +
@@ -56,9 +56,14 @@ def property_table_row(substaneces_objects_globals: InitRSP,
         val_dim = copysign(float(converts(str(abs(
             val)) + ' ' + PROPERTY_DIMENSION_SI[property], params.property_dimension)), val)
 
-    except UnConsistentUnitsError or UnitDoesntExistError as e:
+    except (UnConsistentUnitsError, UnitDoesntExistError) as e:
         raise HTTPException(
-            status_code=419, detail={"message": 'Dimensions error: {}'.format(e),
+            status_code=442, detail={"message": 'Dimensions error: {}'.format(e),
+                                     "available_param_dimensions": available_params_dimension,
+                                     "available_property_dimensions": PROPERTY_AVAILABE_DIM.get(params.property)})
+    except:
+        raise HTTPException(
+            status_code=442, detail={"message": "Dimension error/ Check param and property dimension",
                                      "available_param_dimensions": available_params_dimension,
                                      "available_property_dimensions": PROPERTY_AVAILABE_DIM.get(params.property)})
 

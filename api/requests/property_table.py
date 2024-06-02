@@ -45,9 +45,10 @@ def property_table(substaneces_objects_globals: InitRSP, substanceId: int, modeI
                 params.param_values,
                 params.param_dimensions,
                 substaneces_objects_globals.substances_calc_modes_literals[substanceId][mode])]
-    except UnConsistentUnitsError or UnitDoesntExistError as e:
+    except (UnConsistentUnitsError, UnitDoesntExistError) as e:
         raise HTTPException(
             status_code=419, detail={"details": 'Dimensions error: {}'.format(e), "available_param_dimensions": available_params_dimension})
+    
 
     try:
         for prop in substaneces_objects_globals.properties[int(substanceId)][mode].keys():

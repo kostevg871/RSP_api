@@ -91,27 +91,3 @@ class PropertyRowDataResponseTable(BaseModel):
 class PropertyTableResponse(BaseModel):
     available_param_dimensions: list[list[str]]
     data: list[PropertyRowDataResponseTable]
-
-
-class HTTPError(BaseModel):
-    detail: str
-
-    class Config:
-        schema_extra = {
-            "example": {"status_code": int, "details": "Error message!"},
-        }
-
-
-class DetailsError_419(BaseModel):
-    message: str
-    available_param_dimensions: list[list[str]]
-    available_property_dimensions: list[list[str]]
-
-
-class HTTPError_419(BaseModel):
-    detail: DetailsError_419
-
-    class Config:
-        schema_extra = {
-            "example": {"status_code": int, "details": DetailsError_419},
-        }
