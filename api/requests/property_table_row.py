@@ -1,16 +1,11 @@
-from math import copysign
-from fastapi import HTTPException
-from api.requests.exception.exception import check_count_substance_id, check_property, in_mode_on_substance
-from core.init import InitRSP, rsp_callProperty
+from api.requests.exception.exception import check_count_substance_id, check_dimension, check_params, check_property, in_mode_on_substance
+from core.init import InitRSP
 from helpers.constants import PROPERTY_AVAILABE_DIM, PROPERTY_DIMENSION_SI
-from schemas import PropertyRowTableResponse
-
-from unit_converter.converter import convert, converts
-from unit_converter.exceptions import UnConsistentUnitsError, UnitDoesntExistError
+from schemas import PropertyRowTableResponse, RowParams
 
 
 def property_table_row(substaneces_objects_globals: InitRSP,
-                       substanceId: int, modeId: str, property: str, params: list[str]) -> PropertyRowTableResponse:
+                       substanceId: int, modeId: str, property: str, params: RowParams) -> PropertyRowTableResponse:
 
     count_substance = len(
         substaneces_objects_globals.data_get_substances_list)
@@ -26,44 +21,17 @@ def property_table_row(substaneces_objects_globals: InitRSP,
     check_property(substaneces_objects_globals=substaneces_objects_globals,
                    substanceId=substanceId, mode=mode, property=params.property)
 
-    params_global: list[str] = substaneces_objects_globals.mode_descriptions[
-        substanceId][mode]
-
-    if not (len(params.param_values) == len(params_global)):
-        raise HTTPException(
-            status_code=400, detail="parameters must contain " + str(len(params_global)) + " parameters "
-            + str(list(params_global))[1: -1])
-
     for avail_param in substaneces_objects_globals.data_get_calc_modes_info[substanceId]:
         if avail_param.value == mode:
             available_params_dimension = avail_param.available_param_dimension
             break
-    try:
-        params_in_SI = [
-            copysign(float(convert(str(abs(v)) + ' ' + d, PROPERTY_DIMENSION_SI[l])), v) for v, d, l in zip(
-                params.param_values,
-                params.param_dimensions,
-                substaneces_objects_globals.substances_calc_modes_literals[substanceId][mode])]
 
-        val = rsp_callProperty(
-            substaneces_objects_globals.substances_objects[
-                substanceId],
-            property,
-            mode,
-            params_in_SI)
-        val_dim = copysign(float(converts(str(abs(
-            val)) + ' ' + PROPERTY_DIMENSION_SI[property], params.property_dimension)), val)
+    check_params(substaneces_objects_globals=substaneces_objects_globals,
+                 substanceId=substanceId, mode=mode, param_value=params.param_values)
 
-    except (UnConsistentUnitsError, UnitDoesntExistError) as e:
-        raise HTTPException(
-            status_code=442, detail={"message": 'Dimensions error: {}'.format(e),
-                                     "available_param_dimensions": available_params_dimension,
-                                     "available_property_dimensions": PROPERTY_AVAILABE_DIM.get(params.property)})
-    except:
-        raise HTTPException(
-            status_code=442, detail={"message": "Dimension error/ Check param and property dimension",
-                                     "available_param_dimensions": available_params_dimension,
-                                     "available_property_dimensions": PROPERTY_AVAILABE_DIM.get(params.property)})
+    val_dim = check_dimension(substaneces_objects_globals=substaneces_objects_globals, substanceId=substanceId,
+                              mode=mode, params=params, property=property,
+                              available_param_dimensions=available_params_dimension)
 
     return {
         "available_param_dimensions": available_params_dimension,

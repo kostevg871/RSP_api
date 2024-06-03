@@ -3,7 +3,7 @@ from pydantic import BaseModel
 # Ошибка с описанием
 
 
-class HTTPError(BaseModel):
+class Schemas_exception_400(BaseModel):
     detail: str
 
 # 441 Неправильный запрос параметра mode
@@ -38,3 +38,12 @@ class Schema_exception_443_info(BaseModel):
 
 class Schemas_exception_443(BaseModel):
     detail: Schema_exception_443_info
+
+
+class Schema_exception_444_info(BaseModel):
+    message: str
+    range: list[list[str]]
+
+
+class Schemas_exception_444(BaseModel):
+    detail: Schema_exception_444_info
