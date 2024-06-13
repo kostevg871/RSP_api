@@ -1,4 +1,5 @@
-from api.requests.exception.exception import check_count_substance_id, check_dimension, check_params, check_property, in_mode_on_substance
+from api.requests.exception.exception import check_count_substance_id, check_dimension, check_params, check_property, check_property_negative, in_mode_on_substance
+from core.convert_params_in_si import convert_params_in_SI
 from core.init import InitRSP
 from helpers.constants import PROPERTY_AVAILABE_DIM, PROPERTY_DIMENSION_SI
 from schemas import PropertyRowTableResponse, RowParams
@@ -28,6 +29,8 @@ def property_table_row(substaneces_objects_globals: InitRSP,
 
     check_params(substaneces_objects_globals=substaneces_objects_globals,
                  substanceId=substanceId, mode=mode, param_value=params.param_values)
+
+    check_property_negative(params=params)
 
     val_dim = check_dimension(substaneces_objects_globals=substaneces_objects_globals, substanceId=substanceId,
                               mode=mode, params=params, property=property,

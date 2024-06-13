@@ -1,13 +1,13 @@
-from math import copysign
 from fastapi import HTTPException
 
-from core.init import InitRSP, rsp_callProperty
-from helpers.constants import PROPERTY_AVAILABE_DIM, PROPERTY_DIMENSION_SI
+
+from core.init import InitRSP
+from helpers.constants import PROPERTY_AVAILABE_DIM, PROPERTY_MIN_DIM
 from schemas import RowParams
 
-from unit_converter.converter import convert, converts
-from unit_converter.exceptions import UnConsistentUnitsError, UnitDoesntExistError
 
+from unit_converter.exceptions import UnConsistentUnitsError, UnitDoesntExistError
+from core.convert_params_in_si import convert_params_in_SI
 # check mode calculation
 
 
@@ -49,26 +49,25 @@ def check_params(substaneces_objects_globals: InitRSP, substanceId: int, mode: s
             + str(list(params_global))[1: -1])
 
 
+# Cheak negative value and convert temprature
+def check_property_negative(params: RowParams) -> None:
+    for index, dimens in enumerate(params.param_dimensions):
+        if params.param_values[index] < 0:
+            if dimens in PROPERTY_MIN_DIM.keys():
+                if params.param_values[index] < PROPERTY_MIN_DIM.get(dimens):
+                    raise HTTPException(
+                        status_code=400, detail="Parameters {dimens} there can't be less {value}".format(dimens=dimens, value=PROPERTY_MIN_DIM.get(dimens)))
+            else:
+                raise HTTPException(
+                    status_code=400, detail="Parameters {dimens} there can't be negative".format(dimens=dimens))
+
 # check_dimension and params
+
+
 def check_dimension(substaneces_objects_globals: InitRSP, substanceId: int, mode: str, params: RowParams, property: str, available_param_dimensions: list[list[str]]):
     try:
-        params_in_SI = [
-            copysign(float(convert(str(abs(v)) + ' ' + d, PROPERTY_DIMENSION_SI[l])), v) for v, d, l in zip(
-                params.param_values,
-                params.param_dimensions,
-                substaneces_objects_globals.substances_calc_modes_literals[substanceId][mode])]
-
-        val = rsp_callProperty(
-            substaneces_objects_globals.substances_objects[
-                substanceId],
-            property,
-            mode,
-            params_in_SI)
-
-        val_dim = copysign(float(converts(str(abs(
-            val)) + ' ' + PROPERTY_DIMENSION_SI[property], params.property_dimension)), val)
-
-        return val_dim
+        return convert_params_in_SI(substaneces_objects_globals=substaneces_objects_globals,
+                                    substanceId=substanceId, mode=mode, params=params, property=property)
 
     except (UnConsistentUnitsError, UnitDoesntExistError) as e:
         raise HTTPException(
@@ -77,6 +76,6 @@ def check_dimension(substaneces_objects_globals: InitRSP, substanceId: int, mode
                                      "available_property_dimensions": PROPERTY_AVAILABE_DIM.get(params.property)})
     except Exception as e:
         raise HTTPException(
-            status_code=442, detail={"message": "Core error: {}".format(e),
+            status_code=442, detail={"message": "{}".format(e),
                                      "available_param_dimensions": available_param_dimensions,
                                      "available_property_dimensions": PROPERTY_AVAILABE_DIM.get(params.property)})

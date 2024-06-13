@@ -149,3 +149,7 @@ PROPERTY_AVAILABE_DIM = {
     "PRANDTLES": [""],
     "JOULETHOMPSONS": [""],
 }
+PROPERTY_MIN_DIM = {
+    "°C": -273.15,
+    "°F": -459.67,
+}

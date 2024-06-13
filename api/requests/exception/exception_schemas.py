@@ -39,6 +39,8 @@ class Schema_exception_443_info(BaseModel):
 class Schemas_exception_443(BaseModel):
     detail: Schema_exception_443_info
 
+# 444 Ошибка для при не попадание
+
 
 class Schema_exception_444_info(BaseModel):
     message: str
