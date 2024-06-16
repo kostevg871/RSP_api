@@ -43,7 +43,7 @@ def property_table_row(substaneces_objects_globals: InitRSP,
         {
             "dimension": params.property_dimension,
             "propertyId": str(substaneces_objects_globals.properties[substanceId][mode][property]),
-            "value": float(val_dim),
+            "value": str(val_dim),
             "available_property_dimensions": PROPERTY_AVAILABE_DIM.get(params.property)
         }
     }

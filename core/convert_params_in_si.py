@@ -1,4 +1,4 @@
-from math import copysign, isnan, nan
+from math import copysign, isinf, isnan, nan
 from unit_converter.converter import convert, converts
 from decimal import Decimal
 
@@ -12,7 +12,7 @@ from core.get_params_in_SI import get_params_in_SI
 
 def convert_params_in_SI(substaneces_objects_globals: InitRSP,
                          substanceId: int, mode: str, params: RowParams,
-                         property: str | None) -> float:
+                         property: str) -> float:
 
     # не очень понятно что делать с большими числами
     params_in_SI = get_params_in_SI(params=params, substaneces_objects_globals=substaneces_objects_globals,
@@ -27,6 +27,9 @@ def convert_params_in_SI(substaneces_objects_globals: InitRSP,
 
     if isnan(val):
         return error_calculating_core()
+    if isinf(val):
+        val_dim = str(Decimal(val))
+        return val_dim
 
     # Если будет приходить отрицательные значения температур и тп
     # надо будет проверять
