@@ -39,12 +39,12 @@ class Schema_exception_443_info(BaseModel):
 class Schemas_exception_443(BaseModel):
     detail: Schema_exception_443_info
 
-# 444 Ошибка для при не попадание
+# 444 Ошибка при переводе и непаладках в расчете таблицы
 
 
 class Schema_exception_444_info(BaseModel):
     message: str
-    range: list[list[str]]
+    available_param_dimensions: list[list[str]]
 
 
 class Schemas_exception_444(BaseModel):
