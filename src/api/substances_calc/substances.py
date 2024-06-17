@@ -1,14 +1,13 @@
 from fastapi import APIRouter
 from typing_extensions import Annotated
 
-from api.requests.available_substances import available_substances
-from api.requests.calc_model_substanse import calc_model_substanse
-from api.requests.exception.exception_schemas import Schemas_exception_442
-from api.requests.properties_list import properties_list
-from api.requests.property_table import property_table
-from api.requests.property_table_row import property_table_row
+from src.api.substances_calc.requests.available_substances import available_substances
+from src.api.substances_calc.requests.calc_model_substanse import calc_model_substanse
+from src.api.substances_calc.requests.properties_list import properties_list
+from src.api.substances_calc.requests.property_table import property_table
+from src.api.substances_calc.requests.property_table_row import property_table_row
 
-from api.response_model import model_error_400, model_error_441, model_error_442, model_error_443
+from src.api.substances_calc.response_model import model_error_400, model_error_441, model_error_442, model_error_443, model_error_444
 
 
 from schemas import *
@@ -60,10 +59,10 @@ def get_properties_table_row(request: PropertyRowTableRequest) -> PropertyRowTab
                         responses={
                             200: {"model": PropertyRowTableResponse},
                             400: model_error_400,
-                            442: {
-                                "model": Schemas_exception_442,
-                            }
-
+                            441: model_error_441,
+                            442: model_error_442,
+                            443: model_error_443,
+                            444: model_error_444
                         },
                         description="Запрос для получения таблицы значений по каждому параметру")
 def get_properties_table(request: PropertyTableRequest) -> PropertyTableResponse:

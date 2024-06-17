@@ -3,7 +3,7 @@ from typing_extensions import Annotated
 from pydantic import BaseModel
 
 
-from core.init import InitRSP
+from src.core.init import InitRSP
 
 init = InitRSP()
 # Схемы ответов

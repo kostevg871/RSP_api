@@ -1,13 +1,13 @@
-from math import copysign, isinf, isnan, nan
-from unit_converter.converter import convert, converts
+from math import copysign, isinf, isnan
+from unit_converter.converter import converts
 from decimal import Decimal
 
 
-from api.requests.exception.global_exception import error_calculating_core
-from core.init import InitRSP, rsp_callProperty
-from helpers.constants import PROPERTY_DIMENSION_SI, PROPERTY_MIN_DIM
+from src.api.substances_calc.requests.exceptions.global_exception import error_calculating_core
+from src.core.init import InitRSP, rsp_callProperty
+from src.helpers.constants import PROPERTY_DIMENSION_SI
 from schemas import RowParams
-from core.get_params_in_SI import get_params_in_SI
+from src.core.get_params_in_SI import get_params_in_SI
 
 
 def convert_params_in_SI(substaneces_objects_globals: InitRSP,
@@ -31,9 +31,10 @@ def convert_params_in_SI(substaneces_objects_globals: InitRSP,
         val_dim = str(Decimal(val))
         return val_dim
 
-    # Если будет приходить отрицательные значения температур и тп
-    # надо будет проверять
-    val_dim = copysign(float(converts(str(
-        abs(val)) + ' ' + PROPERTY_DIMENSION_SI[property], params.property_dimension)), val)
+    if params.property_dimension.strip() == "":
+        val_dim = val
+    else:
+        val_dim = copysign(float(converts(str(abs(
+            val)) + ' ' + PROPERTY_DIMENSION_SI[property], params.property_dimension)), val)
 
     return val_dim

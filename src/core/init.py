@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 import rsp
 
-from helpers.constants import PROPERTY_DIMENSION_SI, PROPERTY_AVAILABE_DIM
+from src.helpers.constants import PROPERTY_DIMENSION_SI, PROPERTY_AVAILABE_DIM
 
 
 def rsp_callProperty(

@@ -1,6 +1,6 @@
 from fastapi import HTTPException
-from api.requests.exception.exception import check_count_substance_id, check_params, check_property_negative, check_table_dimension, in_mode_on_substance
-from core.init import InitRSP
+from src.api.substances_calc.requests.verification_data.verification import check_count_substance_id, check_params, check_property_negative, check_table_dimension, in_mode_on_substance
+from src.core.init import InitRSP
 from schemas import PropertyTableResponse
 
 
@@ -37,6 +37,6 @@ def property_table(substaneces_objects_globals: InitRSP, substanceId: int, modeI
             available_param_dimensions=available_params_dimension, data=results)
     except ValueError as e:
         raise HTTPException(
-            status_code=400, detail='Unknown error: {}'.format(e))
+            status_code=400, detail={"status_code": 400, "msg": "Unknown error: {}".format(e)})
 
     return response

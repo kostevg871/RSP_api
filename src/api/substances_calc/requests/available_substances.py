@@ -1,4 +1,4 @@
-from core.init import InitRSP
+from src.core.init import InitRSP
 from schemas import AvailableSubstance
 
 

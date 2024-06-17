@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-from api.substances import router_substances
+from src.api.substances_calc.substances import router_substances
 
 app = FastAPI(
     title="RSP App"

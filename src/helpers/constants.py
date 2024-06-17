@@ -93,7 +93,7 @@ PROPERTY_AVAILABE_DIM = {
     "THERMCOND": ["Wt*m^-1", "kWt*m^-1", "MWt*m^-1"],
     "PRANDTLE": [""],
     "JOULETHOMPSON": [""],
-    "X": [""],
+    "X": [" "],
 
     "TS": ["K", "°C", "°F"],
     "PS": ["Pa", "kPa", "MPa", "bar"],
