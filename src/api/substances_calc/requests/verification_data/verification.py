@@ -2,7 +2,7 @@ from decimal import Decimal
 from fastapi import HTTPException
 
 
-from src.api.substances_calc.requests.exceptions.exception_substances import error_substance_id_count
+from src.api.substances_calc.requests.exceptions.exception_substances import error_substance_id_count, error_substance_mode
 from src.core.get_params_in_SI import get_params_in_SI
 from src.core.init import InitRSP
 from src.helpers.constants import PROPERTY_AVAILABE_DIM, PROPERTY_DIMENSION_SI, PROPERTY_MIN_DIM
@@ -20,11 +20,10 @@ import rsp
 
 def in_mode_on_substance(substaneces_objects_globals: InitRSP, substanceId: int, mode: str) -> None:
     if mode not in substaneces_objects_globals.properties[substanceId]:
-        raise HTTPException(status_code=441,
-                            detail={"status_code": 441,
-                                    "msg": "mode={mode} not in substance".format(mode=mode),
-                                    "available_modes": substaneces_objects_globals.substances_calc_modes_id[substanceId],
-                                    })
+        error_substance_mode(substaneces_objects_globals=substaneces_objects_globals,
+                             substanceId=substanceId,
+                             mode=mode)
+
 
 # check count substance_id
 

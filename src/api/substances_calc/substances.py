@@ -18,7 +18,8 @@ router_substances = APIRouter()
 substaneces_objects_globals = InitRSP()
 
 
-@router_substances.get("/getAvailableSubstances", response_model=AvailableSubstance,
+@router_substances.get("/getAvailableSubstances",
+                       response_model=AvailableSubstance,
                        description="Получение всех доступных веществ")
 def get_available_substances() -> AvailableSubstance:
     return available_substances(substaneces_objects_globals)
@@ -27,18 +28,20 @@ def get_available_substances() -> AvailableSubstance:
 @router_substances.get("/getCalcModesInfo",
                        responses={
                            200: {"model": Property},
-                           400: model_error_400},
+                           400: model_error_400
+                       },
                        description="Запрос для получения Режима параметров")
 def get_calc_model_substanse(id: int) -> ParameterMode:
     return calc_model_substanse(substaneces_objects_globals, id)
 
 
-@router_substances.get("/getPropertiesLists", responses={
-    200: {"model": Property},
-    441: model_error_441
-},
-    description="Запрос для получения возможных Параметров для выбранного вещества и режима")
-def get_properties_list(substanceId: Annotated[int, Query(ge=0, lt=len(substaneces_objects_globals.data_get_substances_list))],
+@router_substances.get("/getPropertiesLists",
+                       responses={
+                           200: {"model": Property},
+                           400: model_error_400
+                       },
+                       description="Запрос для получения возможных Параметров для выбранного вещества и режима")
+def get_properties_list(substanceId: int,
                         modeId: str) -> Property:
     return properties_list(
         substaneces_objects_globals, substanceId, modeId)
