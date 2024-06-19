@@ -24,9 +24,12 @@ def get_available_substances() -> AvailableSubstance:
     return available_substances(substaneces_objects_globals)
 
 
-@router_substances.get("/getCalcModesInfo", response_model=ParameterMode,
+@router_substances.get("/getCalcModesInfo",
+                       responses={
+                           200: {"model": Property},
+                           400: model_error_400},
                        description="Запрос для получения Режима параметров")
-def get_calc_model_substanse(id: Annotated[int, Query(ge=0, lt=len(substaneces_objects_globals.data_get_substances_list))]) -> ParameterMode:
+def get_calc_model_substanse(id: int) -> ParameterMode:
     return calc_model_substanse(substaneces_objects_globals, id)
 
 

@@ -2,6 +2,7 @@ from decimal import Decimal
 from fastapi import HTTPException
 
 
+from src.api.substances_calc.requests.exceptions.exception_substances import error_substance_id_count
 from src.core.get_params_in_SI import get_params_in_SI
 from src.core.init import InitRSP
 from src.helpers.constants import PROPERTY_AVAILABE_DIM, PROPERTY_DIMENSION_SI, PROPERTY_MIN_DIM
@@ -30,10 +31,8 @@ def in_mode_on_substance(substaneces_objects_globals: InitRSP, substanceId: int,
 
 def check_count_substance_id(substanceId: int, count_substance: int) -> None:
     if substanceId < 0 or substanceId > count_substance-1:
-        raise HTTPException(status_code=400, detail={
-            "status_code": 400,
-            "msg": "substanceId = {substanceId} be in the range from 0 to {count_substance}".format(
-                substanceId=substanceId, count_substance=count_substance-1)})
+        error_substance_id_count(
+            substanceId=substanceId, count_substance=count_substance)
 
 # check property
 
