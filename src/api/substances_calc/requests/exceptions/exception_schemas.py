@@ -3,6 +3,16 @@ from pydantic import BaseModel
 # Ошибка с описанием
 
 
+class Schemas_exception_422_info(BaseModel):
+    status_code: int
+    description: str
+    msg: str
+
+
+class Schemas_exception_422(BaseModel):
+    detail: Schemas_exception_422_info
+
+
 class Schemas_exception_400_info(BaseModel):
     status_code: int
     msg: str
