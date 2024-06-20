@@ -2,7 +2,7 @@ from decimal import Decimal
 from fastapi import HTTPException
 
 
-from src.api.substances_calc.requests.exceptions.exception_substances import error_dimension, error_parameters, error_params_min_value, error_params_negative, error_substance_id_count, error_substance_mode
+from src.api.substances_calc.requests.exceptions.exception_substances import error_dimension, error_parameters, error_params_min_value, error_params_negative, error_substance_id_count, error_substance_mode, error_unknown
 from src.core.get_params_in_SI import get_params_in_SI
 from src.core.init import InitRSP
 from src.helpers.constants import PROPERTY_AVAILABE_DIM, PROPERTY_DIMENSION_SI, PROPERTY_MIN_DIM
@@ -77,21 +77,10 @@ def check_dimension(substaneces_objects_globals: InitRSP, substanceId: int, mode
                                     substanceId=substanceId, mode=mode, params=params, property=property)
 
     except (UnConsistentUnitsError, UnitDoesntExistError) as e:
-        print(str(e))
         error_dimension(params, available_param_dimensions, str(e))
-    except ValueError as e:
-        raise HTTPException(
-            status_code=400, detail={
-                "status_code": 400,
-                "msg": 'Core error: {}'.format(e)}
-        )
 
     except Exception as e:
-        raise HTTPException(
-            status_code=442, detail={"status_code": 442,
-                                     "msg": "{}".format(e),
-                                     "available_param_dimensions": available_param_dimensions,
-                                     "available_property_dimensions": PROPERTY_AVAILABE_DIM.get(params.property)})
+        error_unknown(params, available_param_dimensions, e)
 
 
 def check_table_dimension(substaneces_objects_globals: InitRSP, substanceId: int, mode: str, params: RowParams,

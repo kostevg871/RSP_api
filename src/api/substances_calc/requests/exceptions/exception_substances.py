@@ -104,3 +104,19 @@ def error_dimension(params: RowParams, available_param_dimensions: InitRSP, e: s
                     "loc": e
             }
         })
+
+
+def error_unknown(params: RowParams, available_param_dimensions: InitRSP, e: str):
+
+    raise HTTPException(
+        status_code=400, detail={
+            "code": 8,
+            "type": "UnknownError",
+            "error_info": "Ошибка вычисления {e}".format(e=e),
+            "msg_user_en": "Calculation error, check parameters",
+            "msg_user_ru": "Ошибка вычисления, проверьте параметры",
+            "request_info": {
+                    "available_param_dimensions": available_param_dimensions,
+                    "available_property_dimensions": PROPERTY_AVAILABE_DIM.get(params.property),
+            }
+        })
