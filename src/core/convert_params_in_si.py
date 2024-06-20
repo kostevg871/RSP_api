@@ -14,7 +14,6 @@ def convert_params_in_SI(substaneces_objects_globals: InitRSP,
                          substanceId: int, mode: str, params: RowParams,
                          property: str) -> float:
 
-    # не очень понятно что делать с большими числами
     params_in_SI = get_params_in_SI(params=params, substaneces_objects_globals=substaneces_objects_globals,
                                     substanceId=substanceId, mode=mode)
 

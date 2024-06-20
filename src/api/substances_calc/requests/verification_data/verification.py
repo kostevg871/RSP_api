@@ -2,7 +2,7 @@ from decimal import Decimal
 from fastapi import HTTPException
 
 
-from src.api.substances_calc.requests.exceptions.exception_substances import error_substance_id_count, error_substance_mode
+from src.api.substances_calc.requests.exceptions.exception_substances import error_dimension, error_parameters, error_params_min_value, error_params_negative, error_substance_id_count, error_substance_mode
 from src.core.get_params_in_SI import get_params_in_SI
 from src.core.init import InitRSP
 from src.helpers.constants import PROPERTY_AVAILABE_DIM, PROPERTY_DIMENSION_SI, PROPERTY_MIN_DIM
@@ -38,25 +38,21 @@ def check_count_substance_id(substanceId: int, count_substance: int) -> None:
 
 def check_property(substaneces_objects_globals: InitRSP, substanceId: int, mode: str, property: list[str]) -> None:
     if not property in substaneces_objects_globals.properties[substanceId][mode]:
-        raise HTTPException(status_code=443,
-                            detail={"status_code": 443,
-                                    "msg": "property= {property} not in substance".format(property=property),
-                                    "available_property_dimensions": list(substaneces_objects_globals.properties[substanceId][mode]),
-                                    })
+        error_dimension(property=property, substanceId=substanceId, substances_objects_globals=substaneces_objects_globals,
+                        mode=mode)
+
+        # Check params
 
 
-# Check params
+def check_params(substances_objects_globals: InitRSP,
+                 substanceId: int, mode: str, param_value: list[str]):
 
-def check_params(substaneces_objects_globals: InitRSP, substanceId: int, mode: str, param_value: list[str]):
-    params_global: list[str] = substaneces_objects_globals.mode_descriptions[
+    params_global: list[str] = substances_objects_globals.mode_descriptions[
         substanceId][mode]
 
     if not (len(param_value) == len(params_global)):
-        raise HTTPException(
-            status_code=400, detail={"status_code": 400,
-                                     "msg": "parameters must contain " + str(len(params_global)) + " parameters "
-                                     + str(list(params_global))[1: -1]
-                                     })
+        error_parameters(params_global=params_global,
+                         substanceId=substanceId, substances_objects_globals=substances_objects_globals)
 
 
 # Cheak negative value and convert temprature
@@ -65,16 +61,11 @@ def check_property_negative(params: RowParams, params_global: list[str]) -> None
         if params.param_values[index] < 0:
             if dimens in PROPERTY_MIN_DIM.keys():
                 if params.param_values[index] < PROPERTY_MIN_DIM.get(dimens):
-                    raise HTTPException(
-                        status_code=400,
-                        detail={"status_code": 400,
-                                "msg": "Parameters {dimens} there can't be less {value}".format(dimens=dimens,
-                                                                                                value=PROPERTY_MIN_DIM.get(dimens))})
+                    error_params_min_value(
+                        dimens=dimens, curr_param=params_global[index])
             else:
-                raise HTTPException(
-                    status_code=400, detail={"status_code": 400,
-                                             "msg": "Parameters {param}({dimens}) there can't be negative".format(param=params_global[index],
-                                                                                                                  dimens=dimens)})
+                error_params_negative(
+                    params_global=params_global, index=index, dimens=dimens)
 
 
 # check_dimension and params
@@ -82,16 +73,12 @@ def check_property_negative(params: RowParams, params_global: list[str]) -> None
 
 def check_dimension(substaneces_objects_globals: InitRSP, substanceId: int, mode: str, params: RowParams, property: str, available_param_dimensions: list[list[str]]):
     try:
-
         return convert_params_in_SI(substaneces_objects_globals=substaneces_objects_globals,
                                     substanceId=substanceId, mode=mode, params=params, property=property)
 
     except (UnConsistentUnitsError, UnitDoesntExistError) as e:
-        raise HTTPException(
-            status_code=442, detail={"status_code": 442,
-                                     "msg": 'Dimensions error: {}'.format(e),
-                                     "available_param_dimensions": available_param_dimensions,
-                                     "available_property_dimensions": PROPERTY_AVAILABE_DIM.get(params.property)})
+        print(str(e))
+        error_dimension(params, available_param_dimensions, str(e))
     except ValueError as e:
         raise HTTPException(
             status_code=400, detail={

@@ -43,22 +43,21 @@ def get_calc_model_substanse(id: int) -> ParameterMode:
                        description="Запрос для получения возможных Параметров для выбранного вещества и режима")
 def get_properties_list(substanceId: int,
                         modeId: str) -> Property:
-    return properties_list(
-        substaneces_objects_globals, substanceId, modeId)
+    return properties_list(substaneces_objects_globals, substanceId, modeId)
 
 
 @router_substances.post("/getPropertiesTableRow",
                         responses={
                             200: {"model": PropertyRowTableResponse},
                             400: model_error_400,
-                            441: model_error_441,
-                            442: model_error_442,
-                            443: model_error_443,
                         },
                         description="Запрос для получения строки таблицы по параметру")
 def get_properties_table_row(request: PropertyRowTableRequest) -> PropertyRowTableResponse:
-    return property_table_row(substaneces_objects_globals, request.substanceId, request.modeId,
-                              request.params.property, request.params)
+    return property_table_row(substaneces_objects_globals,
+                              request.substanceId,
+                              request.modeId,
+                              request.params.property,
+                              request.params)
 
 
 @router_substances.post("/getPropertiesTable",
