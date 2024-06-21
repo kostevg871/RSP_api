@@ -1,3 +1,4 @@
+
 from fastapi import HTTPException
 
 from schemas import RowParams
@@ -107,17 +108,28 @@ def error_dimension(params: RowParams, available_param_dimensions: InitRSP, e: s
 
 
 def error_dimension_call_property(params: RowParams, available_param_dimensions: InitRSP, e: str):
+    e = str(e)
+    split_error = e.split(":")
+    index_start = e.rfind("of range:")
+    list_value = e[index_start: -1].split(":")
+    if ">" in list_value[2]:
+        find_value = list_value[2].split(">")[1]
+    else:
+        find_value = list_value[2].split("<")[1]
+    index = find_value.strip().find(".")
+    find_value = find_value.strip()[:index+3]
 
     raise HTTPException(
         status_code=400, detail={
             "code": 8,
-            "type": "ErrorDimension",
-            "error_info": "Ошибка вычисления {e}".format(e=e),
-            "msg_user_en": "Calculation error, check parameters",
-            "msg_user_ru": "Ошибка вычисления, проверьте параметры",
+            "type": "OutOfRange",
+            "error_info": "Выход из диапозона вычисления:" + str(split_error[5]) + ", граничное условие=" + str(find_value),
+            "msg_user_en": "Out of range:" + str(split_error[5]) + ", boundary condition=" + str(find_value),
+            "msg_user_ru": "Выход из диапозона вычисления:" + str(split_error[5]) + ", граничное условие=" + str(find_value),
             "request_info": {
-                    "available_param_dimensions": available_param_dimensions,
-                    "available_property_dimensions": PROPERTY_AVAILABE_DIM.get(params.property),
+                "available_param_dimensions": available_param_dimensions,
+                "available_property_dimensions": PROPERTY_AVAILABE_DIM.get(params.property),
+                "boundary_condition": find_value
             }
         })
 
@@ -167,5 +179,48 @@ def error_dimension_table(available_param_dimensions: InitRSP, e: str):
             "request_info": {
                     "available_param_dimensions": available_param_dimensions,
                     "loc": e[0]
+            }
+        })
+
+
+def error_unknown(params: RowParams, available_param_dimensions: InitRSP, e: str):
+
+    raise HTTPException(
+        status_code=400, detail={
+            "code": 12,
+            "type": "ErrorDimension",
+            "error_info": "Не правильно указаны единицы измерения",
+            "msg_user_en": "Unit ({dim}) invalid",
+            "msg_user_ru": "Единица измерения ({dim}) не верна",
+            "request_info": {
+                    "available_param_dimensions": available_param_dimensions,
+                    "available_property_dimensions": PROPERTY_AVAILABE_DIM.get(params.property),
+                    "loc": e
+            }
+        })
+
+
+def error_dimension_call_property_table(available_param_dimensions: InitRSP, e: str):
+    e = str(e)
+    split_error = e.split(":")
+    index_start = e.rfind("of range:")
+    list_value = e[index_start: -1].split(":")
+    if ">" in list_value[2]:
+        find_value = list_value[2].split(">")[1]
+    else:
+        find_value = list_value[2].split("<")[1]
+    index = find_value.strip().find(".")
+    find_value = find_value.strip()[:index+3]
+
+    raise HTTPException(
+        status_code=400, detail={
+            "code": 13,
+            "type": "OutOfRange",
+            "error_info": "Выход из диапозона вычисления:" + str(split_error[3]) + ", граничное условие=" + str(find_value),
+            "msg_user_en": "Out of range:" + str(split_error[3]) + ", boundary condition=" + str(find_value),
+            "msg_user_ru": "Выход из диапозона вычисления:" + str(split_error[3]) + ", граничное условие=" + str(find_value),
+            "request_info": {
+                "available_param_dimensions": available_param_dimensions,
+                "boundary_condition": find_value
             }
         })

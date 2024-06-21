@@ -2,7 +2,7 @@ from decimal import Decimal
 from fastapi import HTTPException
 
 
-from src.api.substances_calc.requests.exceptions.exception_substances import error_count_param_dimension, error_dimension, error_dimension_call_property, error_dimension_table, error_parameters, error_params_min_value, error_params_negative, error_property, error_substance_id_count, error_substance_mode, error_value_core
+from src.api.substances_calc.requests.exceptions.exception_substances import error_count_param_dimension, error_dimension, error_dimension_call_property, error_dimension_call_property_table, error_dimension_table, error_parameters, error_params_min_value, error_params_negative, error_property, error_substance_id_count, error_substance_mode, error_unknown, error_value_core
 from src.core.get_params_in_SI import get_params_in_SI, get_params_in_SI_table
 from src.core.init import InitRSP
 from src.helpers.constants import PROPERTY_AVAILABE_DIM, PROPERTY_DIMENSION_SI, PROPERTY_MIN_DIM
@@ -94,7 +94,11 @@ def check_dimension(substaneces_objects_globals: InitRSP, substanceId: int, mode
         error_value_core(params, available_param_dimensions, str(e))
 
     except Exception as e:
-        error_dimension_call_property(params, available_param_dimensions, e)
+        if str(e).find("out of range"):
+            error_dimension_call_property(
+                params, available_param_dimensions, e)
+
+        error_unknown(params, available_param_dimensions, e)
 
 
 def check_table_dimension(substaneces_objects_globals: InitRSP, substanceId: int, mode: str, params: RowParams,
@@ -134,10 +138,10 @@ def check_table_dimension(substaneces_objects_globals: InitRSP, substanceId: int
                             str(prop))
                     ))
 
-    except RuntimeError as e:
-        raise HTTPException(
-            status_code=400, detail={"status_code": 400,
-                                     "msg": 'RSP core error: {}'.format(e)})
+    # except RuntimeError as e:
+    #    raise HTTPException(
+    #        status_code=400, detail={"status_code": 400,
+    #                                 "msg": 'RSP core error: {}'.format(e)})
 
     except (UnConsistentUnitsError, UnitDoesntExistError) as e:
         error_dimension_table(available_param_dimensions, str(e))
@@ -146,6 +150,9 @@ def check_table_dimension(substaneces_objects_globals: InitRSP, substanceId: int
         error_value_core(params, available_param_dimensions, str(e))
 
     except Exception as e:
-        error_dimension_call_property(params, available_param_dimensions, e)
+        if str(e).find("out of range"):
+            error_dimension_call_property_table(
+                available_param_dimensions, e)
+        error_unknown(params, available_param_dimensions, e)
 
     return results
