@@ -46,7 +46,7 @@ def error_parameters(params_global: list[str], substanceId: int, substances_obje
 # !! Перевести параметры на русский
 
 
-def error_dimension(property: list[str], substanceId: int, substances_objects_globals: InitRSP, mode: str):
+def error_property(property: str, substanceId: int, substances_objects_globals: InitRSP, mode: str):
     raise HTTPException(status_code=400, detail={
         "code": 4,
         "type": "PropetryNotFound",
@@ -106,17 +106,66 @@ def error_dimension(params: RowParams, available_param_dimensions: InitRSP, e: s
         })
 
 
-def error_unknown(params: RowParams, available_param_dimensions: InitRSP, e: str):
+def error_dimension_call_property(params: RowParams, available_param_dimensions: InitRSP, e: str):
 
     raise HTTPException(
         status_code=400, detail={
             "code": 8,
-            "type": "UnknownError",
+            "type": "ErrorDimension",
             "error_info": "Ошибка вычисления {e}".format(e=e),
             "msg_user_en": "Calculation error, check parameters",
             "msg_user_ru": "Ошибка вычисления, проверьте параметры",
             "request_info": {
                     "available_param_dimensions": available_param_dimensions,
                     "available_property_dimensions": PROPERTY_AVAILABE_DIM.get(params.property),
+            }
+        })
+
+
+def error_value_core(params: RowParams, available_param_dimensions: InitRSP, e: str):
+
+    raise HTTPException(
+        status_code=400, detail={
+            "code": 9,
+            "type": "CoreValueError",
+            "error_info": "Calculation error in rsp, try other parameters ({e})".format(e=e),
+            "msg_user_en": "Calculation error, use different input data",
+            "msg_user_ru": "Ошибка вычисления, используйте другие данные",
+            "request_info": {
+                    "available_param_dimensions": available_param_dimensions,
+                    "available_property_dimensions": PROPERTY_AVAILABE_DIM.get(params.property),
+            }
+        })
+
+
+def error_count_param_dimension(params_global: list[str], substanceId: int, substances_objects_globals: InitRSP):
+
+    count = str(len(params_global))
+    list_params = str(list(params_global))[1: -1]
+
+    raise HTTPException(
+        status_code=400, detail={
+            "code": 10,
+            "type": "InvalidDimensionParametrs",
+            "error_info": "Неправильно указано количество единиц измерения для расчета, ожидается `{count}`".format(count=count),
+            "msg_user_en": "Unit must contain " + count + " parameters " + list_params,
+            "msg_user_ru": "Поле с единицами измерения должно содержать " + count + " параметр(а) " + list_params,
+            "request_info": {"available_substances": substances_objects_globals.substances_calc_modes_id[substanceId]},
+        })
+
+
+def error_dimension_table(available_param_dimensions: InitRSP, e: str):
+    e = e[e.find("(") + 1: e.rfind(")")].split(",")
+
+    raise HTTPException(
+        status_code=400, detail={
+            "code": 11,
+            "type": "InvalidDimensionTable",
+            "error_info": "Не правильно указаны единицы измерения",
+            "msg_user_en": "Unit ({dim}) invalid, expected {ap}".format(dim=e[0], ap=available_param_dimensions[int(e[1])]),
+            "msg_user_ru": "Единица измерения ({dim}) не верна, ожидается {ap}".format(dim=e[0], ap=available_param_dimensions[int(e[1])]),
+            "request_info": {
+                    "available_param_dimensions": available_param_dimensions,
+                    "loc": e[0]
             }
         })

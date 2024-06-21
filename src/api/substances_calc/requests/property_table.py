@@ -1,5 +1,5 @@
 from fastapi import HTTPException
-from src.api.substances_calc.requests.verification_data.verification import check_count_substance_id, check_params, check_property_negative, check_table_dimension, in_mode_on_substance
+from src.api.substances_calc.requests.verification_data.verification import check_count_substance_id, check_params, check_property, check_property_negative, check_property_params, check_table_dimension, in_mode_on_substance
 from src.core.init import InitRSP
 from schemas import PropertyTableResponse
 
@@ -23,8 +23,11 @@ def property_table(substaneces_objects_globals: InitRSP, substanceId: int, modeI
             available_params_dimension = avail_param.available_param_dimension
             break
 
-    check_params(substaneces_objects_globals=substaneces_objects_globals,
+    check_params(substances_objects_globals=substaneces_objects_globals,
                  substanceId=substanceId, mode=mode, param_value=params.param_values)
+
+    check_property_params(substances_objects_globals=substaneces_objects_globals,
+                          substanceId=substanceId, mode=mode, param_value_dimen=params.param_dimensions)
 
     check_property_negative(params=params, params_global=substaneces_objects_globals.mode_descriptions[
         substanceId][mode])

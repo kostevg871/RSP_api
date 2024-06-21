@@ -1,4 +1,4 @@
-from src.api.substances_calc.requests.verification_data.verification import check_count_substance_id, check_dimension, check_params, check_property, check_property_negative, in_mode_on_substance
+from src.api.substances_calc.requests.verification_data.verification import check_count_substance_id, check_dimension, check_params, check_property, check_property_negative, check_property_params, in_mode_on_substance
 from src.core.init import InitRSP
 from src.helpers.constants import PROPERTY_AVAILABE_DIM
 from schemas import PropertyRowTableResponse, RowParams
@@ -27,6 +27,9 @@ def property_table_row(substances_objects_globals: InitRSP,
         if avail_param.value == mode:
             available_params_dimension = avail_param.available_param_dimension
             break
+
+    check_property_params(substances_objects_globals=substances_objects_globals,
+                          substanceId=substanceId, mode=mode, param_value_dimen=params.param_dimensions)
 
     check_params(substances_objects_globals=substances_objects_globals,
                  substanceId=substanceId, mode=mode, param_value=params.param_values)
