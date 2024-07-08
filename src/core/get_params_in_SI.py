@@ -35,10 +35,12 @@ def get_params_in_SI(params: RowParams, substaneces_objects_globals: InitRSP, su
         if d.strip() not in PROPERTY_AVAILABE_DIM[substaneces_objects_globals.substances_calc_modes_literals[substanceId][mode][index]]:
             raise UnConsistentUnitsError(str(d))
         if d.strip() == "":
+            results.append(float(str(Decimal(v)) + ' ' +
+                           d, PROPERTY_DIMENSION_SI[l]))
+
+        else:
             results.append(
                 float(convert(str(Decimal(v)) + ' ' + d, PROPERTY_DIMENSION_SI[l])))
-        else:
-            results.append(float(str(Decimal(v))))
 
     return results
 
@@ -66,14 +68,17 @@ def get_params_in_SI_table(params: RowParams, substaneces_objects_globals: InitR
             range(len(
                 substaneces_objects_globals.substances_calc_modes_literals[substanceId][mode]))
     ):
+        # !!! рассмотреть перевод в правильные единицы измерения
+
         if d.strip() not in PROPERTY_AVAILABE_DIM[substaneces_objects_globals.substances_calc_modes_literals[substanceId][mode][index]]:
             raise UnConsistentUnitsError(str(d), index)
         if d.strip() == "":
             if d.strip() not in PROPERTY_AVAILABE_DIM[substaneces_objects_globals.substances_calc_modes_literals[substanceId][mode][index]]:
                 raise UnConsistentUnitsError(str(d))
+            results.append(float(str(Decimal(v)) + ' ' +
+                           d, PROPERTY_DIMENSION_SI[l]))
+        else:
+
             results.append(
                 float(convert(str(Decimal(v)) + ' ' + d, PROPERTY_DIMENSION_SI[l])))
-        else:
-            results.append(float(str(Decimal(v))))
-
     return results
