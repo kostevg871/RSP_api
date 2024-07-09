@@ -1,9 +1,8 @@
 from decimal import Decimal
-from fastapi import HTTPException
 
 
-from src.api.substances_calc.requests.exceptions.exception_substances import error_count_param_dimension, error_dimension, error_dimension_call_property, error_dimension_call_property_table, error_dimension_table, error_parameters, error_params_min_value, error_params_negative, error_property, error_substance_id_count, error_substance_mode, error_unknown, error_value_core
-from src.core.get_params_in_SI import get_params_in_SI, get_params_in_SI_table
+from src.api.substances_calc.requests.exceptions.exception_substances import error_count_param_dimension, error_dimension, error_dimension_call_property, error_dimension_call_property_table, error_dimension_table, error_parameters, error_params_min_value, error_params_negative, error_property, error_substance_id_count, error_substance_mode, error_unknown, error_value_core, unphysical_two_phase
+from src.core.get_params_in_SI import get_params_in_SI_table
 from src.core.init import InitRSP
 from src.helpers.constants import PROPERTY_AVAILABE_DIM, PROPERTY_DIMENSION_SI, PROPERTY_MIN_DIM
 from schemas import PropertyRowDataResponseTable, RowParams
@@ -56,14 +55,15 @@ def check_params(substances_objects_globals: InitRSP,
 
 
 def check_property_params(substances_objects_globals: InitRSP,
-                          substanceId: int, mode: str, param_value_dimen: list[str]):
+                          substanceId: int, mode: str, param_value_dimen: list[str], available_param_dimensions: list[list[str]]):
 
     params_global: list[str] = substances_objects_globals.mode_descriptions[
         substanceId][mode]
 
     if not (len(param_value_dimen) == len(params_global)):
         error_count_param_dimension(params_global=params_global,
-                                    substanceId=substanceId, substances_objects_globals=substances_objects_globals)
+                                    substanceId=substanceId, substances_objects_globals=substances_objects_globals,
+                                    available_param_dimensions=available_param_dimensions)
 
 
 # Cheak negative value and convert temprature
@@ -94,10 +94,11 @@ def check_dimension(substaneces_objects_globals: InitRSP, substanceId: int, mode
         error_value_core(params, available_param_dimensions, str(e))
 
     except Exception as e:
-        if str(e).find("out of range"):
+        if str(e).find("out of range") != -1:
             error_dimension_call_property(
                 params, available_param_dimensions, e)
-
+        if str(e).find("two-phase") != -1:
+            unphysical_two_phase(e)
         error_unknown(params, available_param_dimensions, e)
 
 
@@ -137,11 +138,6 @@ def check_table_dimension(substaneces_objects_globals: InitRSP, substanceId: int
                         available_dimensions=PROPERTY_AVAILABE_DIM.get(
                             str(prop))
                     ))
-
-    # except RuntimeError as e:
-    #    raise HTTPException(
-    #        status_code=400, detail={"status_code": 400,
-    #                                 "msg": 'RSP core error: {}'.format(e)})
 
     except (UnConsistentUnitsError, UnitDoesntExistError) as e:
         error_dimension_table(available_param_dimensions, str(e))

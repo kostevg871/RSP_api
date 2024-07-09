@@ -27,7 +27,8 @@ def property_table(substaneces_objects_globals: InitRSP, substanceId: int, modeI
                  substanceId=substanceId, mode=mode, param_value=params.param_values)
 
     check_property_params(substances_objects_globals=substaneces_objects_globals,
-                          substanceId=substanceId, mode=mode, param_value_dimen=params.param_dimensions)
+                          substanceId=substanceId, mode=mode, param_value_dimen=params.param_dimensions,
+                          available_param_dimensions=available_params_dimension)
 
     check_property_negative(params=params, params_global=substaneces_objects_globals.mode_descriptions[
         substanceId][mode])

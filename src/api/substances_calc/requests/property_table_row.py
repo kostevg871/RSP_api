@@ -29,7 +29,7 @@ def property_table_row(substances_objects_globals: InitRSP,
             break
 
     check_property_params(substances_objects_globals=substances_objects_globals,
-                          substanceId=substanceId, mode=mode, param_value_dimen=params.param_dimensions)
+                          substanceId=substanceId, mode=mode, param_value_dimen=params.param_dimensions, available_param_dimensions=available_params_dimension)
 
     check_params(substances_objects_globals=substances_objects_globals,
                  substanceId=substanceId, mode=mode, param_value=params.param_values)

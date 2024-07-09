@@ -64,10 +64,6 @@ def get_properties_table_row(request: PropertyRowTableRequest) -> PropertyRowTab
                         responses={
                             200: {"model": PropertyRowTableResponse},
                             400: model_error_400,
-                            441: model_error_441,
-                            442: model_error_442,
-                            443: model_error_443,
-                            444: model_error_444
                         },
                         description="Запрос для получения таблицы значений по каждому параметру")
 def get_properties_table(request: PropertyTableRequest) -> PropertyTableResponse:

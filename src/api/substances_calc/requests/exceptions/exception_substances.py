@@ -110,12 +110,15 @@ def error_dimension(params: RowParams, available_param_dimensions: InitRSP, e: s
 def error_dimension_call_property(params: RowParams, available_param_dimensions: InitRSP, e: str):
     e = str(e)
     split_error = e.split(":")
-    index_start = e.rfind("of range:")
-    list_value = e[index_start: -1].split(":")
-    if ">" in list_value[2]:
-        find_value = list_value[2].split(">")[1]
+    len_split_error = len(split_error)-2
+    if ">" in e:
+        len_split = len(e.split(">"))
+        find_value = e.split(">")[len_split-1]
+        operator = "меньше "
     else:
-        find_value = list_value[2].split("<")[1]
+        len_split = len(e.split("<"))
+        find_value = e.split("<")[len_split-1]
+        operator = "больше "
     index = find_value.strip().find(".")
     find_value = find_value.strip()[:index+3]
 
@@ -123,9 +126,9 @@ def error_dimension_call_property(params: RowParams, available_param_dimensions:
         status_code=400, detail={
             "code": 8,
             "type": "OutOfRange",
-            "error_info": "Выход из диапозона вычисления:" + str(split_error[5]) + ", граничное условие=" + str(find_value),
-            "msg_user_en": "Out of range:" + str(split_error[5]) + ", boundary condition=" + str(find_value),
-            "msg_user_ru": "Выход из диапозона вычисления:" + str(split_error[5]) + ", граничное условие=" + str(find_value),
+            "error_info": e,
+            "msg_user_en": "Out of range:" + str(split_error[len_split_error]) + ", boundary condition=" + str(find_value),
+            "msg_user_ru": "Выход из диапозона вычисления:" + str(split_error[len_split_error]) + ", параметр должен быть " + operator + str(find_value),
             "request_info": {
                 "available_param_dimensions": available_param_dimensions,
                 "available_property_dimensions": PROPERTY_AVAILABE_DIM.get(params.property),
@@ -150,7 +153,8 @@ def error_value_core(params: RowParams, available_param_dimensions: InitRSP, e: 
         })
 
 
-def error_count_param_dimension(params_global: list[str], substanceId: int, substances_objects_globals: InitRSP):
+def error_count_param_dimension(params_global: list[str], substanceId: int, substances_objects_globals: InitRSP,
+                                available_param_dimensions: list[list[str]]):
 
     count = str(len(params_global))
     list_params = str(list(params_global))[1: -1]
@@ -162,23 +166,25 @@ def error_count_param_dimension(params_global: list[str], substanceId: int, subs
             "error_info": "Неправильно указано количество единиц измерения для расчета, ожидается `{count}`".format(count=count),
             "msg_user_en": "Unit must contain " + count + " parameters " + list_params,
             "msg_user_ru": "Поле с единицами измерения должно содержать " + count + " параметр(а) " + list_params,
-            "request_info": {"available_substances": substances_objects_globals.substances_calc_modes_id[substanceId]},
+            "request_info": {"available_substances": substances_objects_globals.substances_calc_modes_id[substanceId],
+                             "available_param_dimensions": available_param_dimensions},
         })
 
 
 def error_dimension_table(available_param_dimensions: InitRSP, e: str):
-    e = e[e.find("(") + 1: e.rfind(")")].split(",")
+
+    e_change = e[e.find("(") + 1: e.rfind(")")].split(",")
 
     raise HTTPException(
         status_code=400, detail={
             "code": 11,
             "type": "InvalidDimensionTable",
-            "error_info": "Не правильно указаны единицы измерения",
-            "msg_user_en": "Unit ({dim}) invalid, expected {ap}".format(dim=e[0], ap=available_param_dimensions[int(e[1])]),
-            "msg_user_ru": "Единица измерения ({dim}) не верна, ожидается {ap}".format(dim=e[0], ap=available_param_dimensions[int(e[1])]),
+            "error_info": e,
+            "msg_user_en": "Unit ({dim}) invalid, expected {ap}".format(dim=e_change[0], ap=available_param_dimensions[int(e_change[1])]),
+            "msg_user_ru": "Единица измерения ({dim}) не верна, ожидается {ap}".format(dim=e_change[0], ap=available_param_dimensions[int(e_change[1])]),
             "request_info": {
                     "available_param_dimensions": available_param_dimensions,
-                    "loc": e[0]
+                    "loc": e_change[0]
             }
         })
 
@@ -188,27 +194,33 @@ def error_unknown(params: RowParams, available_param_dimensions: InitRSP, e: str
     raise HTTPException(
         status_code=400, detail={
             "code": 12,
-            "type": "ErrorDimension",
-            "error_info": "Не правильно указаны единицы измерения",
-            "msg_user_en": "Unit ({dim}) invalid",
-            "msg_user_ru": "Единица измерения ({dim}) не верна",
+            "type": "UnknownError",
+            "error_info": "Неизвестная ошибка",
+            "msg_user_en": "-",
+            "msg_user_ru": "-",
             "request_info": {
                     "available_param_dimensions": available_param_dimensions,
                     "available_property_dimensions": PROPERTY_AVAILABE_DIM.get(params.property),
-                    "loc": e
+                    "loc": str(e)
             }
         })
 
 
 def error_dimension_call_property_table(available_param_dimensions: InitRSP, e: str):
+    # !!! find value переводить в единицу измерения в которой был отправлен запрос
     e = str(e)
     split_error = e.split(":")
-    index_start = e.rfind("of range:")
-    list_value = e[index_start: -1].split(":")
-    if ">" in list_value[2]:
-        find_value = list_value[2].split(">")[1]
+    len_split_error = len(split_error)-2
+
+    if ">" in e:
+        len_split = len(e.split(">"))-1
+        find_value = e.split(">")[len_split]
+        operator = "меньше "
     else:
-        find_value = list_value[2].split("<")[1]
+        len_split = len(e.split("<"))-1
+        find_value = e.split("<")[len_split]
+        operator = "больше "
+
     index = find_value.strip().find(".")
     find_value = find_value.strip()[:index+3]
 
@@ -216,11 +228,26 @@ def error_dimension_call_property_table(available_param_dimensions: InitRSP, e: 
         status_code=400, detail={
             "code": 13,
             "type": "OutOfRange",
-            "error_info": "Выход из диапозона вычисления:" + str(split_error[3]) + ", граничное условие=" + str(find_value),
-            "msg_user_en": "Out of range:" + str(split_error[3]) + ", boundary condition=" + str(find_value),
-            "msg_user_ru": "Выход из диапозона вычисления:" + str(split_error[3]) + ", граничное условие=" + str(find_value),
+            "error_info": e,
+            "msg_user_en": "Out of range:" + str(split_error[len_split_error]) + ", boundary condition=" + str(find_value),
+            "msg_user_ru": "Выход из диапозона вычисления:" + str(split_error[len_split_error]) + ", параметр должен быть " + operator + str(find_value),
             "request_info": {
                 "available_param_dimensions": available_param_dimensions,
                 "boundary_condition": find_value
+            }
+        })
+
+
+def unphysical_two_phase(e: str):
+
+    raise HTTPException(
+        status_code=400, detail={
+            "code": 14,
+            "type": "UnphysicalTwoPhase ",
+            "error_info": e,
+            "msg_user_en": "Isobaric heat capacity is unphysical in two-phase region",
+            "msg_user_ru": "Изобарная теплоемкость нефизична в двухфазной области",
+            "request_info": {
+                    "loc": str(e)
             }
         })
