@@ -33,5 +33,5 @@ uvicorn app:app --host 0.0.0.0 --port 80 - запуск на сервере
 
 ### Тестирование
 
-python -m pytest - запуск тестов
-python -m pytest --tb=long -vv - более подробное описание
+pytest - запуск тестов
+pytest --tb=long -vv - более подробное описание
