@@ -1,3 +1,4 @@
+import asyncio
 from math import copysign, isinf, isnan
 from unit_converter.converter import converts
 from decimal import Decimal
@@ -33,6 +34,8 @@ def convert_params_in_SI(substaneces_objects_globals: InitRSP,
     if params.property_dimension.strip() == "":
         val_dim = val
     else:
+        if str(val) in "E":
+            val = round(val, 3)
         val_dim = copysign(float(converts(str(abs(
             val)) + ' ' + PROPERTY_DIMENSION_SI[property], params.property_dimension)), val)
 
