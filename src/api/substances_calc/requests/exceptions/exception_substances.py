@@ -195,9 +195,9 @@ def error_unknown(params: RowParams, available_param_dimensions: InitRSP, e: str
         status_code=400, detail={
             "code": 12,
             "type": "UnknownError",
-            "error_info": "Неизвестная ошибка",
-            "msg_user_en": "-",
-            "msg_user_ru": "-",
+            "error_info": str(e),
+            "msg_user_en": "Unknown error",
+            "msg_user_ru": "Неизвестная ошибка, измените параметры расчета",
             "request_info": {
                     "available_param_dimensions": available_param_dimensions,
                     "available_property_dimensions": PROPERTY_AVAILABE_DIM.get(params.property),
