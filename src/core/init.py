@@ -162,8 +162,9 @@ class InitRSP:
             self.substances_calc_modes_available_descriptions.append({})
             for mode_id in self.mode_descriptions[i].keys():
                 if(subst=='H2O_IF97' and mode_id=='DT'):
+                    del self.mode_descriptions[i][mode_id]
                     continue
-                
+
                 # режимы вычисления
                 self.substances_calc_modes_id[i].append(str(mode_id))
                 # декомпозиция режимов вычисления на литералы
