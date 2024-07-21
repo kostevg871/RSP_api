@@ -227,7 +227,7 @@ def test_get_calc_modes_info_id_1_200():
 
 
 def test_get_calc_modes_info_id_0_200():
-    res = client.get("/getCalcModesInfo?id=1")
+    res = client.get("/getCalcModesInfo?id=0")
     assert res.status_code == 200
     assert res.json() == {
         "data": [
