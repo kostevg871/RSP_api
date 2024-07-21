@@ -6,7 +6,7 @@ client = TestClient(app)
 
 
 def test_get_property_table_200_0_PT_DYNVIS():
-    res = client.get("/getPropertiesTable", json={
+    res = client.post("/getPropertiesTable", json={
         "substanceId": 0,
         "modeId": "PT",
         "params": {
