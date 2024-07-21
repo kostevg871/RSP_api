@@ -232,182 +232,178 @@ def test_get_calc_modes_info_id_0_200():
     assert res.json() == {
         "data": [
             {
-                "data": [
-                    {
-                        "value": "HS",
-                        "filter_params": [
-                            "Enthalpy",
-                            "Enthropy"
-                        ],
-                        "param_literals": [
-                            "H",
-                            "S"
-                        ],
-                        "param_dimensions": [
-                            "J*kg^-1",
-                            "J*kg^-1*K^-1"
-                        ],
-                        "available_param_dimension": [
-                            [
-                                "J*kg^-1",
-                                "kJ*kg^-1",
-                                "MJ*kg^-1"
-                            ],
-                            [
-                                "J*kg^-1*K^-1",
-                                "kJ*kg^-1*K^-1",
-                                "MJ*kg^-1*K^-1"
-                            ]
-                        ]
-                    },
-                    {
-                        "value": "P",
-                        "filter_params": [
-                            "Saturation pressure"
-                        ],
-                        "param_literals": [
-                            "PS"
-                        ],
-                        "param_dimensions": [
-                            "Pa"
-                        ],
-                        "available_param_dimension": [
-                            [
-                                "Pa",
-                                "kPa",
-                                "MPa",
-                                "bar"
-                            ]
-                        ]
-                    },
-                    {
-                        "value": "PH",
-                        "filter_params": [
-                            "Pressure",
-                            "Enthalpy"
-                        ],
-                        "param_literals": [
-                            "P",
-                            "H"
-                        ],
-                        "param_dimensions": [
-                            "Pa",
-                            "J*kg^-1"
-                        ],
-                        "available_param_dimension": [
-                            [
-                                "Pa",
-                                "kPa",
-                                "MPa",
-                                "bar"
-                            ],
-                            [
-                                "J*kg^-1",
-                                "kJ*kg^-1",
-                                "MJ*kg^-1"
-                            ]
-                        ]
-                    },
-                    {
-                        "value": "PS",
-                        "filter_params": [
-                            "Pressure",
-                            "Enthropy"
-                        ],
-                        "param_literals": [
-                            "P",
-                            "S"
-                        ],
-                        "param_dimensions": [
-                            "Pa",
-                            "J*kg^-1*K^-1"
-                        ],
-                        "available_param_dimension": [
-                            [
-                                "Pa",
-                                "kPa",
-                                "MPa",
-                                "bar"
-                            ],
-                            [
-                                "J*kg^-1*K^-1",
-                                "kJ*kg^-1*K^-1",
-                                "MJ*kg^-1*K^-1"
-                            ]
-                        ]
-                    },
-                    {
-                        "value": "PT",
-                        "filter_params": [
-                            "Pressure",
-                            "Temperature"
-                        ],
-                        "param_literals": [
-                            "P",
-                            "T"
-                        ],
-                        "param_dimensions": [
-                            "Pa",
-                            "K"
-                        ],
-                        "available_param_dimension": [
-                            [
-                                "Pa",
-                                "kPa",
-                                "MPa",
-                                "bar"
-                            ],
-                            [
-                                "K",
-                                "°C",
-                                "°F"
-                            ]
-                        ]
-                    },
-                    {
-                        "value": "T",
-                        "filter_params": [
-                            "Saturation temperature"
-                        ],
-                        "param_literals": [
-                            "TS"
-                        ],
-                        "param_dimensions": [
-                            "K"
-                        ],
-                        "available_param_dimension": [
-                            [
-                                "K",
-                                "°C",
-                                "°F"
-                            ]
-                        ]
-                    },
-                    {
-                        "value": "TX",
-                        "filter_params": [
-                            "Saturation temperature",
-                            "Steam mass fraction"
-                        ],
-                        "param_literals": [
-                            "TS",
-                            "X"
-                        ],
-                        "param_dimensions": [
-                            "K",
-                            ""
-                        ],
-                        "available_param_dimension": [
-                            [
-                                "K",
-                                "°C",
-                                "°F"
-                            ],
-                            [
-                                ""
-                            ]
-                        ]
-                    }
+                "value": "HS",
+                "filter_params": [
+                    "Enthalpy",
+                    "Enthropy"
+                ],
+                "param_literals": [
+                    "H",
+                    "S"
+                ],
+                "param_dimensions": [
+                    "J*kg^-1",
+                    "J*kg^-1*K^-1"
+                ],
+                "available_param_dimension": [
+                    [
+                        "J*kg^-1",
+                        "kJ*kg^-1",
+                        "MJ*kg^-1"
+                    ],
+                    [
+                        "J*kg^-1*K^-1",
+                        "kJ*kg^-1*K^-1",
+                        "MJ*kg^-1*K^-1"
+                    ]
+                ]
+            },
+            {
+                "value": "P",
+                "filter_params": [
+                    "Saturation pressure"
+                ],
+                "param_literals": [
+                    "PS"
+                ],
+                "param_dimensions": [
+                    "Pa"
+                ],
+                "available_param_dimension": [
+                    [
+                        "Pa",
+                        "kPa",
+                        "MPa",
+                        "bar"
+                    ]
+                ]
+            },
+            {
+                "value": "PH",
+                "filter_params": [
+                    "Pressure",
+                    "Enthalpy"
+                ],
+                "param_literals": [
+                    "P",
+                    "H"
+                ],
+                "param_dimensions": [
+                    "Pa",
+                    "J*kg^-1"
+                ],
+                "available_param_dimension": [
+                    [
+                        "Pa",
+                        "kPa",
+                        "MPa",
+                        "bar"
+                    ],
+                    [
+                        "J*kg^-1",
+                        "kJ*kg^-1",
+                        "MJ*kg^-1"
+                    ]
+                ]
+            },
+            {
+                "value": "PS",
+                "filter_params": [
+                    "Pressure",
+                    "Enthropy"
+                ],
+                "param_literals": [
+                    "P",
+                    "S"
+                ],
+                "param_dimensions": [
+                    "Pa",
+                    "J*kg^-1*K^-1"
+                ],
+                "available_param_dimension": [
+                    [
+                        "Pa",
+                        "kPa",
+                        "MPa",
+                        "bar"
+                    ],
+                    [
+                        "J*kg^-1*K^-1",
+                        "kJ*kg^-1*K^-1",
+                        "MJ*kg^-1*K^-1"
+                    ]
+                ]
+            },
+            {
+                "value": "PT",
+                "filter_params": [
+                    "Pressure",
+                    "Temperature"
+                ],
+                "param_literals": [
+                    "P",
+                    "T"
+                ],
+                "param_dimensions": [
+                    "Pa",
+                    "K"
+                ],
+                "available_param_dimension": [
+                    [
+                        "Pa",
+                        "kPa",
+                        "MPa",
+                        "bar"
+                    ],
+                    [
+                        "K",
+                        "°C",
+                        "°F"
+                    ]
+                ]
+            },
+            {
+                "value": "T",
+                "filter_params": [
+                    "Saturation temperature"
+                ],
+                "param_literals": [
+                    "TS"
+                ],
+                "param_dimensions": [
+                    "K"
+                ],
+                "available_param_dimension": [
+                    [
+                        "K",
+                        "°C",
+                        "°F"
+                    ]
+                ]
+            },
+            {
+                "value": "TX",
+                "filter_params": [
+                    "Saturation temperature",
+                    "Steam mass fraction"
+                ],
+                "param_literals": [
+                    "TS",
+                    "X"
+                ],
+                "param_dimensions": [
+                    "K",
+                    ""
+                ],
+                "available_param_dimension": [
+                    [
+                        "K",
+                        "°C",
+                        "°F"
+                    ],
+                    [
+                        ""
+                    ]
                 ]
             }
         ]
