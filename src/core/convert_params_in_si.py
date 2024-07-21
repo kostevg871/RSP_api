@@ -19,7 +19,7 @@ def convert_params_in_SI(substaneces_objects_globals: InitRSP,
                                     substanceId=substanceId, mode=mode)
 
     val = rsp_callProperty(
-        substaneces_objects_globals.substances_objects[
+        substaneces_objects_globals.substances_objects_no_info[
             substanceId],
         property,
         mode,

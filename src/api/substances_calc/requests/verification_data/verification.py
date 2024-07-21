@@ -118,8 +118,9 @@ def check_table_dimension(substaneces_objects_globals: InitRSP, substanceId: int
                         dimension=PROPERTY_DIMENSION_SI[prop],
                         propertyId=str(prop),
                         value=str(Decimal(rsp.callProperty(
-                            substaneces_objects_globals.substances_objects[int(
-                                substanceId)],
+                            # substaneces_objects_globals.substances_objects[int(
+                            #     substanceId)],
+                            substaneces_objects_globals.substances_objects_no_info[int(substanceId)],
                             prop,
                             mode,
                             params_in_SI
