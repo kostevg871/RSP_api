@@ -92,10 +92,10 @@ def test_get_available_substances_400_sub_fail_mode_fail():
     }
 
 
-def test_get_available_substances_400_sub_3_mode_fail():
-    mode = "dasda"
+def test_get_available_substances_400_sub_0_mode_fail():
+    mode = "DT"
     res = client.get(
-        "/getPropertiesLists?substanceId=3&modeId={mode}".format(mode=mode))
+        "/getPropertiesLists?substanceId=0&modeId={mode}".format(mode=mode))
     assert res.status_code == 400
     assert res.json() == {
         "detail": {
@@ -106,10 +106,13 @@ def test_get_available_substances_400_sub_3_mode_fail():
             "msg_user_ru": "Мод={mode} не существует для данного вещества".format(mode=mode.upper()),
             "request_info": {
                 "available_substances": [
-                    "DT",
-                    "PT",
-                    "T",
-                    "TX"
+                    'HS',
+                    'P',
+                    'PH',
+                    'PS',
+                    'PT',
+                    'T',
+                    'TX',
                 ]
             }
         }

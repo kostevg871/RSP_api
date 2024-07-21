@@ -18,7 +18,7 @@ import rsp
 
 
 def in_mode_on_substance(substaneces_objects_globals: InitRSP, substanceId: int, mode: str) -> None:
-    if mode not in substaneces_objects_globals.properties[substanceId]:
+    if mode not in substaneces_objects_globals.substances_calc_modes_id[substanceId]:
         error_substance_mode(substaneces_objects_globals=substaneces_objects_globals,
                              substanceId=substanceId,
                              mode=mode)
