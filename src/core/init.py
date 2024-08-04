@@ -97,9 +97,14 @@ class InitRSP:
         # список пояснений для доступных свойств для каждого режима вычисления по веществам
         self.properties_descriptions = []
 
+        self.substances_objects_no_info = []
+
         for subst, i in zip(self.substances_names, range(len(self.substances_names))):
+            
+            self.substances_objects_no_info.append(rsp.createSubstance(str(subst)))
+
             # создаем объекты веществ
-            self.substances_objects.append(rsp.createSubstance(subst))
+            self.substances_objects.append(rsp.createSubstance(str(subst)))
 
             # заполняем список объектов для getAvailableSubstances
             self.data_get_substances_list.append(

@@ -27,7 +27,7 @@ def get_available_substances() -> AvailableSubstance:
 
 @router_substances.get("/getCalcModesInfo",
                        responses={
-                           200: {"model": Property},
+                           200: {"model": ParameterMode},
                            400: model_error_400
                        },
                        description="Запрос для получения Режима параметров")
