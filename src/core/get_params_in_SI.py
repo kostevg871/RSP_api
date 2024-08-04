@@ -2,6 +2,7 @@ from unit_converter.converter import convert
 from decimal import Decimal
 
 
+from src.helpers.help_func import float_to_str
 from src.core.init import InitRSP
 from src.helpers.constants import PROPERTY_AVAILABE_DIM, PROPERTY_DIMENSION_SI, PROPERTY_MIN_DIM
 from schemas import RowParams
@@ -36,11 +37,10 @@ def get_params_in_SI(params: RowParams, substaneces_objects_globals: InitRSP, su
             raise UnConsistentUnitsError(str(d))
         if d.strip() == "":
             results.append(float(str(Decimal(v))))
-
         else:
+            v = float_to_str(v)
             results.append(
-                float(convert(str(Decimal(v)) + ' ' + d, PROPERTY_DIMENSION_SI[l])))
-
+                float(convert(v + ' ' + d, PROPERTY_DIMENSION_SI[l])))
     return results
 
 
@@ -76,7 +76,7 @@ def get_params_in_SI_table(params: RowParams, substaneces_objects_globals: InitR
                 raise UnConsistentUnitsError(str(d))
             results.append(float(str(Decimal(v))))
         else:
-
+            v = float_to_str(v)
             results.append(
-                float(convert(str(Decimal(v)) + ' ' + d, PROPERTY_DIMENSION_SI[l])))
+                float(convert(v + ' ' + d, PROPERTY_DIMENSION_SI[l])))
     return results
