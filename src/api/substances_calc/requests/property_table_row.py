@@ -41,11 +41,16 @@ def property_table_row(substances_objects_globals: InitRSP,
                               mode=mode, params=params, property=property,
                               available_param_dimensions=available_params_dimension)
 
+    if params.property_dimension.strip() == "" and params.property_dimension.strip() not in PROPERTY_AVAILABE_DIM.get(params.property):
+        property_dimension = PROPERTY_AVAILABE_DIM.get(params.property)[0]
+    else:
+        property_dimension = params.property_dimension
+
     return {
         "available_param_dimensions": available_params_dimension,
         "data":
         {
-            "dimension": params.property_dimension,
+            "dimension": property_dimension,
             "propertyId": str(substances_objects_globals.properties[substanceId][mode][property]),
             "value": str(val_dim),
             "available_property_dimensions": PROPERTY_AVAILABE_DIM.get(params.property)

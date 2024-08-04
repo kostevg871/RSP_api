@@ -37,6 +37,7 @@ def get_params_in_SI(params: RowParams, substaneces_objects_globals: InitRSP, su
             raise UnConsistentUnitsError(str(d))
         if d.strip() == "":
             results.append(float(str(Decimal(v))))
+        
         else:
             v = float_to_str(v)
             results.append(

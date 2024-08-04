@@ -28,7 +28,7 @@ def convert_params_in_SI(substaneces_objects_globals: InitRSP,
     if isnan(val):
         return error_calculating_core()
     if isinf(val):
-        val_dim = str(Decimal(val))
+        val_dim = str(Decimal(val))[1:]
         return val_dim
 
     if params.property_dimension.strip() == "":
