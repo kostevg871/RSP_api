@@ -22,11 +22,10 @@ def test_prop_row_substance_PT_DYNVIS_1():
                           }
                       }
                       )
-    assert res.status_code == 200
+    assert res.status_code == 400
     res = res.json()
-    assert res["data"]["value"] == "73.813603020747"
-    assert res["data"]["propertyId"] == "Dynamic viscosity"
-    assert res["data"]["dimension"] == "Pa*s"
+    assert res["detail"]["code"] == 15
+    assert res["detail"]["msg_user_ru"] == "Укажите единицу измерения, ожидается ['Pa*s']"
 
 
 def test_prop_row_substance_PT_DYNVIS_2():
@@ -36,7 +35,7 @@ def test_prop_row_substance_PT_DYNVIS_2():
                           "modeId": "PT",
                           "params": {
                               "property": "DYNVIS",
-                              "property_dimension": "",
+                              "property_dimension": "Pa*s",
                               "param_values": [
                                   700, 0.0000000001
                               ],
@@ -72,8 +71,8 @@ def test_prop_row_substance_PT_DYNVIS_3():
                       )
     assert res.status_code == 400
     res = res.json()
-    assert res["detail"]["code"] == 7
-    assert res["detail"]["msg_user_ru"] == "Единица измерения (str) не верна"
+    assert res["detail"]["code"] == 15
+    assert res["detail"]["msg_user_ru"] == "Единица измерения (str) не верна, ожидается ['Pa*s']"
 
 
 def test_prop_row_substance_PT_DYNVIS_4_empty_dimension():
@@ -83,7 +82,7 @@ def test_prop_row_substance_PT_DYNVIS_4_empty_dimension():
                           "modeId": "PT",
                           "params": {
                               "property": "DYNVIS",
-                              "property_dimension": "",
+                              "property_dimension": "Pa*s",
                               "param_values": [
                                   700, -273.14444
                               ],
@@ -121,19 +120,17 @@ def test_prop_row_substance_PT_DYNVIS_Pa_Less_C():
     res = res.json()
     assert res["detail"]["code"] == 8
     assert res["detail"]["type"] == "OutOfRange"
-    assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: \"P < Pmin, параметр должен быть больше 611.65"
-
-# !!! Остановился тута
+    assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: P < Pmin, параметр должен быть больше 611.65"
 
 
-def test_prop_row_substance_PT_D_Pa_More_C():
+def test_prop_row_substance_PT_DYNVIS_Pa_More_C():
     res = client.post("/getPropertiesTableRow",
                       json={
                           "substanceId": 0,
                           "modeId": "PT",
                           "params": {
-                              "property": "D",
-                              "property_dimension": "kg*m^-3",
+                              "property": "DYNVIS",
+                              "property_dimension": "Pa*s",
                               "param_values": [
                                   100000000, -273.14444
                               ],
@@ -150,13 +147,13 @@ def test_prop_row_substance_PT_D_Pa_More_C():
     assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: P > Pmax, параметр должен быть меньше 100000000.00"
 
 
-def test_prop_row_substance_PT_D_C_Negative():
+def test_prop_row_substance_PT_DYNVIS_C_Negative():
     res = client.post("/getPropertiesTableRow",
                       json={
                           "substanceId": 0,
                           "modeId": "PT",
                           "params": {
-                              "property": "D",
+                              "property": "DYNVIS",
                               "property_dimension": "kg*m^-3",
                               "param_values": [
                                   100000000, -273.300
@@ -174,14 +171,14 @@ def test_prop_row_substance_PT_D_C_Negative():
     assert res["detail"]["msg_user_ru"] == "Параметр Temperature (°C) не может быть меньше -273.15"
 
 
-def test_prop_row_substance_PT_D_C_More_Pa_More():
+def test_prop_row_substance_PT_DYNVIS_C_More_Pa_More():
     res = client.post("/getPropertiesTableRow",
                       json={
                           "substanceId": 0,
                           "modeId": "PT",
                           "params": {
-                              "property": "D",
-                              "property_dimension": "kg*m^-3",
+                              "property": "DYNVIS",
+                              "property_dimension": "Pa*s",
                               "param_values": [
                                   100000000, 15000
                               ],
@@ -198,14 +195,14 @@ def test_prop_row_substance_PT_D_C_More_Pa_More():
     assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: T > Tmax, параметр должен быть меньше 2273.15"
 
 
-def test_prop_row_substance_PT_D_C_Less_Pa_Less():
+def test_prop_row_substance_PT_DYNVIS_C_Less_Pa_Less():
     res = client.post("/getPropertiesTableRow",
                       json={
                           "substanceId": 0,
                           "modeId": "PT",
                           "params": {
-                              "property": "D",
-                              "property_dimension": "kg*m^-3",
+                              "property": "DYNVIS",
+                              "property_dimension": "Pa*s",
                               "param_values": [
                                   700, 0.00000000001
                               ],
@@ -217,19 +214,19 @@ def test_prop_row_substance_PT_D_C_Less_Pa_Less():
                       )
     assert res.status_code == 200
     res = res.json()
-    assert res["data"]["propertyId"] == "Density"
-    assert res["data"]["value"] == '933.7869293793411'
-    assert res["data"]["dimension"] == "kg*m^-3"
+    assert res["data"]["dimension"] == "Pa*s"
+    assert res["data"]["propertyId"] == "Dynamic viscosity"
+    assert res["data"]["value"] == 'Infinity'
 
 
-def test_prop_row_substance_PT_D_C_More_Pa_Less():
+def test_prop_row_substance_PT_DYNVIS_C_More_Pa_Less():
     res = client.post("/getPropertiesTableRow",
                       json={
                           "substanceId": 0,
                           "modeId": "PT",
                           "params": {
-                              "property": "D",
-                              "property_dimension": "kg*m^-3",
+                              "property": "DYNVIS",
+                              "property_dimension": "Pa*s",
                               "param_values": [
                                   0, 100000
                               ],
@@ -247,14 +244,14 @@ def test_prop_row_substance_PT_D_C_More_Pa_Less():
     assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: T > Tmax, параметр должен быть меньше 2273.15"
 
 
-def test_prop_row_substance_PT_D_C_Less_Pa_More():
+def test_prop_row_substance_PT_DYNVIS_C_Less_Pa_More():
     res = client.post("/getPropertiesTableRow",
                       json={
                           "substanceId": 0,
                           "modeId": "PT",
                           "params": {
-                              "property": "D",
-                              "property_dimension": "kg*m^-3",
+                              "property": "DYNVIS",
+                              "property_dimension": "Pa*s",
                               "param_values": [
                                   10000000, -20
                               ],
@@ -272,14 +269,14 @@ def test_prop_row_substance_PT_D_C_Less_Pa_More():
     assert res["detail"]["msg_user_ru"] == "Параметр Temperature(K) не может быть отрицательным"
 
 
-def test_prop_row_substance_PT_D_C_Less():
+def test_prop_row_substance_PT_DYNVIS_C_Less():
     res = client.post("/getPropertiesTableRow",
                       json={
                           "substanceId": 0,
                           "modeId": "PT",
                           "params": {
-                              "property": "D",
-                              "property_dimension": "kg*m^-3",
+                              "property": "DYNVIS",
+                              "property_dimension": "Pa*s",
                               "param_values": [
                                   1000, 3000
                               ],
@@ -296,14 +293,14 @@ def test_prop_row_substance_PT_D_C_Less():
     assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: T > Tmax, параметр должен быть меньше 2273.15"
 
 
-def test_prop_row_substance_PT_D_400_P_less():
+def test_prop_row_substance_PT_DYNVIS_400_P_less():
     res = client.post("/getPropertiesTableRow",
                       json={
                           "substanceId": 0,
                           "modeId": "PT",
                           "params": {
-                              "property": "D",
-                              "property_dimension": "kg*m^-3",
+                              "property": "DYNVIS",
+                              "property_dimension": "Pa*s",
                               "param_values": [
                                   1, 1
                               ],
@@ -316,17 +313,17 @@ def test_prop_row_substance_PT_D_400_P_less():
     assert res.status_code == 400
     res = res.json()
     assert res["detail"]["code"] == 8
-    assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: \"P < Pmin, параметр должен быть больше 611.65"
+    assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: P < Pmin, параметр должен быть больше 611.65"
 
 
-def test_prop_row_substance_PT_D_400_P_more_and_MPa():
+def test_prop_row_substance_PT_DYNVIS_400_P_more_and_MPa():
     res = client.post("/getPropertiesTableRow",
                       json={
                           "substanceId": 0,
                           "modeId": "PT",
                           "params": {
-                              "property": "D",
-                              "property_dimension": "kg*m^-3",
+                              "property": "DYNVIS",
+                              "property_dimension": "Pa*s",
                               "param_values": [
                                   12000, 1
                               ],
@@ -342,14 +339,14 @@ def test_prop_row_substance_PT_D_400_P_more_and_MPa():
     assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: P > Pmax, параметр должен быть меньше 100000000.00"
 
 
-def test_prop_row_substance_PT_D_400_T_more():
+def test_prop_row_substance_PT_DYNVIS_400_T_more():
     res = client.post("/getPropertiesTableRow",
                       json={
                           "substanceId": 0,
                           "modeId": "PT",
                           "params": {
-                              "property": "D",
-                              "property_dimension": "kg*m^-3",
+                              "property": "DYNVIS",
+                              "property_dimension": "Pa*s",
                               "param_values": [
                                   1, 3000
                               ],
@@ -365,14 +362,14 @@ def test_prop_row_substance_PT_D_400_T_more():
     assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: T > Tmax, параметр должен быть меньше 2273.15"
 
 
-def test_prop_row_substance_PT_D_200_T_less_and_C():
+def test_prop_row_substance_PT_DYNVIS_200_T_less_and_C():
     res = client.post("/getPropertiesTableRow",
                       json={
                           "substanceId": 0,
                           "modeId": "PT",
                           "params": {
-                              "property": "D",
-                              "property_dimension": "kg*m^-3",
+                              "property": "DYNVIS",
+                              "property_dimension": "Pa*s",
                               "param_values": [
                                   1, -237.010101010101010101001010101
                               ],
@@ -384,18 +381,18 @@ def test_prop_row_substance_PT_D_200_T_less_and_C():
                       )
     assert res.status_code == 200
     res = res.json()
-    assert res["data"]["value"] == "933.8617746435223"
-    assert res["data"]["dimension"] == "kg*m^-3"
+    assert res["data"]["value"] == "Infinity"
+    assert res["data"]["dimension"] == "Pa*s"
 
 
-def test_prop_row_substance_PT_D_400_T_more():
+def test_prop_row_substance_PT_DYNVIS_400_T_more():
     res = client.post("/getPropertiesTableRow",
                       json={
                           "substanceId": 0,
                           "modeId": "PT",
                           "params": {
-                              "property": "D",
-                              "property_dimension": "kg*m^-3",
+                              "property": "DYNVIS",
+                              "property_dimension": "Pa*s",
                               "param_values": [
                                   128000, 5000
                               ],
