@@ -91,7 +91,7 @@ def test_prop_row_substance_PT_CP_400_P_less():
     assert res.status_code == 400
     res = res.json()
     assert res["detail"]["code"] == 8
-    assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: \"P < Pmin, параметр должен быть больше 611.65"
+    assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: P < Pmin, параметр должен быть больше 611.65"
 
 
 def test_prop_row_substance_PT_CP_400_P_more_and_MPa():

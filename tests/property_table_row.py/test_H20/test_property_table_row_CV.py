@@ -118,8 +118,7 @@ def test_prop_row_substance_PT_CV_Pa_Less_C():
     res = res.json()
     assert res["detail"]["code"] == 8
     assert res["detail"]["type"] == "OutOfRange"
-    # !!! Ответ не корректен
-    assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: \"P < Pmin, параметр должен быть больше 611.65"
+    assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: P < Pmin, параметр должен быть больше 611.65"
 
 
 def test_prop_row_substance_PT_CV_Pa_More_C():
@@ -291,7 +290,7 @@ def test_prop_row_substance_PT_CV_C_Less():
     assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: T > Tmax, параметр должен быть меньше 2273.15"
 
 
-def test_prop_row_substance_PT_CP_400_P_less():
+def test_prop_row_substance_PT_CV_400_P_less():
     res = client.post("/getPropertiesTableRow",
                       json={
                           "substanceId": 0,
@@ -311,7 +310,7 @@ def test_prop_row_substance_PT_CP_400_P_less():
     assert res.status_code == 400
     res = res.json()
     assert res["detail"]["code"] == 8
-    assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: \"P < Pmin, параметр должен быть больше 611.65"
+    assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: P < Pmin, параметр должен быть больше 611.65"
 
 
 def test_prop_row_substance_PT_CP_400_P_more_and_MPa():

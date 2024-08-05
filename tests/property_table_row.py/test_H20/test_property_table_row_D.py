@@ -5,14 +5,14 @@ from fastapi.testclient import TestClient
 client = TestClient(app)
 
 
-def test_prop_row_substance_PT_D_1_empty_dimension():
+def test_prop_row_substance_PT_D_1():
     res = client.post("/getPropertiesTableRow",
                       json={
                           "substanceId": 0,
                           "modeId": "PT",
                           "params": {
                               "property": "D",
-                              "property_dimension": "   ",
+                              "property_dimension": "kg*m^-3",
                               "param_values": [
                                   128000, 200
                               ],
@@ -45,11 +45,10 @@ def test_prop_row_substance_PT_D_2_empty_dimension():
                           }
                       }
                       )
-    assert res.status_code == 200
+    assert res.status_code == 400
     res = res.json()
-    assert res["data"]["value"] == "933.7869293793411"
-    assert res["data"]["propertyId"] == "Density"
-    assert res["data"]["dimension"] == "kg*m^-3"
+    assert res["detail"]["code"] == 15
+    assert res["detail"]["msg_user_ru"] == "Укажите единицу измерения, ожидается ['kg*m^-3']"
 
 
 def test_prop_row_substance_PT_D_dimension_error():
@@ -71,8 +70,8 @@ def test_prop_row_substance_PT_D_dimension_error():
                       )
     assert res.status_code == 400
     res = res.json()
-    assert res["detail"]["code"] == 7
-    assert res["detail"]["msg_user_ru"] == "Единица измерения (str) не верна"
+    assert res["detail"]["code"] == 15
+    assert res["detail"]["msg_user_ru"] == "Единица измерения (str) не верна, ожидается ['kg*m^-3']"
 
 
 def test_prop_row_substance_PT_D_3():
@@ -120,8 +119,7 @@ def test_prop_row_substance_PT_D_Pa_Less_C():
     res = res.json()
     assert res["detail"]["code"] == 8
     assert res["detail"]["type"] == "OutOfRange"
-    # !!! Ответ не корректен
-    assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: \"P < Pmin, параметр должен быть больше 611.65"
+    assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: P < Pmin, параметр должен быть больше 611.65"
 
 
 def test_prop_row_substance_PT_D_Pa_More_C():
@@ -314,7 +312,7 @@ def test_prop_row_substance_PT_D_400_P_less():
     assert res.status_code == 400
     res = res.json()
     assert res["detail"]["code"] == 8
-    assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: \"P < Pmin, параметр должен быть больше 611.65"
+    assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: P < Pmin, параметр должен быть больше 611.65"
 
 
 def test_prop_row_substance_PT_D_400_P_more_and_MPa():
