@@ -1,7 +1,7 @@
 from decimal import Decimal
 
 
-from src.api.substances_calc.requests.exceptions.exception_substances import error_count_param_dimension, error_dimension, error_dimension_call_property, error_dimension_call_property_table, error_dimension_table, error_parameters, error_params_min_value, error_params_negative, error_property, error_substance_id_count, error_substance_mode, error_unknown, error_value_core, unphysical_two_phase
+from src.api.substances_calc.requests.exceptions.exception_substances import error_count_param_dimension, error_dimension, error_dimension_call_property, error_dimension_call_property_table, error_dimension_row_table, error_dimension_table, error_parameters, error_params_min_value, error_params_negative, error_property, error_substance_id_count, error_substance_mode, error_unknown, error_value_core, unphysical_two_phase
 from src.core.get_params_in_SI import get_params_in_SI_table
 from src.core.init import InitRSP
 from src.helpers.constants import PROPERTY_AVAILABE_DIM, PROPERTY_DIMENSION_SI, PROPERTY_MIN_DIM
@@ -79,6 +79,14 @@ def check_property_negative(params: RowParams, params_global: list[str]) -> None
                     params_global=params_global, index=index, dimens=dimens)
 
 
+def check_property_dimension_row(params=RowParams, available_param_dimensions=list[list[str]]):
+    if params.property_dimension.strip() == "" and params.property_dimension.strip() in PROPERTY_AVAILABE_DIM.get(params.property):
+        return params.property_dimension.strip()
+    if params.property_dimension.strip() not in PROPERTY_AVAILABE_DIM.get(params.property):
+        error_dimension_row_table(
+            params=params, available_param_dimensions=available_param_dimensions)
+    return params.property_dimension.strip()
+
 # check_dimension and params
 
 
@@ -120,7 +128,8 @@ def check_table_dimension(substaneces_objects_globals: InitRSP, substanceId: int
                         value=str(Decimal(rsp.callProperty(
                             # substaneces_objects_globals.substances_objects[int(
                             #     substanceId)],
-                            substaneces_objects_globals.substances_objects_no_info[int(substanceId)],
+                            substaneces_objects_globals.substances_objects_no_info[int(
+                                substanceId)],
                             prop,
                             mode,
                             params_in_SI

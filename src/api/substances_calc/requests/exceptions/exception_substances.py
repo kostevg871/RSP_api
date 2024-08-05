@@ -111,6 +111,7 @@ def error_dimension_call_property(params: RowParams, available_param_dimensions:
     e = str(e)
     split_error = e.split(":")
     len_split_error = len(split_error)-2
+    result_param = str(split_error[len_split_error]).replace('"', "")
     if ">" in e:
         len_split = len(e.split(">"))
         find_value = e.split(">")[len_split-1]
@@ -128,7 +129,7 @@ def error_dimension_call_property(params: RowParams, available_param_dimensions:
             "type": "OutOfRange",
             "error_info": e,
             "msg_user_en": "Out of range:" + str(split_error[len_split_error]) + ", boundary condition=" + str(find_value),
-            "msg_user_ru": "Выход из диапозона вычисления:" + str(split_error[len_split_error]) + ", параметр должен быть " + operator + str(find_value),
+            "msg_user_ru": "Выход из диапозона вычисления:" + result_param + ", параметр должен быть " + operator + str(find_value),
             "request_info": {
                 "available_param_dimensions": available_param_dimensions,
                 "available_property_dimensions": PROPERTY_AVAILABE_DIM.get(params.property),
@@ -249,5 +250,29 @@ def unphysical_two_phase(e: str):
             "msg_user_ru": "Изобарная теплоемкость нефизична в двухфазной области",
             "request_info": {
                     "loc": str(e)
+            }
+        })
+
+
+def error_dimension_row_table(params: RowParams, available_param_dimensions: list[list[str]]):
+
+    if params.property_dimension.strip() == "":
+        result = "Укажите единицу измерения, ожидается {avail}".format(
+            avail=PROPERTY_AVAILABE_DIM.get(params.property))
+    else:
+        result = "Единица измерения ({dim}) не верна, ожидается {avail}".format(
+            dim=params.property_dimension, avail=PROPERTY_AVAILABE_DIM.get(params.property))
+
+    raise HTTPException(
+        status_code=400, detail={
+            "code": 15,
+            "type": "InvalidDimension",
+            "error_info": "Не правильно указаны единицы измерения",
+            "msg_user_en": "Unit ({dim}) invalid".format(dim=params.property_dimension),
+            "msg_user_ru": result,
+            "request_info": {
+                    "available_param_dimensions": available_param_dimensions,
+                    "available_property_dimensions": PROPERTY_AVAILABE_DIM.get(params.property),
+                    "loc": ""
             }
         })
