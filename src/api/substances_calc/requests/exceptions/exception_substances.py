@@ -244,12 +244,12 @@ def unphysical_two_phase(e: str):
     raise HTTPException(
         status_code=400, detail={
             "code": 14,
-            "type": "UnphysicalTwoPhase ",
-            "error_info": e,
+            "type": "UnphysicalTwoPhase",
+            "error_info": str(e),
             "msg_user_en": "Isobaric heat capacity is unphysical in two-phase region",
             "msg_user_ru": "Изобарная теплоемкость нефизична в двухфазной области",
             "request_info": {
-                    "loc": str(e)
+                "loc": str(e)
             }
         })
 
