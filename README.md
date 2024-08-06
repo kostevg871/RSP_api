@@ -4,18 +4,6 @@
 
 ## Команды
 
-### Первый запуск:
-
-```
-python -m venv venv - создание локального окружения
-.\venv\Scripts\activate - запуск локального окружения
-```
-
-<!--pip install -r .\requirements.txt - установка всех зависимостей-->
-
-<!--pip freeze > requirements.txt - соххранение локальных зависимостей-->
-<!--py pip install git+https://github.com/fiztexlabs/librsp.git - установка библиотеки-->
-
 ### Контроль зависимостей
 
 ```
@@ -33,6 +21,12 @@ uvicorn app:app --host 0.0.0.0 --port 80 - запуск на сервере
 ```
 
 ### Тестирование
-
+```
 pytest - запуск тестов
 pytest --tb=long -vv - более подробное описание
+```
+
+```
+pytest --cov .  - процент покрытия тестами 
+pytest --cov-report html --cov . - процент покрытия тестами, в виде отчета в html
+```

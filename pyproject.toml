@@ -13,6 +13,7 @@ unicorn = { extras = ["standard"], version = "^2.0.1.post1" }
 setuptools = "^69.5.1"
 unit-converter = "^1.1.0"
 gunicorn = "^22.0.0"
+pytest-cov = "^5.0.0"
 
 
 [tool.poetry.group.rsp.dependencies]
