@@ -1,6 +1,6 @@
 from src.api.substances_calc.requests.verification_data.verification import check_count_substance_id, in_mode_on_substance
 from src.core.init import InitRSP
-from schemas import Property
+from src.schemas import Property
 
 
 def properties_list(substaneces_objects_globals: InitRSP,

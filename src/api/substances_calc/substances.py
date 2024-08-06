@@ -10,7 +10,7 @@ from src.api.substances_calc.requests.property_table_row import property_table_r
 from src.api.substances_calc.response_model import model_error_400, model_error_441, model_error_442, model_error_443, model_error_444
 
 
-from schemas import *
+from src.schemas import *
 
 
 router_substances = APIRouter()

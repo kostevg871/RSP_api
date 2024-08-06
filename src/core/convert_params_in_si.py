@@ -7,7 +7,7 @@ from src.helpers.help_func import float_to_str
 from src.api.substances_calc.requests.exceptions.global_exception import error_calculating_core
 from src.core.init import InitRSP, rsp_callProperty
 from src.helpers.constants import PROPERTY_DIMENSION_SI
-from schemas import RowParams
+from src.schemas import RowParams
 from src.core.get_params_in_SI import get_params_in_SI
 
 

@@ -5,7 +5,7 @@ from decimal import Decimal
 from src.helpers.help_func import float_to_str
 from src.core.init import InitRSP
 from src.helpers.constants import PROPERTY_AVAILABE_DIM, PROPERTY_DIMENSION_SI, PROPERTY_MIN_DIM
-from schemas import RowParams
+from src.schemas import RowParams
 
 from unit_converter.exceptions import UnConsistentUnitsError
 

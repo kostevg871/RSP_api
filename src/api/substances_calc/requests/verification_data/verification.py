@@ -5,7 +5,7 @@ from src.api.substances_calc.requests.exceptions.exception_substances import err
 from src.core.get_params_in_SI import get_params_in_SI_table
 from src.core.init import InitRSP
 from src.helpers.constants import PROPERTY_AVAILABE_DIM, PROPERTY_DIMENSION_SI, PROPERTY_MIN_DIM
-from schemas import PropertyRowDataResponseTable, RowParams
+from src.schemas import PropertyRowDataResponseTable, RowParams
 
 
 from unit_converter.exceptions import UnConsistentUnitsError, UnitDoesntExistError

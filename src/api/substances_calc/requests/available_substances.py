@@ -1,5 +1,5 @@
 from src.core.init import InitRSP
-from schemas import AvailableSubstance
+from src.schemas import AvailableSubstance
 
 
 def available_substances(substaneces_objects: InitRSP) -> AvailableSubstance:

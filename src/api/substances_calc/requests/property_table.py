@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from src.api.substances_calc.requests.verification_data.verification import check_count_substance_id, check_params, check_property, check_property_negative, check_property_params, check_table_dimension, in_mode_on_substance
 from src.core.init import InitRSP
-from schemas import PropertyTableResponse
+from src.schemas import PropertyTableResponse
 
 
 def property_table(substaneces_objects_globals: InitRSP, substanceId: int, modeId: str, params: list[str]):

@@ -1,6 +1,6 @@
 from src.api.substances_calc.requests.verification_data.verification import check_count_substance_id
 from src.core.init import InitRSP
-from schemas import ParameterMode
+from src.schemas import ParameterMode
 
 
 def calc_model_substanse(substaneces_objects: InitRSP, id: int) -> ParameterMode:

@@ -1,7 +1,7 @@
 
 from fastapi import HTTPException
 
-from schemas import RowParams
+from src.schemas import RowParams
 from src.helpers.constants import PROPERTY_AVAILABE_DIM, PROPERTY_MIN_DIM
 from src.core.init import InitRSP
 
