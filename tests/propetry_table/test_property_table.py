@@ -177,3 +177,69 @@ def test_get_property_table_200_0_PT_DYNVIS():
             }
         ]
     }
+
+
+def test_get_property_table_400_0_Invalid_dimension():
+    res = client.post("/getPropertiesTable", json={
+        "substanceId": 0,
+        "modeId": "PT",
+        "params": {
+            "param_values": [
+                128000, 300.0
+            ],
+            "param_dimensions": [
+                "Pa", "Pa"
+            ]
+        }
+    }
+    )
+
+    assert res.status_code == 400
+    res = res.json()
+    assert res["detail"]["code"] == 11
+    assert res["detail"]["error_info"] == "\"Units ('Pa', 1) are not of the same dimension !\""
+    assert res["detail"]["msg_user_ru"] == "Единица измерения ('Pa') не верна, ожидается ['K', '°C', '°F']"
+
+
+def test_get_property_table_400_Out_Of_range_1():
+    res = client.post("/getPropertiesTable", json={
+        "substanceId": 0,
+        "modeId": "PT",
+        "params": {
+            "param_values": [
+                1000000000, 300.0
+            ],
+            "param_dimensions": [
+                "Pa", "K"
+            ]
+        }
+    }
+    )
+
+    assert res.status_code == 400
+    res = res.json()
+    assert res["detail"]["code"] == 13
+    assert res["detail"]["error_info"] == "IF97: Value out of range in function CPPT: pressure out of range: P > Pmax: 1000000000.000000 > 100000000.000000"
+    assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: P > Pmax, параметр должен быть меньше 100000000.00"
+
+
+def test_get_property_table_400_Out_Of_range_2():
+    res = client.post("/getPropertiesTable", json={
+        "substanceId": 0,
+        "modeId": "PT",
+        "params": {
+            "param_values": [
+                1, 300.0
+            ],
+            "param_dimensions": [
+                "Pa", "K"
+            ]
+        }
+    }
+    )
+
+    assert res.status_code == 400
+    res = res.json()
+    assert res["detail"]["code"] == 13
+    assert res["detail"]["error_info"] == "IF97: Value out of range in function CPPT: pressure out of range: \"P < Pmin: 1.000000 < 611.657000\" "
+    assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: P < Pmin, параметр должен быть больше 611.65"

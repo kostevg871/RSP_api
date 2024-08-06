@@ -212,16 +212,15 @@ def error_dimension_call_property_table(available_param_dimensions: InitRSP, e: 
     e = str(e)
     split_error = e.split(":")
     len_split_error = len(split_error)-2
-
+    result_param = str(split_error[len_split_error]).replace('"', "")
     if ">" in e:
-        len_split = len(e.split(">"))-1
-        find_value = e.split(">")[len_split]
+        len_split = len(e.split(">"))
+        find_value = e.split(">")[len_split-1]
         operator = "меньше "
     else:
-        len_split = len(e.split("<"))-1
-        find_value = e.split("<")[len_split]
+        len_split = len(e.split("<"))
+        find_value = e.split("<")[len_split-1]
         operator = "больше "
-
     index = find_value.strip().find(".")
     find_value = find_value.strip()[:index+3]
 
@@ -231,7 +230,7 @@ def error_dimension_call_property_table(available_param_dimensions: InitRSP, e: 
             "type": "OutOfRange",
             "error_info": e,
             "msg_user_en": "Out of range:" + str(split_error[len_split_error]) + ", boundary condition=" + str(find_value),
-            "msg_user_ru": "Выход из диапозона вычисления:" + str(split_error[len_split_error]) + ", параметр должен быть " + operator + str(find_value),
+            "msg_user_ru": "Выход из диапозона вычисления:" + result_param + ", параметр должен быть " + operator + str(find_value),
             "request_info": {
                 "available_param_dimensions": available_param_dimensions,
                 "boundary_condition": find_value

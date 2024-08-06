@@ -61,3 +61,27 @@ def test_prop_row_substance_PT_property_400_modeId_error_1(substanceId):
     assert res["detail"]["error_info"] == "Неправильно указано вещество"
     assert res["detail"]["msg_user_ru"] == "substanceId={substanceId} должно быть в промежутке от 0 до 4".format(
         substanceId=substanceId)
+
+
+def test_prop_row_substance_error_UnphysicalTwoPhase():
+    res = client.post("/getPropertiesTableRow",
+                      json={
+                          "substanceId": 0,
+                          "modeId": "PH",
+                          "params": {
+                              "property": "CP",
+                              "property_dimension": "J*kg^-1*K^-1",
+                              "param_values": [
+                                  128851.478, 558034.329
+                              ],
+                              "param_dimensions": [
+                                  "Pa", "J*kg^-1"
+                              ]
+                          }
+                      }
+                      )
+    assert res.status_code == 400
+    res = res.json()
+    assert res["detail"]["code"] == 14
+    assert res["detail"]["error_info"] == "500: RSP core error: IF97: isobaric heat capacity is unphysical in two-phase region, function CPSTX"
+    assert res["detail"]["msg_user_ru"] == "Изобарная теплоемкость нефизична в двухфазной области"
