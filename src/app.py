@@ -46,5 +46,5 @@ app.add_middleware(CORSMiddleware, allow_origins=origins,
 app.include_router(router=router_substances)
 
 
-if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1")
+#if __name__ == "__main__":
+#    uvicorn.run(app, host="127.0.0.1")
