@@ -36,11 +36,7 @@ def property_table(substaneces_objects_globals: InitRSP, substanceId: int, modeI
     results = check_table_dimension(params=params, substaneces_objects_globals=substaneces_objects_globals,
                                     substanceId=substanceId, mode=mode, available_param_dimensions=available_params_dimension)
 
-    try:
-        response = PropertyTableResponse(
-            available_param_dimensions=available_params_dimension, data=results)
-    except ValueError as e:
-        raise HTTPException(
-            status_code=400, detail={"status_code": 400, "msg": "Unknown error: {}".format(e)})
+    response = PropertyTableResponse(
+        available_param_dimensions=available_params_dimension, data=results)
 
     return response

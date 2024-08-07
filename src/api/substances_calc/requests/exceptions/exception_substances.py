@@ -138,7 +138,7 @@ def error_dimension_call_property(params: RowParams, available_param_dimensions:
         })
 
 
-def error_value_core(params: RowParams, available_param_dimensions: InitRSP, e: str):
+def error_value_core(available_param_dimensions: InitRSP, e: str):
 
     raise HTTPException(
         status_code=400, detail={
@@ -149,7 +149,7 @@ def error_value_core(params: RowParams, available_param_dimensions: InitRSP, e: 
             "msg_user_ru": "Ошибка вычисления, используйте другие данные",
             "request_info": {
                     "available_param_dimensions": available_param_dimensions,
-                    "available_property_dimensions": PROPERTY_AVAILABE_DIM.get(params.property),
+
             }
         })
 
@@ -190,7 +190,7 @@ def error_dimension_table(available_param_dimensions: InitRSP, e: str):
         })
 
 
-def error_unknown(params: RowParams, available_param_dimensions: InitRSP, e: str):
+def error_unknown(available_param_dimensions: InitRSP, e: str):
 
     raise HTTPException(
         status_code=400, detail={
@@ -201,7 +201,7 @@ def error_unknown(params: RowParams, available_param_dimensions: InitRSP, e: str
             "msg_user_ru": "Неизвестная ошибка, измените параметры расчета",
             "request_info": {
                     "available_param_dimensions": available_param_dimensions,
-                    "available_property_dimensions": PROPERTY_AVAILABE_DIM.get(params.property),
+
                     "loc": str(e)
             }
         })

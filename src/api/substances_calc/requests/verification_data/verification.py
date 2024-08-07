@@ -1,6 +1,8 @@
 from decimal import Decimal
+from math import isinf, isnan
 
 
+from src.api.substances_calc.requests.exceptions.global_exception import error_calculating_core
 from src.api.substances_calc.requests.exceptions.exception_substances import error_count_param_dimension, error_dimension, error_dimension_call_property, error_dimension_call_property_table, error_dimension_row_table, error_dimension_table, error_parameters, error_params_min_value, error_params_negative, error_property, error_substance_id_count, error_substance_mode, error_unknown, error_value_core, unphysical_two_phase
 from src.core.get_params_in_SI import get_params_in_SI_table
 from src.core.init import InitRSP
@@ -99,7 +101,7 @@ def check_dimension(substaneces_objects_globals: InitRSP, substanceId: int, mode
         error_dimension(params, available_param_dimensions, str(e))
 
     except ValueError as e:
-        error_value_core(params, available_param_dimensions, str(e))
+        error_value_core(available_param_dimensions, str(e))
 
     except Exception as e:
         if str(e).find("out of range") != -1:
@@ -107,7 +109,7 @@ def check_dimension(substaneces_objects_globals: InitRSP, substanceId: int, mode
                 params, available_param_dimensions, e)
         if str(e).find("two-phase") != -1:
             unphysical_two_phase(e)
-        error_unknown(params, available_param_dimensions, e)
+        error_unknown(available_param_dimensions, e)
 
 
 def check_table_dimension(substaneces_objects_globals: InitRSP, substanceId: int, mode: str, params: RowParams,
@@ -119,24 +121,33 @@ def check_table_dimension(substaneces_objects_globals: InitRSP, substanceId: int
                                               substanceId=substanceId, mode=mode, params=params)
 
         for prop in substaneces_objects_globals.properties[int(substanceId)][mode].keys():
-
+            nan_count = []
             try:
+                value_result = PropertyRowDataResponseTable(
+                    dimension=PROPERTY_DIMENSION_SI[prop],
+                    propertyId=str(prop),
+                    value=str(Decimal(rsp.callProperty(
+                        # substaneces_objects_globals.substances_objects[int(
+                        #     substanceId)],
+                        substaneces_objects_globals.substances_objects_no_info[int(
+                            substanceId)],
+                        prop,
+                        mode,
+                        params_in_SI
+                    ),)),
+                    available_dimensions=PROPERTY_AVAILABE_DIM.get(
+                        str(prop)),
+                )
+
+                if isnan(float(value_result.value)):
+                    value_result.value = "NaN"
+                    nan_count.append(True)
+
+                if isinf(float(value_result.value)):
+                    value_result.value = "Infinity"
+
                 results.append(
-                    PropertyRowDataResponseTable(
-                        dimension=PROPERTY_DIMENSION_SI[prop],
-                        propertyId=str(prop),
-                        value=str(Decimal(rsp.callProperty(
-                            # substaneces_objects_globals.substances_objects[int(
-                            #     substanceId)],
-                            substaneces_objects_globals.substances_objects_no_info[int(
-                                substanceId)],
-                            prop,
-                            mode,
-                            params_in_SI
-                        ))),
-                        available_dimensions=PROPERTY_AVAILABE_DIM.get(
-                            str(prop)),
-                    )
+                    value_result
                 )
 
             except rsp.exceptions.ExceptionUnphysicalFunc as e:
@@ -149,16 +160,19 @@ def check_table_dimension(substaneces_objects_globals: InitRSP, substanceId: int
                             str(prop))
                     ))
 
+            if len(nan_count) == len(results):
+                error_calculating_core()
+
     except (UnConsistentUnitsError, UnitDoesntExistError) as e:
         error_dimension_table(available_param_dimensions, str(e))
 
     except ValueError as e:
-        error_value_core(params, available_param_dimensions, str(e))
+        error_value_core(available_param_dimensions, str(e))
 
     except Exception as e:
-        if str(e).find("out of range"):
+        if str(e).find("out of range") != -1:
             error_dimension_call_property_table(
                 available_param_dimensions, e)
-        error_unknown(params, available_param_dimensions, e)
+        error_unknown(available_param_dimensions, str(e))
 
     return results
