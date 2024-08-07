@@ -108,6 +108,7 @@ PROPERTY_AVAILABE_DIM = {
     "CVSS": ["J*kg^-1*K^-1"],
     "CPSS": ["J*kg^-1*K^-1"],
     "WSS": ["m*s^-1"],
+    "SSW": ["J*kg^-1*K^-1"],
     "KSS": [""],
     "KINVISSS": ["m^2*s^-1"],
     "DYNVISSS": ["Pa*s"],
