@@ -9,28 +9,30 @@ client = TestClient(app)
 @pytest.mark.parametrize(
     "value_Pa, value_T, dimension_Pa, dimension_T, result_value, dimension",
     [
-        (128000, 300, "Pa", "K", "-5365.634897243392", "J*kg^-1"),
-        (612, 0.00001, "Pa", "K", "-632128.7093146846", "J*kg^-1"),
-        (10000, 500, "Pa", "K", "-1804954.3660445986", "J*kg^-1"),
-        (10000, 500, "Pa", "K", "-1.8049543660445986", "MJ*kg^-1"),
-        (10000, 500, "Pa", "K", "-1804.9543660445986", "kJ*kg^-1"),
-        (100, 500, "MPa", "K", "-314127.6589532308", "J*kg^-1"),
-        (100, 500, "kPa", "K", "-1273599.4759990084", "J*kg^-1"),
-        (100, 500, "bar", "K", "-318215.51166032744", "J*kg^-1"),
-        (100, 500, "MPa", "K", "-314127.6589532308", "J*kg^-1"),
-        (100, 500, "MPa", "°C", "-1344473.1228465552", "J*kg^-1"),
-        (100, 500, "MPa", "°F", "-403635.06409560586", "J*kg^-1"),
-        (100, -200, "MPa", "°C", "-401723.6524352464", "J*kg^-1"),
-        (100, -200, "MPa", "°F", "-16566.45014419791", "J*kg^-1"),
+        (128000, 300, "Pa", "K", "112689.60702009771", "J*kg^-1"),
+        (612, 0.00001, "Pa", "K", "-632128.0871922886", "J*kg^-1"),
+
+        (10000, 500, "Pa", "K", "2931967.281061654", "J*kg^-1"),
+        (10000, 500, "Pa", "K", "2.931967281061654", "MJ*kg^-1"),
+        (10000, 500, "Pa", "K", "2931.967281061654", "kJ*kg^-1"),
+
+        (100, 500, "MPa", "K", "1015393.6760197142", "J*kg^-1"),
+        (100, 500, "kPa", "K", "2928585.332824713", "J*kg^-1"),
+        (100, 500, "bar", "K", "977213.9101189049", "J*kg^-1"),
+
+        (100, 500, "MPa", "°C", "2316227.7742722193", "J*kg^-1"),
+        (100, 500, "MPa", "°F", "1155610.7062877498", "J*kg^-1"),
+        (100, -200, "MPa", "°C", "-503894.842275367", "J*kg^-1"),
+        (100, -200, "MPa", "°F", "-256875.71103206312", "J*kg^-1"),
     ]
 )
-def test_prop_row_substance_PT_F_200(value_Pa, value_T, dimension_Pa, dimension_T, result_value, dimension):
+def test_prop_row_substance_PT_H_200(value_Pa, value_T, dimension_Pa, dimension_T, result_value, dimension):
     res = client.post("/getPropertiesTableRow",
                       json={
                           "substanceId": 0,
                           "modeId": "PT",
                           "params": {
-                              "property": "F",
+                              "property": "H",
                               "property_dimension": dimension,
                               "param_values": [
                                   value_Pa, value_T
@@ -43,83 +45,12 @@ def test_prop_row_substance_PT_F_200(value_Pa, value_T, dimension_Pa, dimension_
                       )
     assert res.status_code == 200
     res = res.json()
-    assert res["data"]["propertyId"] == "Specific Helmholtz energy"
+    assert res["data"]["propertyId"] == "Specific enthropy"
     assert res["data"]["value"] == result_value
     assert res["data"]["dimension"] == dimension
 
 
-def test_prop_row_substance_PT_F_400_modeId_error():
-    res = client.post("/getPropertiesTableRow",
-                      json={
-                          "substanceId": 0,
-                          "modeId": "PT",
-                          "params": {
-                              "property": "Nan",
-                              "property_dimension": "J*kg^-1",
-                              "param_values": [
-                                  128000, 300
-                              ],
-                              "param_dimensions": [
-                                  "Pa", "K"
-                              ]
-                          }
-                      }
-                      )
-    assert res.status_code == 400
-    res = res.json()
-    assert res["detail"]["code"] == 4
-    assert res["detail"]["error_info"] == "Неправильно указано свойство для расчета, не существует для данного вещества"
-    assert res["detail"]["msg_user_ru"] == "Свойство=Nan не существует для данного вещества"
 
-
-def test_prop_row_substance_PT_F_400_param_value_count():
-    res = client.post("/getPropertiesTableRow",
-                      json={
-                          "substanceId": 0,
-                          "modeId": "PT",
-                          "params": {
-                              "property": "F",
-                              "property_dimension": "J*kg^-1",
-                              "param_values": [
-                                  128000
-                              ],
-                              "param_dimensions": [
-                                  "Pa", "K"
-                              ]
-                          }
-                      }
-                      )
-    assert res.status_code == 400
-    res = res.json()
-    assert res["detail"]["code"] == 3
-    assert res["detail"]["error_info"] == "Неправильно указано количество параметров для расчета"
-    assert res["detail"][
-        "msg_user_ru"] == "Поле параметры должно содержать 2 параметр(а) 'Pressure', 'Temperature'"
-
-
-def test_prop_row_substance_PT_F_400_param_dimension_count():
-    res = client.post("/getPropertiesTableRow",
-                      json={
-                          "substanceId": 0,
-                          "modeId": "PT",
-                          "params": {
-                              "property": "F",
-                              "property_dimension": "J*kg^-1",
-                              "param_values": [
-                                  128000, 300
-                              ],
-                              "param_dimensions": [
-                                  "Pa"
-                              ]
-                          }
-                      }
-                      )
-    assert res.status_code == 400
-    res = res.json()
-    assert res["detail"]["code"] == 10
-    assert res["detail"]["error_info"] == "Неправильно указано количество единиц измерения для расчета, ожидается `2`"
-    assert res["detail"][
-        "msg_user_ru"] == "Поле с единицами измерения должно содержать 2 параметр(а) 'Pressure', 'Temperature'"
 
 
 def test_prop_row_substance_PT_F_400_property_dimension():

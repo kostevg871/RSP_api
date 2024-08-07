@@ -12,7 +12,7 @@ def test_prop_row_substance_PT_DYNVIS_1():
                           "modeId": "PT",
                           "params": {
                               "property": "DYNVIS",
-                              "property_dimension": " ",
+                              "property_dimension": "",
                               "param_values": [
                                   128000, 200
                               ],

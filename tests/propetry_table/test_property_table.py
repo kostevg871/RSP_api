@@ -1,3 +1,4 @@
+import pytest
 from app import app
 from fastapi.testclient import TestClient
 
@@ -243,3 +244,150 @@ def test_get_property_table_400_Out_Of_range_2():
     assert res["detail"]["code"] == 13
     assert res["detail"]["error_info"] == "IF97: Value out of range in function CPPT: pressure out of range: \"P < Pmin: 1.000000 < 611.657000\" "
     assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: P < Pmin, параметр должен быть больше 611.65"
+
+
+def test_get_property_table_400_Out_Of_range_3():
+    res = client.post("/getPropertiesTable", json={
+        "substanceId": 0,
+        "modeId": "PT",
+        "params": {
+            "param_values": [
+                1, 0
+            ],
+            "param_dimensions": [
+                "Pa", "K"
+            ]
+        }
+    }
+    )
+
+    assert res.status_code == 400
+    res = res.json()
+
+    assert res["detail"]["code"] == 13
+    assert res["detail"]["error_info"] == "IF97: Value out of range in function CPPT: pressure out of range: \"P < Pmin: 1.000000 < 611.657000\" "
+    assert res["detail"]["msg_user_ru"] == "Выход из диапозона вычисления: P < Pmin, параметр должен быть больше 611.65"
+
+
+def test_prop_row_substance_error_UnphysicalTwoPhase_table():
+    res = client.post("/getPropertiesTable",
+                      json={
+                          "substanceId": 0,
+                          "modeId": "PH",
+                          "params": {
+
+                              "param_values": [
+                                  128851.478, 558034.329
+                              ],
+                              "param_dimensions": [
+                                  "Pa", "J*kg^-1"
+                              ]
+                          }
+                      }
+                      )
+    assert res.status_code == 200
+    res = res.json()
+    assert res["data"][0]["value"] == "NaN: IF97: isobaric heat capacity is unphysical in two-phase region, function CPSTX"
+
+
+def test_prop_row_substance_error_Nan_table():
+    res = client.post("/getPropertiesTable",
+                      json={
+                          "substanceId": 0,
+                          "modeId": "PT",
+                          "params": {
+                              "param_values": [
+                                  128000, 0
+                              ],
+                              "param_dimensions": [
+                                  "Pa", "K"
+                              ]
+                          }
+                      }
+                      )
+    assert res.status_code == 400
+    res = res.json()
+
+    assert res["detail"]["code"] == 9
+    assert res["detail"][
+        "error_info"] == "Calculation error in rsp, try other parameters (Error calculating core!!!, change the source data)"
+    assert res["detail"]["msg_user_ru"] == "Ошибка вычисления, используйте другие данные"
+
+
+def test_prop_row_substance_error_unknown_12():
+    res = client.post("/getPropertiesTable",
+                      json={
+                          "substanceId": 0,
+                          "modeId": "PH",
+                          "params": {
+                              "property": "CP",
+                              "property_dimension": "J*kg^-1*K^-1",
+                              "param_values": [
+                                  128851.478, 0
+                              ],
+                              "param_dimensions": [
+                                  "Pa", "J*kg^-1"
+                              ]
+                          }
+                      }
+                      )
+    assert res.status_code == 400
+    res = res.json()
+
+    assert res["detail"]["code"] == 12
+    assert res["detail"][
+        "error_info"] == "bad function call"
+    assert res["detail"]["msg_user_ru"] == "Неизвестная ошибка, измените параметры расчета"
+
+
+@pytest.mark.parametrize(
+    "substance, modeId, values,  dimensions, count_result_1, result_value_1, count_result_2, result_value_2, ",
+    [
+        (0, "PT", [700, 0.0000000001],  ["Pa", "K"],
+         3, "Infinity", 10, "NaN"),
+        (0, "PT", [700, -0.0000000001],  ["Pa", "°C"],
+         0, "2096.71055530725288917892612516880035400390625", 1, "-9545.186238230473463772796094417572021484375"),
+        (0, "PT", [700, -0.0000000001],  ["Pa", "°F"],
+         0, "1932.9566641795781833934597671031951904296875", 1, "1471.315166277382331827539019286632537841796875"),
+        (1, "TX", [100, 0.0000000001],  ["K",  " "],
+         0, "2176.61268772477706079371273517608642578125", 1, "689.3755530267420681411749683320522308349609375"),
+
+    ]
+)
+def test_prop_substance_200(substance, modeId, values,  dimensions, result_value_1, result_value_2, count_result_1, count_result_2):
+    res = client.post("/getPropertiesTable",
+                      json={
+                          "substanceId": substance,
+                          "modeId": modeId,
+                          "params": {
+                              "param_values": values,
+                              "param_dimensions": dimensions
+                          }
+                      }
+                      )
+    assert res.status_code == 200
+    res = res.json()
+    assert res["data"][count_result_1]["value"] == result_value_1
+    assert res["data"][count_result_2]["value"] == result_value_2
+
+
+def test_get_property_table_400_empty_dimension():
+    res = client.post("/getPropertiesTable", json={
+        "substanceId": 0,
+        "modeId": "PT",
+        "params": {
+            "param_values": [
+                128000, 300.0
+            ],
+            "param_dimensions": [
+                "Pa", " "
+            ]
+        }
+    }
+    )
+
+    assert res.status_code == 400
+    res = res.json()
+    assert res["detail"]["code"] == 11
+    assert res["detail"]["error_info"] == "\"Units (' ', 1) are not of the same dimension !\""
+    assert res["detail"]["msg_user_ru"] == "Единица измерения (' ') не верна, ожидается ['K', '°C', '°F']"
