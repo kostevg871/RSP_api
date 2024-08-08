@@ -119,22 +119,23 @@ def check_table_dimension(substaneces_objects_globals: InitRSP, substanceId: int
     try:
         params_in_SI = get_params_in_SI_table(substaneces_objects_globals=substaneces_objects_globals,
                                               substanceId=substanceId, mode=mode, params=params)
-
+        nan_count = []
         for prop in substaneces_objects_globals.properties[int(substanceId)][mode].keys():
-            nan_count = []
+
             try:
-                value_result = PropertyRowDataResponseTable(
-                    dimension=PROPERTY_DIMENSION_SI[prop],
-                    propertyId=str(prop),
-                    value=str(Decimal(rsp.callProperty(
-                        # substaneces_objects_globals.substances_objects[int(
-                        #     substanceId)],
+                v = str(Decimal(rsp.callProperty(
+                    # substaneces_objects_globals.substances_objects[int(
+                    #     substanceId)],
                         substaneces_objects_globals.substances_objects_no_info[int(
                             substanceId)],
                         prop,
                         mode,
                         params_in_SI
-                    ),)),
+                        )))
+                value_result = PropertyRowDataResponseTable(
+                    dimension=PROPERTY_DIMENSION_SI[prop],
+                    propertyId=str(prop),
+                    value=v,
                     available_dimensions=PROPERTY_AVAILABE_DIM.get(
                         str(prop)),
                 )
@@ -160,8 +161,8 @@ def check_table_dimension(substaneces_objects_globals: InitRSP, substanceId: int
                             str(prop))
                     ))
 
-            if len(nan_count) == len(results):
-                error_calculating_core()
+        if len(nan_count) == len(results):
+            error_calculating_core()
 
     except (UnConsistentUnitsError, UnitDoesntExistError) as e:
         error_dimension_table(available_param_dimensions, str(e))
