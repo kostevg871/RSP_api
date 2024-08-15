@@ -77,7 +77,7 @@ list_name_property = ["Specific Gibbs energy",
 
     ]
 )
-def test_prop_row_substance_PT_F_200(property, value_Pa, value_T, dimension_Pa, dimension_T, result_value, dimension, nameProperty):
+def test_prop_row_substance_PT_200(property, value_Pa, value_T, dimension_Pa, dimension_T, result_value, dimension, nameProperty):
     res = client.post("/getPropertiesTableRow",
                       json={
                           "substanceId": 0,
