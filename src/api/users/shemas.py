@@ -2,7 +2,7 @@ import uuid
 from fastapi import HTTPException
 from pydantic import BaseModel, EmailStr, field_validator
 
-from helpers.letter_match_pattern import LETTER_MATCH_PATTERN
+from src.helpers.letter_match_pattern import LETTER_MATCH_PATTERN
 
 
 class TunedModel(BaseModel):

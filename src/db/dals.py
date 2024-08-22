@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from db.models import User
+from src.db.models import User
 
 
 class UserDAL:

@@ -1,11 +1,11 @@
 from fastapi import APIRouter
 
-from api.handlers.users.shemas import ShowUser, UserCreate
-from db.session import async_session
-from db.dals import UserDAL
+from src.api.users.shemas import ShowUser, UserCreate
+from src.db.session import async_session
+from src.db.dals import UserDAL
 
 
-user_router = APIRouter()
+user_router = APIRouter(prefix="/users", tags=["users"])
 
 
 async def _create_new_user(body: UserCreate) -> ShowUser:
