@@ -1,9 +1,6 @@
-from typing import AsyncGenerator
+from datetime import datetime
 
-from fastapi import Depends
-from fastapi_users.db import SQLAlchemyBaseUserTableUUID, SQLAlchemyUserDatabase
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy import MetaData, JSON, TIMESTAMP, Boolean, Column, ForeignKey, Integer, String, Table
 
 
 metadata = MetaData()
