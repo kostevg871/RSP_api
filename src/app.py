@@ -4,7 +4,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from src.api.users.users import user_router
+from src.api.auth.router_auth import router_auth
 from src.api.substances_calc.substances import router_substances
 from src.api.substances_calc.response_model import model_error_422
 
@@ -45,7 +45,7 @@ app.add_middleware(CORSMiddleware, allow_origins=origins,
 app.include_router(router=router_substances)
 
 # Добавление ручек users
-app.include_router(router=user_router)
+app.include_router(router=router_auth)
 
 
 # if __name__ == "__main__":

@@ -3,14 +3,18 @@ from typing import AsyncGenerator
 
 from fastapi import Depends
 from fastapi_users.db import SQLAlchemyUserDatabase
+from fastapi_users_db_sqlalchemy.access_token import (
+    SQLAlchemyBaseAccessTokenTable,
+    SQLAlchemyAccessTokenDatabase,
+)
 from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
 from sqlalchemy import TIMESTAMP, Column, ForeignKey, Integer, String, Boolean
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeMeta, declarative_base
 
 from config import DB_HOST, DB_NAME, DB_PASS, DB_USER, DB_PORT
-from src.db.types.user_id import UserIdType
-from src.db.models import role
+from src.db.auth.models import role, user
+
 
 DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:{
     DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
@@ -19,7 +23,7 @@ DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:{
 Base: DeclarativeMeta = declarative_base()
 
 
-class User(SQLAlchemyBaseUserTable[UserIdType], Base):
+class User(SQLAlchemyBaseUserTable[int], Base):
     id = Column(Integer, primary_key=True)
     email = Column(String, nullable=False)
     username = Column(String, nullable=False)
@@ -29,6 +33,13 @@ class User(SQLAlchemyBaseUserTable[UserIdType], Base):
     is_active: bool = Column(Boolean, default=True, nullable=False)
     is_superuser: bool = Column(Boolean, default=False, nullable=False)
     is_verified: bool = Column(Boolean, default=False, nullable=False)
+
+
+class AccessToken(SQLAlchemyBaseAccessTokenTable[int], Base):
+    user_id = Column(Integer, ForeignKey(
+        user.c.id, ondelete="cascade"), nullable=False)
+    created_at = Column(TIMESTAMP, default=datetime.now)
+    user_id = Column(Integer, ForeignKey(user.c.id))
 
 
 engine = create_async_engine(DATABASE_URL)
@@ -47,3 +58,9 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
 
 async def get_user_db(session: AsyncSession = Depends(get_async_session)):
     yield SQLAlchemyUserDatabase(session, User)
+
+
+async def get_access_token_db(
+    session: AsyncSession = Depends(get_async_session),
+):
+    yield SQLAlchemyAccessTokenDatabase(session, AccessToken)
