@@ -10,29 +10,20 @@ class TunedModel(BaseModel):
 
 
 class ShowUser(TunedModel):
-    user_id: uuid.UUID
-    name: str
-    surname: str
+    user_id: int
+    username: str
     email: EmailStr
     is_active: bool
 
 
 class UserCreate(BaseModel):
-    name: str
-    surname: str
+    username: str
     email: EmailStr
 
-    @field_validator("name")
+    @field_validator("username")
     def validate_name(cls, value):
         if not LETTER_MATCH_PATTERN.match(value):
             raise HTTPException(
-                status_code=422, detail="Name should contains only letters"
-            )
-        return value
-
-    def validate_surname(cls, value):
-        if not LETTER_MATCH_PATTERN.match(value):
-            raise HTTPException(
-                status_code=422, detail="Surname should contains only letters"
+                status_code=422, detail="UserName should contains only letters"
             )
         return value
