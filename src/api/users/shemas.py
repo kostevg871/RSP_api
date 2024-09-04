@@ -1,15 +1,12 @@
 import uuid
 from fastapi import HTTPException
-from pydantic import BaseModel, EmailStr, field_validator
+from pydantic import ConfigDict, BaseModel, EmailStr, field_validator
 
 from src.helpers.letter_match_pattern import LETTER_MATCH_PATTERN
 
 
 class TunedModel(BaseModel):
-    class Config:
-        """pydantic to convert even non dict obj to json"""
-
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class ShowUser(TunedModel):

@@ -19,7 +19,7 @@ class Schemas_exception_400_info(BaseModel):
     error_info: str
     msg_user_ru: str
     msg_user_en: str
-    request_info: dict | None
+    request_info: dict | None = None
 
 
 class Schemas_exception_400(BaseModel):

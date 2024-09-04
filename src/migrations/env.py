@@ -1,4 +1,4 @@
-from src.db.models import Base
+from src.db.models import metadata
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -17,7 +17,7 @@ if config.config_file_name is not None:
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-target_metadata = Base.metadata
+target_metadata = metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
