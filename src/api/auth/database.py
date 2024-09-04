@@ -9,7 +9,8 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from sqlalchemy.orm import DeclarativeMeta, declarative_base
 
 from config import DB_HOST, DB_NAME, DB_PASS, DB_USER, DB_PORT
-from db.models import role
+from src.db.types.user_id import UserIdType
+from src.db.models import role
 
 DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:{
     DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
@@ -18,7 +19,7 @@ DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:{
 Base: DeclarativeMeta = declarative_base()
 
 
-class User(SQLAlchemyBaseUserTable[int], Base):
+class User(SQLAlchemyBaseUserTable[UserIdType], Base):
     id = Column(Integer, primary_key=True)
     email = Column(String, nullable=False)
     username = Column(String, nullable=False)
