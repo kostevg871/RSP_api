@@ -1,16 +1,20 @@
-from fastapi import FastAPI, Request, status
+from fastapi import Depends, FastAPI, Request, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.security import HTTPBearer
 
 from src.api.users.router_users import router_users
 from src.api.auth.router_auth import router_auth
 from src.api.substances_calc.substances import router_substances
 from src.api.substances_calc.response_model import model_error_422
 
+http_bearer = HTTPBearer(auto_error=False)
+
 app = FastAPI(
     title="RSP App",
+    dependencies=[Depends(http_bearer)],
     responses={422: model_error_422}
 )
 

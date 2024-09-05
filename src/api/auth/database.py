@@ -8,19 +8,22 @@ from fastapi_users_db_sqlalchemy.access_token import (
     SQLAlchemyAccessTokenDatabase,
 )
 from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
-from sqlalchemy import TIMESTAMP, Column, ForeignKey, Integer, String, Boolean
+from sqlalchemy import TIMESTAMP, Column, ForeignKey, Integer, MetaData, String, Boolean
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from sqlalchemy.orm import DeclarativeMeta, declarative_base
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 from config import DB_HOST, DB_NAME, DB_PASS, DB_USER, DB_PORT
-from src.db.auth.models import role, user
+from src.db.auth.models import role
 
 
 DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:{
     DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 
-Base: DeclarativeMeta = declarative_base()
+class Base(DeclarativeBase):
+    __abstract__ = True
+
+    metadata = MetaData()
 
 
 class User(SQLAlchemyBaseUserTable[int], Base):
@@ -36,11 +39,18 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     is_verified: bool = Column(Boolean, default=False, nullable=False)
 
 
-class AccessToken(SQLAlchemyBaseAccessTokenTable[int], Base):
-    user_id = Column(Integer, ForeignKey(
-        user.c.id, ondelete="cascade"), nullable=False)
-    created_at = Column(TIMESTAMP(timezone=True),
-                        default=lambda: datetime.now(timezone.utc))
+class AccessToken(Base, SQLAlchemyBaseAccessTokenTable[int], ):
+    user_id: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("user.id", ondelete="cascade"),
+        nullable=False,
+    )
+    created_at: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True),
+                                                 default=lambda: datetime.now(timezone.utc))
+
+    @classmethod
+    def get_db(cls, session: "AsyncSession"):
+        return SQLAlchemyAccessTokenDatabase(session, cls)
 
 
 engine = create_async_engine(DATABASE_URL)
