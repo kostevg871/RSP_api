@@ -22,7 +22,8 @@ user = Table(
     Column("email", String, nullable=False, unique=True),
     Column("username", String, nullable=False),
     Column("hashed_password", String, nullable=False),
-    Column("registered_at", TIMESTAMP, default=datetime.now),
+    Column("registered_at", TIMESTAMP(timezone=True),
+           default=lambda: datetime.now(timezone.utc)),
     Column("role_id", Integer, ForeignKey(role.c.id)),
 
     Column("is_active", Boolean, default=True),
