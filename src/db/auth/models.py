@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import MetaData, JSON, TIMESTAMP, Boolean, Column, ForeignKey, Integer, String, Table
 
@@ -36,5 +36,6 @@ access_token = Table(
     Column("user_id", Integer, ForeignKey(
         user.c.id, ondelete="cascade"), nullable=False),
     Column("token", String, nullable=False, unique=True),
-    Column("created_at", TIMESTAMP, default=datetime.now),
+    Column("created_at", TIMESTAMP(timezone=True),
+           default=lambda: datetime.now(timezone.utc))
 )

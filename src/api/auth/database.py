@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import AsyncGenerator
 
 from fastapi import Depends
@@ -38,8 +38,8 @@ class User(SQLAlchemyBaseUserTable[int], Base):
 class AccessToken(SQLAlchemyBaseAccessTokenTable[int], Base):
     user_id = Column(Integer, ForeignKey(
         user.c.id, ondelete="cascade"), nullable=False)
-    created_at = Column(TIMESTAMP, default=datetime.now)
-    user_id = Column(Integer, ForeignKey(user.c.id))
+    created_at = Column(TIMESTAMP(timezone=True),
+                        default=lambda: datetime.now(timezone.utc))
 
 
 engine = create_async_engine(DATABASE_URL)
