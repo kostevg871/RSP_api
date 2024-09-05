@@ -2,7 +2,8 @@ from fastapi_users import schemas
 
 
 class UserRead(schemas.BaseUser[int]):
-    pass
+    role_id: int | None
+    username: str
 
 
 class UserCreate(schemas.BaseUserCreate):
