@@ -1,4 +1,4 @@
-from src.db.auth.models import metadata
+from db.auth.models import metadata
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config

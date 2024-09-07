@@ -27,6 +27,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
             "detail": {
                 "status_code": 422,
                 "description": exc.errors()[0]["msg"],
+                "error": exc.errors()[0]["ctx"]["error"],
                 "msg": "Не правильно введены данные!",
             }
         })

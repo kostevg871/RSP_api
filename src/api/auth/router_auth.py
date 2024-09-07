@@ -14,6 +14,7 @@ router_auth = APIRouter(
 # /login
 # /logout
 router_auth.include_router(
+
     router=fastapi_users.get_auth_router(authentication_backend)
 )
 
