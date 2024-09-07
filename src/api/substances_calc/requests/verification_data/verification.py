@@ -83,7 +83,7 @@ def check_property_negative(params: RowParams, params_global: list[str]) -> None
 
 def check_property_dimension_row(params=RowParams, available_param_dimensions=list[list[str]]):
     if params.property_dimension.strip() == "" and params.property_dimension.strip() in PROPERTY_AVAILABE_DIM.get(params.property):
-        return params.property_dimension.strip()
+        return None
     if params.property_dimension.strip() not in PROPERTY_AVAILABE_DIM.get(params.property):
         error_dimension_row_table(
             params=params, available_param_dimensions=available_param_dimensions)
@@ -146,6 +146,12 @@ def check_table_dimension(substaneces_objects_globals: InitRSP, substanceId: int
 
                 if isinf(float(value_result.value)):
                     value_result.value = "Infinity"
+
+                if value_result.dimension.strip() == "":
+                    value_result.dimension = None
+
+                if len(value_result.available_dimensions) == 1 and value_result.available_dimensions[0] == "":
+                    value_result.available_dimensions = None
 
                 results.append(
                     value_result

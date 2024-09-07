@@ -57,8 +57,9 @@ class PropertyRowTableRequest(BaseModel):
 
 
 class PropertyRowDataResponse(BaseModel):
-    dimension: str
+    dimension: str | None
     propertyId: str
+    propertyName: str
     value: str | float
     available_property_dimensions: list[str] | None = None
 
@@ -82,7 +83,7 @@ class PropertyTableRequest(BaseModel):
 
 
 class PropertyRowDataResponseTable(BaseModel):
-    dimension: str
+    dimension: str | None
     propertyId: str
     value: str | float
     available_dimensions: list[str] | None = None
