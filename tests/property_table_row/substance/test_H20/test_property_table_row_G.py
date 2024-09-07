@@ -44,7 +44,7 @@ def test_prop_row_substance_PT_G_200(value_Pa, value_T, dimension_Pa, dimension_
                       )
     assert res.status_code == 200
     res = res.json()
-    assert res["data"]["propertyId"] == "Specific Gibbs energy"
+    assert res["data"]["propertyId"] == "G"
     assert res["data"]["value"] == result_value
     assert res["data"]["dimension"] == dimension
 

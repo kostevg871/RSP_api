@@ -99,12 +99,10 @@ def test_get_property_table_200_0_PT_DYNVIS():
                 ]
             },
             {
-                "dimension": "",
+                "dimension": None,
                 "propertyId": "JOULETHOMPSON",
                 "value": "-2.20242891312057205288266127814200689982726544258184731006622314453125E-7",
-                "available_dimensions": [
-                    ""
-                ]
+                "available_dimensions": None
             },
             {
                 "dimension": "m^2*s^-1",
@@ -115,20 +113,16 @@ def test_get_property_table_200_0_PT_DYNVIS():
                 ]
             },
             {
-                "dimension": "",
+                "dimension": None,
                 "propertyId": "K",
                 "value": "22221.7957777002520742826163768768310546875",
-                "available_dimensions": [
-                    ""
-                ]
+                "available_dimensions": None
             },
             {
-                "dimension": "",
+                "dimension": None,
                 "propertyId": "PRANDTLE",
                 "value": "5.85655774372549142725574711221270263195037841796875",
-                "available_dimensions": [
-                    ""
-                ]
+                "available_dimensions": None
             },
             {
                 "dimension": "J*kg^-1*K^-1",

@@ -39,7 +39,8 @@ def test_prop_row_substance_PT_D():
         ],
         "data": {
             "dimension": "kg*m^-3",
-            "propertyId": "Density",
+            "propertyId": "D",
+            "propertyName": "Density",
             "value": "996.5700260976184",
             "available_property_dimensions": [
                 "kg*m^-3"

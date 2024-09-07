@@ -25,7 +25,7 @@ def test_prop_row_substance_PT_D_1():
     assert res.status_code == 200
     res = res.json()
     assert res["data"]["value"] == "926.1343613037452"
-    assert res["data"]["propertyId"] == "Density"
+    assert res["data"]["propertyId"] == "D"
 
 
 def test_prop_row_substance_PT_D_2_empty_dimension():
@@ -94,7 +94,7 @@ def test_prop_row_substance_PT_D_3():
     assert res.status_code == 200
     res = res.json()
     assert res["data"]["value"] == "933.7869293793412"
-    assert res["data"]["propertyId"] == "Density"
+    assert res["data"]["propertyId"] == "D"
     assert res["data"]["dimension"] == "kg*m^-3"
 
 
@@ -213,7 +213,7 @@ def test_prop_row_substance_PT_D_C_Less_Pa_Less():
                       )
     assert res.status_code == 200
     res = res.json()
-    assert res["data"]["propertyId"] == "Density"
+    assert res["data"]["propertyId"] == "D"
     assert res["data"]["value"] == '933.7869293793411'
     assert res["data"]["dimension"] == "kg*m^-3"
 

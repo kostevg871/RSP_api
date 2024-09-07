@@ -164,4 +164,4 @@ def test_prop_row_substance_check_verification_Prandle():
                       )
     assert res.status_code == 200
     res = res.json()
-    assert res["data"]["dimension"] == ""
+    assert res["data"]["dimension"] == None

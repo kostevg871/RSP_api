@@ -43,7 +43,7 @@ def test_prop_row_substance_PT_F_200(value_Pa, value_T, dimension_Pa, dimension_
                       )
     assert res.status_code == 200
     res = res.json()
-    assert res["data"]["propertyId"] == "Specific Helmholtz energy"
+    assert res["data"]["propertyId"] == "F"
     assert res["data"]["value"] == result_value
     assert res["data"]["dimension"] == dimension
 
@@ -311,6 +311,6 @@ def test_prop_row_substance_PT_F_400_error_empty_string():
     assert res.status_code == 200
     res = res.json()
 
-    assert res["data"]["propertyId"] == "Isochoric heat capacity"
+    assert res["data"]["propertyId"] == "CVS"
     assert res["data"]["value"] == "2879.41621112289"
     assert res["data"]["dimension"] == "J*kg^-1*K^-1"

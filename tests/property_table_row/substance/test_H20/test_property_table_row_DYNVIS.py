@@ -48,7 +48,7 @@ def test_prop_row_substance_PT_DYNVIS_2():
     assert res.status_code == 200
     res = res.json()
     assert res["data"]["value"] == "Infinity"
-    assert res["data"]["propertyId"] == "Dynamic viscosity"
+    assert res["data"]["propertyId"] == "DYNVIS"
     assert res["data"]["dimension"] == "Pa*s"
 
 
@@ -95,7 +95,7 @@ def test_prop_row_substance_PT_DYNVIS_4_empty_dimension():
     assert res.status_code == 200
     res = res.json()
     assert res["data"]["value"] == "Infinity"
-    assert res["data"]["propertyId"] == "Dynamic viscosity"
+    assert res["data"]["propertyId"] == "DYNVIS"
     assert res["data"]["dimension"] == "Pa*s"
 
 
@@ -215,7 +215,7 @@ def test_prop_row_substance_PT_DYNVIS_C_Less_Pa_Less():
     assert res.status_code == 200
     res = res.json()
     assert res["data"]["dimension"] == "Pa*s"
-    assert res["data"]["propertyId"] == "Dynamic viscosity"
+    assert res["data"]["propertyId"] == "DYNVIS"
     assert res["data"]["value"] == 'Infinity'
 
 

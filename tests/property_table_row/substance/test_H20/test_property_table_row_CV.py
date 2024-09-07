@@ -25,7 +25,7 @@ def test_prop_row_substance_PT_CV_1():
     assert res.status_code == 200
     res = res.json()
     assert res["data"]["value"] == "1548.39216208469"
-    assert res["data"]["propertyId"] == "Isochoric heat capacity"
+    assert res["data"]["propertyId"] == "CV"
 
 
 def test_prop_row_substance_PT_CV_2():
@@ -48,7 +48,7 @@ def test_prop_row_substance_PT_CV_2():
     assert res.status_code == 200
     res = res.json()
     assert res["data"]["value"] == "-2.9592046167106373e-05"
-    assert res["data"]["propertyId"] == "Isochoric heat capacity"
+    assert res["data"]["propertyId"] == "CV"
 
 
 def test_prop_row_substance_PT_CV_3():
@@ -71,7 +71,7 @@ def test_prop_row_substance_PT_CV_3():
     assert res.status_code == 200
     res = res.json()
     assert res["data"]["value"] == "-9545.186238230473"
-    assert res["data"]["propertyId"] == "Isochoric heat capacity"
+    assert res["data"]["propertyId"] == "CV"
 
 
 def test_prop_row_substance_PT_CV_4():
@@ -94,7 +94,7 @@ def test_prop_row_substance_PT_CV_4():
     assert res.status_code == 200
     res = res.json()
     assert res["data"]["value"] == "1.5646590565786644e-09"
-    assert res["data"]["propertyId"] == "Isochoric heat capacity"
+    assert res["data"]["propertyId"] == "CV"
 
 
 def test_prop_row_substance_PT_CV_Pa_Less_C():
@@ -212,7 +212,7 @@ def test_prop_row_substance_PT_CV_C_Less_Pa_Less():
                       )
     assert res.status_code == 200
     res = res.json()
-    assert res["data"]["propertyId"] == "Isochoric heat capacity"
+    assert res["data"]["propertyId"] == "CV"
     assert res["data"]["value"] == "-0.0075755638187792315"
 
 

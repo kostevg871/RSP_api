@@ -45,12 +45,9 @@ def test_prop_row_substance_PT_H_200(value_Pa, value_T, dimension_Pa, dimension_
                       )
     assert res.status_code == 200
     res = res.json()
-    assert res["data"]["propertyId"] == "Specific enthropy"
+    assert res["data"]["propertyId"] == "H"
     assert res["data"]["value"] == result_value
     assert res["data"]["dimension"] == dimension
-
-
-
 
 
 def test_prop_row_substance_PT_F_400_property_dimension():
