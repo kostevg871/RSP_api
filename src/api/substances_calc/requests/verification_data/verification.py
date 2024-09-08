@@ -124,8 +124,6 @@ def check_table_dimension(substaneces_objects_globals: InitRSP, substanceId: int
 
             try:
                 v = str(Decimal(rsp.callProperty(
-                    # substaneces_objects_globals.substances_objects[int(
-                    #     substanceId)],
                         substaneces_objects_globals.substances_objects_no_info[int(
                             substanceId)],
                         prop,
@@ -160,11 +158,10 @@ def check_table_dimension(substaneces_objects_globals: InitRSP, substanceId: int
             except rsp.exceptions.ExceptionUnphysicalFunc as e:
                 results.append(
                     PropertyRowDataResponseTable(
-                        dimension=PROPERTY_DIMENSION_SI[prop],
+                        dimension=None,
                         propertyId=str(prop),
                         value=str('NaN: {}'.format(e)),
-                        available_dimensions=PROPERTY_AVAILABE_DIM.get(
-                            str(prop))
+                        available_dimensions=None
                     ))
 
         if len(nan_count) == len(results):
