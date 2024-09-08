@@ -13,7 +13,6 @@ def test_get_available_substances_422_not_req():
             "status_code": 422,
             "description": "Field required",
             "msg": "Не правильно введены данные!"
-
         }}
 
 
