@@ -4,7 +4,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPBearer
-import uvicorn
+
 
 from src.api.users.router_users import router_users
 from src.api.auth.router_auth import router_auth
