@@ -4,6 +4,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPBearer
+import uvicorn
 
 from src.api.users.router_users import router_users
 from src.api.auth.router_auth import router_auth
@@ -27,7 +28,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
             "detail": {
                 "status_code": 422,
                 "description": exc.errors()[0]["msg"],
-                "error": exc.errors()[0]["ctx"]["error"],
+                # "error": exc.errors()[0]["ctx"]["error"],
                 "msg": "Не правильно введены данные!",
             }
         })
@@ -38,6 +39,7 @@ origins = [
     "http://localhost:3000",
     "http://localhost:3001",
     "https://real-substance-properties.netlify.app",
+    "https://rsp-api.ru"
 ]
 
 app.add_middleware(CORSMiddleware, allow_origins=origins,
@@ -53,7 +55,3 @@ app.include_router(router=router_substances)
 # Добавление ручек users
 app.include_router(router=router_auth)
 app.include_router(router=router_users)
-
-
-# if __name__ == "__main__":
-#    uvicorn.run(app, host="127.0.0.1")
