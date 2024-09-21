@@ -14,7 +14,7 @@ PROPERTY_DIMENSION_SI = {
     "K": "",
     "KINVIS": "m^2*s^-1",
     "DYNVIS": "Pa*s",
-    "THERMCOND": "Wt*m^-1",
+    "THERMCOND": "W*m^-1",
     "PRANDTLE": "",
     "JOULETHOMPSON": "",
     "X": "",
@@ -35,7 +35,7 @@ PROPERTY_DIMENSION_SI = {
     "KSS": "",
     "KINVISSS": "m^2*s^-1",
     "DYNVISSS": "Pa*s",
-    "THERMCONDSS": "Wt*m^-1",
+    "THERMCONDSS": "W*m^-1",
     "PRANDTLESS": "",
     "JOULETHOMPSONSS": "",
 
@@ -52,7 +52,7 @@ PROPERTY_DIMENSION_SI = {
     "KSW": "",
     "KINVISSW": "m^2*s^-1",
     "DYNVISSW": "Pa*s",
-    "THERMCONDSW": "Wt*m^-1",
+    "THERMCONDSW": "W*m^-1",
     "PRANDTLESW": "",
     "JOULETHOMPSONSW": "",
 
@@ -69,7 +69,7 @@ PROPERTY_DIMENSION_SI = {
     "KS": "",
     "KINVISS": "m^2*s^-1",
     "DYNVISS": "Pa*s",
-    "THERMCONDS": "Wt*m^-1",
+    "THERMCONDS": "W*m^-1",
     "PRANDTLES": "",
     "JOULETHOMPSONS": "",
 }
@@ -90,7 +90,7 @@ PROPERTY_AVAILABE_DIM = {
     "K": [""],
     "KINVIS": ["m^2*s^-1"],
     "DYNVIS": ["Pa*s"],
-    "THERMCOND": ["Wt*m^-1", "kWt*m^-1", "MWt*m^-1"],
+    "THERMCOND": ["W*m^-1", "kW*m^-1", "MW*m^-1"],
     "PRANDTLE": [""],
     "JOULETHOMPSON": [""],
     "X": [""],
@@ -112,7 +112,7 @@ PROPERTY_AVAILABE_DIM = {
     "KSS": [""],
     "KINVISSS": ["m^2*s^-1"],
     "DYNVISSS": ["Pa*s"],
-    "THERMCONDSS": ["Wt*m^-1", "kWt*m^-1", "MWt*m^-1"],
+    "THERMCONDSS": ["W*m^-1", "kW*m^-1", "MW*m^-1"],
     "PRANDTLESS": [""],
     "JOULETHOMPSONSS": [""],
 
@@ -129,7 +129,7 @@ PROPERTY_AVAILABE_DIM = {
     "KSW": [""],
     "KINVISWS": ["m^2*s^-1"],
     "DYNVISWS": ["Pa*s"],
-    "THERMCONDSW": ["Wt*m^-1", "kWt*m^-1", "MWt*m^-1"],
+    "THERMCONDSW": ["W*m^-1", "kW*m^-1", "MW*m^-1"],
     "PRANDTLESW": [""],
     "JOULETHOMPSONSW": [""],
 
@@ -146,7 +146,7 @@ PROPERTY_AVAILABE_DIM = {
     "KS": [""],
     "KINVISS": ["m^2*s^-1"],
     "DYNVISS": ["Pa*s"],
-    "THERMCONDS": ["Wt*m^-1", "kWt*m^-1", "MWt*m^-1"],
+    "THERMCONDS": ["W*m^-1", "kW*m^-1", "MW*m^-1"],
     "PRANDTLES": [""],
     "JOULETHOMPSONS": [""],
 }
