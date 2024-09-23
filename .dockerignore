@@ -1,0 +1,4 @@
+./tests
+.env
+.README.md
+.pytest.ini

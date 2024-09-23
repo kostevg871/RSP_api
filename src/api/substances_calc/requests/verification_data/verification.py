@@ -148,8 +148,11 @@ def check_table_dimension(substaneces_objects_globals: InitRSP, substanceId: int
                 if value_result.dimension.strip() == "":
                     value_result.dimension = None
 
-                if len(value_result.available_dimensions) == 1 and value_result.available_dimensions[0] == "":
-                    value_result.available_dimensions = None
+                if value_result.available_dimensions == None:
+                    pass
+                else:
+                    if len(value_result.available_dimensions) == 1 and value_result.available_dimensions[0] == "":
+                        value_result.available_dimensions = None
 
                 results.append(
                     value_result

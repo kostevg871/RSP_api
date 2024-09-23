@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-from typing_extensions import Annotated
 
 from src.api.substances_calc.requests.available_substances import available_substances
 from src.api.substances_calc.requests.calc_model_substanse import calc_model_substanse
@@ -7,7 +6,7 @@ from src.api.substances_calc.requests.properties_list import properties_list
 from src.api.substances_calc.requests.property_table import property_table
 from src.api.substances_calc.requests.property_table_row import property_table_row
 
-from src.api.substances_calc.response_model import model_error_400, model_error_441, model_error_442, model_error_443, model_error_444
+from src.api.substances_calc.response_model import model_error_400
 
 
 from src.schemas import *

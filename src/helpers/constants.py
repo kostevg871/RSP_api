@@ -146,6 +146,8 @@ PROPERTY_AVAILABE_DIM = {
     "KS": [""],
     "KINVISS": ["m^2*s^-1"],
     "DYNVISS": ["Pa*s"],
+    "DYNVISSW": ["Pa*s"],
+    "KINVISSW": ["m^2*s^-1"],
     "THERMCONDS": ["W*m^-1", "kW*m^-1", "MW*m^-1"],
     "PRANDTLES": [""],
     "JOULETHOMPSONS": [""],
