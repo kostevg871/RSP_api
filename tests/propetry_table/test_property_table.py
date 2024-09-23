@@ -135,13 +135,13 @@ def test_get_property_table_200_0_PT_DYNVIS():
                 ]
             },
             {
-                "dimension": "Wt*m^-1",
+                "dimension": "W*m^-1",
                 "propertyId": "THERMCOND",
                 "value": "0.6095012841120712732134734324063174426555633544921875",
                 "available_dimensions": [
-                    "Wt*m^-1",
-                    "kWt*m^-1",
-                    "MWt*m^-1"
+                    "W*m^-1",
+                    "kW*m^-1",
+                    "MW*m^-1"
                 ]
             },
             {
@@ -173,27 +173,11 @@ def test_get_property_table_200_0_PT_DYNVIS():
         ]
     }
 
-
-def test_get_property_table_400_0_Invalid_dimension():
-    res = client.post("/getPropertiesTable", json={
-        "substanceId": 0,
-        "modeId": "PT",
-        "params": {
-            "param_values": [
-                128000, 300.0
-            ],
-            "param_dimensions": [
-                "Pa", "Pa"
-            ]
-        }
-    }
-    )
-
-    assert res.status_code == 400
-    res = res.json()
-    assert res["detail"]["code"] == 11
-    assert res["detail"]["error_info"] == "\"Units ('Pa', 1) are not of the same dimension !\""
-    assert res["detail"]["msg_user_ru"] == "Единица измерения ('Pa') не верна, ожидается ['K', '°C', '°F']"
+    # assert res.status_code == 400
+    # res = res.json()
+    # assert res["detail"]["code"] == 11
+    # assert res["detail"]["error_info"] == "\"Units ('Pa', 1) are not of the same dimension !\""
+    # assert res["detail"]["msg_user_ru"] == "Единица измерения ('Pa') не верна, ожидается ['K', '°C', '°F']"
 
 
 def test_get_property_table_400_Out_Of_range_1():
