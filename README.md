@@ -15,9 +15,9 @@ poetry update --only rsp - обновление ТОЛЬКО rsp
 ### Для запуска:
 
 ```
-uvicorn app:app --reload - запуск сервера
+uvicorn src.app:app --reload - запуск сервера
 http://127.0.0.1:8000/docs#/ - Swagger или localhost:8000
-uvicorn app:app --host 0.0.0.0 --port 80 - запуск на сервере
+uvicorn src.app:app --host 0.0.0.0 --port 80 - запуск на сервере
 ```
 
 ### Тестирование
