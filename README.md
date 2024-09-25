@@ -60,6 +60,12 @@ from myapp import mymodel
 ### Docker
 
 ```
+docker run -it --rm rsp_api-app bash - запустить bash в докере
+docker compose build - запустить сборку приложения (rsp_api-app)
+
+
+
+
 docker-compose -f .\docker-compose-local.yaml up -d
 docker ps
 ```
