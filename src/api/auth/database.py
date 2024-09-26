@@ -16,7 +16,7 @@ from config import DB_HOST, DB_NAME, DB_PASS, DB_USER, DB_PORT
 
 # !!! перенос строки
 DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:\
-    {DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 
 class Base(DeclarativeBase):
