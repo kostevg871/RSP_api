@@ -1,7 +1,11 @@
 services:
   db:
-    image: postgres:15
+    image: postgres:latest
     container_name: db_users
+    environment:
+        POSTGRES_USER: ${DB_USER}
+        POSTGRES_PASSWORD: ${DB_PASS}
+        POSTGRES_DB: ${DB_NAME}
     env_file:
       - .env-non-dev
     command: -p 1221

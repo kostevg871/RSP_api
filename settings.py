@@ -4,5 +4,5 @@ env = Env()
 
 REAL_DATA_BASE = env.str(
     "REAL_DATA_BASE_URL",
-    default="postgresql+asyncpg://postgres:postgres@localhost:5433/postgres"
+    default="postgresql+asyncpg://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}"
 )
