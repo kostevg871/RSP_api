@@ -87,8 +87,7 @@ ADD pyproject.toml poetry.lock ./
 #RUN --mount=type=ssh git clone git@github.com:fiztexlabs/librsp.git
 
 
-RUN --mount=type=ssh \
-       poetry config virtualenvs.create false && \
+RUN poetry config virtualenvs.create false && \
        poetry install --no-interaction --no-ansi --no-root -v
 
 
