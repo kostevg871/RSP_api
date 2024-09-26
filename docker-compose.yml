@@ -4,6 +4,9 @@ services:
     container_name: db_users
     env_file:
       - .env-non-dev
+    command: -p 1221
+    expose:
+      - 1221
   app:
     build:
       context: .
@@ -15,7 +18,7 @@ services:
     container_name: rsp_api
     command: ["/RSP/docker/app.sh"]
     ports:
-      - 8000:8000
+      - 9999:8000
     depends_on:
       - db
     

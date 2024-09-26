@@ -24,7 +24,7 @@ fastapi-users = {extras = ["sqlalchemy"], version = "^13.0.0"}
 
 
 [tool.poetry.group.rsp.dependencies]
-rsp = { git = "git+ssh://git@github-librsp/fiztexlabs/librsp.git" }
+#rsp = { git = "git+ssh://git@github-librsp/fiztexlabs/librsp.git" }
 #rsp = { git = "git@github.com:fiztexlabs/librsp.git" }
 
 [tool.poetry.group.dev.dependencies]

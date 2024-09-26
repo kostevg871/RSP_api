@@ -1574,25 +1574,6 @@ typing-extensions = {version = ">=4.0.0,<5.0", markers = "python_version < \"3.9
 jupyter = ["ipywidgets (>=7.5.1,<9)"]
 
 [[package]]
-name = "rsp"
-version = "2.0.15"
-description = "Real Substance Properties"
-optional = false
-python-versions = ">=3.7"
-files = []
-develop = false
-
-[package.extras]
-build = ["cmake (>=3.14)"]
-test = ["pytest (>=6.0)"]
-
-[package.source]
-type = "git"
-url = "git+ssh://git@github-librsp/fiztexlabs/librsp.git"
-reference = "HEAD"
-resolved_reference = "d5400504604f51e48bffdad7b317d6d8f9bf7cac"
-
-[[package]]
 name = "shellingham"
 version = "1.5.4"
 description = "Tool to Detect Surrounding Shell"
@@ -2084,4 +2065,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8.10"
-content-hash = "4c90e0484f3324899b7e9371b945e09c1da4427f5f857a5c6d25d82ff17357f7"
+content-hash = "c54dd3541df5ca0203d5bd2bfe89bac775b941489433e66631c308d0281983ca"
