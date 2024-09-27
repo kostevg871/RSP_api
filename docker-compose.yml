@@ -2,12 +2,15 @@ services:
   db:
     image: postgres:latest
     container_name: db_users
+    restart: always
     environment:
         POSTGRES_USER: ${DB_USER}
         POSTGRES_PASSWORD: ${DB_PASS}
         POSTGRES_DB: ${DB_NAME}
     env_file:
       - .env-non-dev
+    volumes:
+      - .db:/var/lib/postgresql/data
     command: -p 1221
     expose:
       - 1221
@@ -25,5 +28,7 @@ services:
       - 9999:8000
     depends_on:
       - db
-
+volumes:
+  db:
+    driver: local
 
