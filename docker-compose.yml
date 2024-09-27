@@ -18,8 +18,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      ssh: 
-      - default
+      secrets: 
+      - ssh_key
     env_file:
       - .env-non-dev
     container_name: rsp_api
@@ -32,3 +32,6 @@ volumes:
   db:
     driver: local
 
+secrets:
+  ssh_key:
+    file: ssh_keys/

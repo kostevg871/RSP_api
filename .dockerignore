@@ -3,3 +3,4 @@
 .README.md
 .pytest.ini
 .env-non-dev
+.db
