@@ -1574,6 +1574,25 @@ typing-extensions = {version = ">=4.0.0,<5.0", markers = "python_version < \"3.9
 jupyter = ["ipywidgets (>=7.5.1,<9)"]
 
 [[package]]
+name = "rsp"
+version = "2.0.15"
+description = "Real Substance Properties"
+optional = false
+python-versions = ">=3.7"
+files = []
+develop = false
+
+[package.extras]
+build = ["cmake (>=3.14)"]
+test = ["pytest (>=6.0)"]
+
+[package.source]
+type = "git"
+url = "git@github.com:fiztexlabs/librsp.git"
+reference = "HEAD"
+resolved_reference = "d5400504604f51e48bffdad7b317d6d8f9bf7cac"
+
+[[package]]
 name = "shellingham"
 version = "1.5.4"
 description = "Tool to Detect Surrounding Shell"
@@ -1786,13 +1805,13 @@ files = [
 
 [[package]]
 name = "uvicorn"
-version = "0.30.6"
+version = "0.31.0"
 description = "The lightning-fast ASGI server."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "uvicorn-0.30.6-py3-none-any.whl", hash = "sha256:65fd46fe3fda5bdc1b03b94eb634923ff18cd35b2f084813ea79d1f103f711b5"},
-    {file = "uvicorn-0.30.6.tar.gz", hash = "sha256:4b15decdda1e72be08209e860a1e10e92439ad5b97cf44cc945fcbee66fc5788"},
+    {file = "uvicorn-0.31.0-py3-none-any.whl", hash = "sha256:cac7be4dd4d891c363cd942160a7b02e69150dcbc7a36be04d5f4af4b17c8ced"},
+    {file = "uvicorn-0.31.0.tar.gz", hash = "sha256:13bc21373d103859f68fe739608e2eb054a816dea79189bc3ca08ea89a275906"},
 ]
 
 [package.dependencies]
@@ -2066,4 +2085,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8.10"
-content-hash = "cc8dd1643dd1832fb1f8a35db6a67e4b7538f8f69dd9a1d468acadd56beefba6"
+content-hash = "5492c2e785fdaaa840ba5e9872cf74bda016b62d49d28d36875a6d53c6b3af2c"

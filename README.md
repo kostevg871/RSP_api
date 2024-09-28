@@ -66,9 +66,11 @@ docker run -it --rm rsp_api-app bash - запустить bash в докере
 docker compose build - запустить сборку приложения (rsp_api-app)
 docker compose up - поднять контейнеры
 
-
-
 docker-compose -f .\docker-compose-local.yaml up -d - еще команда для поднятия контейнеров
 docker ps - просмотр запущенных контейнеров
+
+
+docker compose -f docker-compose-local.yaml up -d - запуск локальной базы для разработки
+docker compose -f docker-compose-local.yml down - отключение локально базы для разработки
 ```
 

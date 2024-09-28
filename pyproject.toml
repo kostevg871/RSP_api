@@ -22,7 +22,7 @@ pydantic = {extras = ["email"], version = "^2.7.1"}
 fastapi-users = {extras = ["sqlalchemy"], version = "^13.0.0"}
 
 #rsp = { git = "git+ssh://git@github-librsp/fiztexlabs/librsp.git" }
-#rsp = { git = "git@github.com:fiztexlabs/librsp.git" }
+rsp = { git = "git@github.com:fiztexlabs/librsp.git" }
 #cmake = "^3.30.3"
 
 [tool.poetry.dev-dependencies]
