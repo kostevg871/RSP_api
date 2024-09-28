@@ -7,6 +7,7 @@ from fastapi.security import HTTPBearer
 
 
 from src.api.substances_calc.substances import router_substances
+from src.api.users.users_handlers import router_users
 from src.api.substances_calc.response_model import model_error_422
 
 http_bearer = HTTPBearer(auto_error=False)
@@ -49,3 +50,4 @@ app.add_middleware(CORSMiddleware, allow_origins=origins,
 
 # Endpoints (routers)
 app.include_router(router=router_substances)
+app.include_router(router=router_users, prefix="/user", tags=["user"])
