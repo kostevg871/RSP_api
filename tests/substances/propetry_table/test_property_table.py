@@ -314,7 +314,7 @@ def test_prop_row_substance_error_unknown_12():
 
     assert res["detail"]["code"] == 12
     assert res["detail"][
-        "error_info"] == "bad function call"
+        "error_info"] == "bad_function_call"
     assert res["detail"]["msg_user_ru"] == "Неизвестная ошибка, измените параметры расчета"
 
 

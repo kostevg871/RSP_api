@@ -141,7 +141,7 @@ def test_prop_row_substance_all_400_error_12():
     assert res.status_code == 400
     res = res.json()
     assert res["detail"]["code"] == 12
-    assert res["detail"]["error_info"] == "500: RSP core error: bad function call"
+    assert res["detail"]["error_info"] == "500: RSP core error: bad_function_call"
     assert res["detail"]["msg_user_ru"] == "Неизвестная ошибка, измените параметры расчета"
 
 
