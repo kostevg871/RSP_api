@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:14.1-alpine
+    container_name: db_RSP
+    restart: always
+    env_file:
+      - .env-non-dev
+    
+    ports:
+      - "5432:5432"
+    networks:
+      - custom
+  
+  db_test:
+    image: postgres:14.1-alpine
+    container_name: db_test
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres_test
+      - POSTGRES_PASSWORD=postgres_test
+      - POSTGRES_DB=postgres_test
+    ports:
+      - "5433:5432"
+    networks:
+      - custom
+
+networks:
+  custom:
+    driver: bridge
