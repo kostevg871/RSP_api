@@ -15,4 +15,5 @@ async def _create_new_user(body: UserCreate, session) -> ShowUser:
             name=user.name,
             email=user.email,
             is_active=user.is_active,
+            registered_at=user.registered_at
         )

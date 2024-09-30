@@ -1,7 +1,8 @@
+from datetime import datetime
 import re
 
 from fastapi import HTTPException
-from pydantic import BaseModel
+from pydantic import AwareDatetime, BaseModel, ConfigDict
 
 from pydantic import EmailStr
 from pydantic import field_validator
@@ -14,10 +15,7 @@ LETTER_MATCH_PATTERN = re.compile(r"^[а-яА-Яa-zA-Z\-]+$")
 
 
 class TunedModel(BaseModel):
-    class Config:
-        """tells pydantic to convert even non dict obj to json"""
-
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class ShowUser(TunedModel):
@@ -25,12 +23,12 @@ class ShowUser(TunedModel):
     name: str
     email: EmailStr
     is_active: bool
+    registered_at: datetime
 
 
 class UserCreate(BaseModel):
     name: str
     email: EmailStr
-    password: str
 
     @field_validator("name")
     def validate_name(cls, value):
