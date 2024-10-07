@@ -57,6 +57,11 @@ from myapp import mymodel
 - Будет создана миграция
 - Дальше вводим: `alembic upgrade heads` - вносяться изменения в базу данных
 
+
+os.system("alembic -c alembic_test.ini init migrations/test")
+os.system('alembic -c alembic_test.ini revision --autogenerate -m "test_migrations"')
+os.system("alembic -c alembic_test.ini upgrade head")
+
 ### Docker
 
 ```

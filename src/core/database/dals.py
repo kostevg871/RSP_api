@@ -22,11 +22,13 @@ class UserDAL:
         self,
         name: str,
         email: str,
+        password: str,
 
     ) -> User:
         new_user = User(
             name=name,
             email=email,
+            hashed_password=password,
         )
         self.db_session.add(new_user)
         await self.db_session.flush()
@@ -62,3 +64,10 @@ class UserDAL:
         update_user_id_row = res.fetchone()
         if update_user_id_row is not None:
             return update_user_id_row[0]
+
+    async def get_user_by_email(self, email: str) -> Union[User, None]:
+        query = select(User).where(User.email == email)
+        res = await self.db_session.execute(query)
+        user_row = res.fetchone()
+        if user_row is not None:
+            return user_row[0]

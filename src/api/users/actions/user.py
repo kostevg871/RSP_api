@@ -1,4 +1,5 @@
 from typing import Union
+from src.helpers.hashing import Hasher
 from src.core.database.models import User
 from src.api.users.schemas import ShowUser
 from src.api.users.schemas import UserCreate
@@ -11,6 +12,8 @@ async def _create_new_user(body: UserCreate, session) -> ShowUser:
         user = await user_dal.create_user(
             name=body.name,
             email=body.email,
+            password=Hasher.get_password_hash(body.password)
+
         )
         return ShowUser(
             user_id=user.user_id,

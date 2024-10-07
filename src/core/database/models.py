@@ -18,3 +18,4 @@ class User(Base):
     is_active = Column(Boolean(), default=True)
     registered_at = Column(TIMESTAMP(timezone=True),
                            default=lambda: datetime.now(timezone.utc))
+    hashed_password = Column(String, nullable=False)
