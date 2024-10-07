@@ -24,8 +24,8 @@ pydantic = {extras = ["email"], version = "^2.7.1"}
 rsp = { git = "git@github.com:fiztexlabs/librsp.git" }
 #cmake = "^3.30.3"
 httpx = "^0.27.2"
-passlib = "^1.7.4"
 python-jose = "^3.3.0"
+bcrypt = "^4.2.0"
 
 
 [tool.poetry.dev-dependencies]
