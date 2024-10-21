@@ -3,3 +3,8 @@ up:
 
 down:
 	docker compose -f docker-compose-local.yaml down && docker network prune --force
+
+SCRIPT = docker/test.sh
+
+test:
+	bash $(SCRIPT)
