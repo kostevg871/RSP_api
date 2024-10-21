@@ -1,4 +1,3 @@
-from datetime import datetime, timezone
 from typing import Union
 from sqlalchemy import and_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
