@@ -65,8 +65,8 @@ async def _get_test_db():
         pass
 
 
-@pytest.fixture(scope="function")
-async def client() -> Generator[TestClient, Any, None]:
+@pytest.fixture(scope="session")
+async def client():
     """
     Create a new FastAPI TestClient that uses the `db_session` fixture to override
     the `get_db` dependency that is injected into routes.
@@ -82,19 +82,21 @@ async def asyncpg_pool():
     pool = await asyncpg.create_pool(
         "".join(settings.TEST_DATABASE_URL.split("+asyncpg"))
     )
-    yield pool
-    await pool.close()
+    try:
+        yield pool
+    finally:
+        await pool.close()
 
 
 @pytest.fixture
 async def get_user_from_database(asyncpg_pool):
-    async def get_user_from_database_by_uuid(user_id: str):
+    async def get_user_from_database_by_int(user_id: int):
         async with asyncpg_pool.acquire() as connection:
             return await connection.fetch(
-                """SELECT * FROM users WHERE user_id = $1;""", user_id
+                "SELECT * FROM users WHERE user_id = $1;", user_id
             )
 
-    return get_user_from_database_by_uuid
+    return get_user_from_database_by_int
 
 
 @pytest.fixture
@@ -111,11 +113,8 @@ async def create_user_in_database(asyncpg_pool):
                 """INSERT INTO users VALUES ($1, $2, $3, $4)""",
                 user_id,
                 name,
-
                 email,
-
                 hashed_password,
-
             )
 
     return create_user_in_database
