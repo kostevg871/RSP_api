@@ -7,6 +7,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
+from src.api.users.actions.auth import get_current_user_from_token
 from src.core.database.models import User
 from src.api.users.actions.user import _create_new_user, _delete_user, _get_user_by_id, _update_user
 from src.api.users.schemas import DeleteUserResponse, ShowUser, UpdatedUserRequest, UpdatedUserResponse, UserCreate
@@ -25,14 +26,14 @@ async def create_user(body: UserCreate, db: AsyncSession = Depends(get_db)) -> S
     except IntegrityError as err:
         logger.error(err)
         raise HTTPException(
-            status_code=503, detail=f"Пользователь с e-mail: {body.email} уже существует")
+            status_code=503, detail=f"Пользователь c такой почтой уже существует!")
 
 
 @router_users.delete("/", response_model=DeleteUserResponse)
 async def delete_user(
     user_id: int,
     db: AsyncSession = Depends(get_db),
-
+    current_user: User = Depends(get_current_user_from_token)
 ) -> DeleteUserResponse:
     delete_user = await _delete_user(user_id, db)
     if delete_user is None:
@@ -44,7 +45,10 @@ async def delete_user(
 
 @router_users.get("/", response_model=ShowUser)
 async def get_user_by_id(user_id: int,
-                         db: AsyncSession = Depends(get_db),) -> ShowUser:
+                         db: AsyncSession = Depends(get_db),
+                         current_user: User = Depends(
+                             get_current_user_from_token),
+                         ) -> ShowUser:
     user = await _get_user_by_id(user_id, db)
     if user is None:
         raise HTTPException(
@@ -56,7 +60,10 @@ async def get_user_by_id(user_id: int,
 @router_users.patch("/", response_model=UpdatedUserResponse)
 async def update_user_by_id(user_id: int,
                             body: UpdatedUserRequest,
-                            db: AsyncSession = Depends(get_db)) -> UpdatedUserResponse:
+                            db: AsyncSession = Depends(get_db),
+                            current_user: User = Depends(
+                                get_current_user_from_token),
+                            ) -> UpdatedUserResponse:
     updated_user_params = body.model_dump(exclude_none=True)
 
     if updated_user_params == {}:

@@ -1,64 +1,31 @@
-# syntax=docker/dockerfile:1.2
-FROM python:3.10-slim
+FROM ubuntu:20.04
 
+ARG PYTHON_VER=3.12
+ARG GCC_VER=13
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+RUN apt-get update && apt-get install -y software-properties-common curl nano
 
+RUN add-apt-repository ppa:ubuntu-toolchain-r/test \
+    && apt-get update \
+    && apt-get install -y "gcc-$GCC_VER" "g++-$GCC_VER"
 
+RUN add-apt-repository ppa:deadsnakes/ppa \
+    && apt-get update \
+    && apt-get install -y "python$PYTHON_VER" "python$PYTHON_VER-venv" "python$PYTHON_VER-dev" "python$PYTHON_VER-distutils"
 
-RUN apt-get update && apt-get install -y \
-build-essential \
-    cmake \
-    git \
-    openssh-client \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y pip && pip install --upgrade pip
 
-RUN pip install --upgrade pip
+RUN apt-get clean
 
-RUN mkdir /RSP
-
-
-WORKDIR /RSP
+WORKDIR /rsp
 
 RUN pip install poetry
-RUN pip install cmake
-
-#COPY --chown=root:root /ssh_keys/rsp_deploy /root/.ssh/id_rsa
-#COPY --chown=root:root /ssh_keys/known_hosts /root/.ssh/known_hosts
-#COPY --chown=root:root /ssh_keys/rsp_deploy.pub /root/.ssh/id_rsa.pub
-
-
-
-#RUN chmod 600 /root/.ssh/id_rsa
-#RUN chmod 600 /root/.ssh/id_rsa.pub
-#RUN chmod 644 /root/.ssh/known_hosts \
-#&& ssh-keyscan github.com >> /root/.ssh/known_hosts
-
-
-RUN --mount=type=secret,id=ssh_key \
-    mkdir -p /root/.ssh && \
-    cp /run/secrets/ssh_key /root/.ssh/id_rsa && \
-    chmod 600 /root/.ssh/id_rsa && \
-	ssh-keyscan github.com >> /root/.ssh/known_hosts && \
-    git clone git@github.com:fiztexlabs/librsp.git
-
-#RUN git clone git@github.com:fiztexlabs/librsp.git
-
-
-WORKDIR /RSP/librsp
-RUN git submodule update --init --recursive
-
-
-RUN cd .. 
-RUN pip install .
-
-WORKDIR /RSP
-
 
 
 ADD pyproject.toml poetry.lock ./
 
+
+RUN poetry env use $(which python3.12)
 
 RUN poetry config virtualenvs.create false && \
        poetry install --no-interaction --no-ansi --no-root -v
@@ -66,5 +33,48 @@ RUN poetry config virtualenvs.create false && \
 
 COPY . .
 
-RUN chmod a+x /RSP/docker/*.sh
+RUN make download
 
+RUN chmod a+x /rsp/docker/*.sh
+
+
+
+#FROM ubuntu:22.04
+
+## Установите необходимые зависимости
+#RUN apt-get update && apt-get install -y wget \
+#    build-essential \
+#    libssl-dev \
+#    libbz2-dev \
+#    libreadline-dev \
+#    libsqlite3-dev \
+#    libffi-dev \
+#    zlib1g-dev \
+#    curl \
+#    nano \
+#    software-properties-common
+
+## Установка gcc и g++
+#ARG GCC_VER=13
+#RUN add-apt-repository ppa:ubuntu-toolchain-r/test \
+#    && apt-get update \
+#    && apt-get install -y "gcc-$GCC_VER" "g++-$GCC_VER"
+
+## Установка Python 3.12.3 из исходного кода
+#ARG PYTHON_VER=3.12.3
+#RUN wget https://www.python.org/ftp/python/$PYTHON_VER/Python-$PYTHON_VER.tgz && \
+#    tar xzf Python-$PYTHON_VER.tgz &&  cd Python-$PYTHON_VER && \
+#    ./configure --enable-optimizations && \
+#    make -j $(nproc) &&  make altinstall && cd .. && rm -rf Python-$PYTHON_VER Python-$PYTHON_VER.tgz
+
+## Установите pip
+#RUN apt-get update && apt-get install -y python3-distutils && \
+#    curl -sS https://bootstrap.pypa.io/get-pip.py | python3
+
+## Обновление pip
+#RUN pip3.12 install --upgrade pip
+
+## Очистка
+#RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+#WORKDIR /rsp

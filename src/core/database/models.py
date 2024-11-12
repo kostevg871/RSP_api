@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from sqlalchemy import TIMESTAMP, Boolean, Column, String, Integer
+from sqlalchemy import TIMESTAMP, Boolean, Column, String, Integer, ARRAY
 from sqlalchemy.orm import declarative_base
 
 ##############################
@@ -19,3 +19,4 @@ class User(Base):
     registered_at = Column(TIMESTAMP(timezone=True),
                            default=lambda: datetime.now(timezone.utc))
     hashed_password = Column(String, nullable=False)
+    # roles = Column(ARRAY(String), nullable=False)
