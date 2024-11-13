@@ -14,3 +14,11 @@ download:
 
 run local:
 	poetry run uvicorn src.app:app --reload
+
+start:
+	docker compose -f docker-compose-ci.yaml up -d
+	
+	poetry run bash docker/app.sh
+
+stop:
+	docker compose -f docker-compose-ci.yaml down && docker network prune --force
