@@ -5,6 +5,7 @@ from typing import Any
 from typing import Generator
 
 import asyncpg
+from core.database.models import PortalRole
 import pytest
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -65,7 +66,7 @@ async def _get_test_db():
         pass
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 async def client():
     """
     Create a new FastAPI TestClient that uses the `db_session` fixture to override
@@ -106,15 +107,17 @@ async def create_user_in_database(asyncpg_pool):
         name: str,
         email: str,
         hashed_password: str,
+        roles: list[PortalRole],
 
     ):
         async with asyncpg_pool.acquire() as connection:
             return await connection.execute(
-                """INSERT INTO users VALUES ($1, $2, $3, $4)""",
+                """INSERT INTO users VALUES ($1, $2, $3, $4, $5,)""",
                 user_id,
                 name,
                 email,
                 hashed_password,
+                roles,
             )
 
     return create_user_in_database
