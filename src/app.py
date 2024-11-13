@@ -11,7 +11,9 @@ from src.api.users.users_handlers import router_users
 from src.api.users.login_handlers import login_router
 from src.api.substances_calc.response_model import model_error_422
 
+
 http_bearer = HTTPBearer(auto_error=False)
+
 
 app = FastAPI(
     title="RSP App",
