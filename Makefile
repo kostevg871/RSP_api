@@ -12,5 +12,5 @@ download:
 	bash docker/rsp-download.sh
 	poetry run python3.12 rsp_install.py
 
-run_local:
+run local:
 	poetry run uvicorn src.app:app --reload

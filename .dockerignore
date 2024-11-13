@@ -1,10 +1,10 @@
 ./tests
-#.env
+.env
 .README.md
 .pytest.ini
-#.env-non-dev
+.env-non-dev
 .db
-#.env_rsp
+.env_rsp
 .gitignore
 rsp.linux-amd64.so
 
@@ -16,7 +16,7 @@ rsp.linux-amd64.so
 # pychache
 __pycache__
 venv
-#.env
-#.env-non-dev
+.env
+.env-non-dev
 .pytest_cache
 .venv
