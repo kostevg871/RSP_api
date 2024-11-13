@@ -1,6 +1,8 @@
 from typing import Union
+
+from fastapi import HTTPException
 from src.helpers.hashing import Hasher
-from src.core.database.models import User
+from src.core.database.models import PortalRole, User
 from src.api.users.schemas import ShowUser
 from src.api.users.schemas import UserCreate
 from src.core.database.dals import UserDAL
@@ -12,7 +14,8 @@ async def _create_new_user(body: UserCreate, session) -> ShowUser:
         user = await user_dal.create_user(
             name=body.name,
             email=body.email,
-            password=Hasher.get_password_hash(body.password)
+            hashed_password=Hasher.get_password_hash(body.password),
+            roles=[PortalRole.ROLE_PORTAL_USER,]
 
         )
         return ShowUser(
@@ -20,7 +23,8 @@ async def _create_new_user(body: UserCreate, session) -> ShowUser:
             name=user.name,
             email=user.email,
             is_active=user.is_active,
-            registered_at=user.registered_at
+            registered_at=user.registered_at,
+            roles=[PortalRole.ROLE_PORTAL_USER,]
         )
 
 
@@ -52,3 +56,30 @@ async def _get_user_by_id(user_id, session) -> Union[User, None]:
         )
         if user is not None:
             return user
+
+
+def check_user_permissions(target_user: User, current_user: User) -> bool:
+    if PortalRole.ROLE_PORTAL_SUPERADMIN in current_user.roles:
+        raise HTTPException(
+            status_code=406, detail="Superadmin cannot be deleted via API."
+        )
+    if target_user.user_id != current_user.user_id:
+        # check admin role
+        if not {
+            PortalRole.ROLE_PORTAL_ADMIN,
+            PortalRole.ROLE_PORTAL_SUPERADMIN,
+        }.intersection(current_user.roles):
+            return False
+        # check admin deactivate superadmin attempt
+        if (
+            PortalRole.ROLE_PORTAL_SUPERADMIN in target_user.roles
+            and PortalRole.ROLE_PORTAL_ADMIN in current_user.roles
+        ):
+            return False
+        # check admin deactivate admin attempt
+        if (
+            PortalRole.ROLE_PORTAL_ADMIN in target_user.roles
+            and PortalRole.ROLE_PORTAL_ADMIN in current_user.roles
+        ):
+            return False
+    return True

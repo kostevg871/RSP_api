@@ -3,7 +3,7 @@ from sqlalchemy import and_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
-from src.core.database.models import User
+from src.core.database.models import PortalRole, User
 
 
 ###########################################################
@@ -21,13 +21,15 @@ class UserDAL:
         self,
         name: str,
         email: str,
-        password: str,
+        hashed_password: str,
+        roles: list[PortalRole]
 
     ) -> User:
         new_user = User(
             name=name,
             email=email,
-            hashed_password=password,
+            hashed_password=hashed_password,
+            roles=roles,
         )
         self.db_session.add(new_user)
         await self.db_session.flush()
@@ -45,13 +47,6 @@ class UserDAL:
         if deleted_user_id_row is not None:
             return deleted_user_id_row[0]
 
-    async def get_user_by_id(self, user_id: int) -> Union[User, None]:
-        query = select(User).where(User.user_id == user_id)
-        res = await self.db_session.execute(query)
-        user_row = res.fetchone()
-        if user_row is not None:
-            return user_row[0]
-
     async def update_user(self, user_id: int, **kwargs) -> Union[int, None]:
         query = (
             update(User)
@@ -63,6 +58,13 @@ class UserDAL:
         update_user_id_row = res.fetchone()
         if update_user_id_row is not None:
             return update_user_id_row[0]
+
+    async def get_user_by_id(self, user_id: int) -> Union[User, None]:
+        query = select(User).where(User.user_id == user_id)
+        res = await self.db_session.execute(query)
+        user_row = res.fetchone()
+        if user_row is not None:
+            return user_row[0]
 
     async def get_user_by_email(self, email: str) -> Union[User, None]:
         query = select(User).where(User.email == email)

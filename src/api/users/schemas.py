@@ -1,9 +1,9 @@
 from datetime import datetime
 import re
-from typing import Optional, Union
+from typing import Optional
 
 from fastapi import HTTPException
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, constr
 
 from pydantic import EmailStr
 from pydantic import field_validator
@@ -25,6 +25,7 @@ class ShowUser(TunedModel):
     email: EmailStr
     is_active: bool
     registered_at: datetime
+    roles: list[str]
 
 
 class UserCreate(BaseModel):
@@ -42,11 +43,11 @@ class UserCreate(BaseModel):
 
 
 class DeleteUserResponse(BaseModel):
-    deleted_user_id: int | None
+    deleted_user_id: int
 
 
 class UpdatedUserResponse(BaseModel):
-    updated_user_id: int | None
+    updated_user_id: int
 
 
 class UpdatedUserRequest(BaseModel):
