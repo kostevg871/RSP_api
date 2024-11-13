@@ -79,6 +79,11 @@ async def update_user_by_id(user_id: int,
     if updated_user_params == {}:
         raise HTTPException(
             status_code=422, detail="Выберите хотя бы один параметр для обновления")
+    user_for_update = await _get_user_by_id(user_id, db)
+    if user_for_update is None:
+        raise HTTPException(
+            status_code=404, detail=f"User with id {user_id} not found."
+        )
 
     user_for_update = await _get_user_by_id(user_id, db)
     if user_id != current_user.user_id:
@@ -86,11 +91,6 @@ async def update_user_by_id(user_id: int,
             target_user=user_for_update, current_user=current_user
         ):
             raise HTTPException(status_code=403, detail="Forbidden.")
-
-    if user_for_update is None:
-        raise HTTPException(
-            status_code=404, detail=f"User with id {user_id} not found."
-        )
 
     try:
         updated_user_id = await _update_user(
