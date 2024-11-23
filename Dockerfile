@@ -33,10 +33,18 @@ RUN poetry config virtualenvs.create false && \
 
 COPY . .
 
-RUN make download
+ARG ACCESS_TOKEN
+ARG VERSION
+
+RUN echo "ACCESS_TOKEN is ${ACCESS_TOKEN} and VERSION is ${VERSION}"
+
+RUN curl --header "PRIVATE-TOKEN: $ACCESS_TOKEN" "https://fiztexlab-dev.servebeer.com/api/v4/projects/1/packages/generic/binaries/v$VERSION/rsp.linux-amd64.so" --output rsp.linux-amd64.so
+
+
 
 RUN chmod a+x /rsp/docker/*.sh
 
+#CMD ["bash", "/rsp/docker/app.sh"]
 
 
 #FROM ubuntu:22.04

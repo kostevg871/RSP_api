@@ -1,10 +1,12 @@
+version: '3.8'
+
 services:
   db:
     image: postgres:14.1-alpine
     container_name: db_RSP
     restart: always
     env_file:
-      - .env
+      - .env-non-dev
     ports:
       - "5432:5432"
     networks:
@@ -15,9 +17,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        VERSION: ${VERSION}
+        ACCESS_TOKEN: ${ACCESS_TOKEN}
     env_file:
-      - .env
-    #command: ["/rsp/docker/app.sh"]
+      - .env-non-dev
+      - .env_rsp
+    command: ["/bin/bash", "-c", "/rsp/docker/app.sh"]
     ports:
       - "9999:8000"
     depends_on:

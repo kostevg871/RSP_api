@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sleep 5
+sleep 2
 #alembic upgrade head
-alembic -c alembic.ini upgrade head
-alembic -c alembic.ini upgrade head
+poetry run alembic -c alembic.ini upgrade head
+poetry run alembic -c alembic.ini upgrade head
