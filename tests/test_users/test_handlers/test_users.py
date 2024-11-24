@@ -74,8 +74,5 @@ async def test_create_user_duplicate_email_error(client, get_user_from_database)
     # Пытаемся создать пользователя с дублирующим email
     resp = client.post("/user/", content=json.dumps(user_data_same))
 
-    assert resp.status_code == 503
-    assert (
-        'Пользователь c такой почтой уже существует!'
-        in resp.json()["detail"]
-    )
+    assert resp.status_code == 400
+    assert resp.json()["detail"]["code"] == 2.2
