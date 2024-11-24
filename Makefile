@@ -27,4 +27,5 @@ build:
 	docker compose -f docker-compose-ci.yaml --env-file .env_rsp build
 
 stop:
+	docker compose -f docker-compose-local.yaml down && docker network prune --force
 	docker compose -f docker-compose-ci.yaml down && docker network prune --force
