@@ -23,6 +23,8 @@ services:
     env_file:
       - .env-non-dev
       - .env_rsp
+    environment:
+      DB_URL: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
     command: ["/bin/bash", "-c", "/rsp/docker/app.sh"]
     ports:
       - "9999:8000"
