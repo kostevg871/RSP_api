@@ -16,7 +16,7 @@ def user_email_already_exist():
     raise HTTPException(status_code=400, detail={
         "code": 2.2,
         "type": "UserEmailAlreadyExist",
-        "error_info": "Пользователь с такой почтой уже сущестует",
+        "error_info": "Пользователь с такой почтой уже существует",
         "msg_user_ru": "Пользователь уже существует",
         "msg_user_en": "The user already exists",
         "request_info": None
